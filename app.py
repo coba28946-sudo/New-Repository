@@ -64,20 +64,29 @@ st.markdown("""
     margin: 5px 0;
     font-size: 13px;
 }
-[data-testid="stTextInput"] label { display: none !important; }
-[data-testid="stTextInput"] svg   { display: none !important; }
 
-/* BUAT INPUT SAMA PANJANG */
+/* HILANGKAN LABEL & ICON */
+[data-testid="stTextInput"] label { 
+    display: none !important; 
+}
+[data-testid="stTextInput"] svg { 
+    display: none !important; 
+}
+
+/* BUAT INPUT SAMA PERSIS */
 [data-testid="stTextInput"] {
     width: 100% !important;
     max-width: 100% !important;
+    min-width: 100% !important;
 }
 [data-testid="stTextInput"] > div {
     width: 100% !important;
     max-width: 100% !important;
+    min-width: 100% !important;
 }
 [data-testid="stTextInput"] input {
     width: 100% !important;
+    max-width: 100% !important;
     min-width: 100% !important;
     border-radius: 12px !important;
     background: rgba(255,255,255,0.07) !important;
@@ -87,6 +96,9 @@ st.markdown("""
     font-size: 16px !important;
     box-sizing: border-box !important;
     text-align: center !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
 }
 [data-testid="stTextInput"] input:focus {
     border-color: #ff8ad8 !important;
@@ -96,19 +108,26 @@ st.markdown("""
     color: rgba(255,255,255,0.35) !important;
     text-align: center !important;
 }
+
+/* BUAT TOMBOL SAMA LEBAR */
 div[data-testid="stButton"] > button {
     width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
     background: white !important;
     color: #07080f !important;
     font-weight: 700 !important;
     border: none !important;
     border-radius: 12px !important;
-    padding: 18px !important;
+    padding: 16px !important;
     font-size: 18px !important;
     letter-spacing: 1px !important;
     transition: all 0.3s ease !important;
     margin-top: 8px !important;
     box-sizing: border-box !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
 }
 div[data-testid="stButton"] > button:hover {
     transform: translateY(-2px) !important;
@@ -190,39 +209,29 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE - SAMA PANJANG
+# 5. LOGIN PAGE - SIMETRIS
 # =====================
 if not st.session_state.logged_in:
     
     col1, col2, col3 = st.columns([1, 2.2, 1])
     with col2:
+        # JUDUL
         st.markdown("""
         <div style="text-align:center; padding-top:60px; margin-bottom:0px;">
-            <span style="font-size:64px; font-weight:800; color:#ff8ad8; display:inline-block; width:100%; text-align:center;">✦ Kei AI</span>
+            <span style="font-size:64px; font-weight:800; color:#ff8ad8; display:block; text-align:center;">✦ Kei AI</span>
         </div>
         <div style="text-align:center; margin-bottom:30px;">
-            <span style="font-size:20px; color:#ffffff; opacity:0.85; display:inline-block; width:100%; text-align:center; letter-spacing:1.5px; word-spacing:3px;">Teman AI Pintar Kamu</span>
+            <span style="font-size:20px; color:#ffffff; opacity:0.85; display:block; text-align:center; letter-spacing:1.5px; word-spacing:3px;">Teman AI Pintar Kamu</span>
         </div>
         """, unsafe_allow_html=True)
         
-        # Username
-        username = st.text_input(
-            "", 
-            placeholder="Username", 
-            key="username_input", 
-            label_visibility="collapsed"
-        )
+        # USERNAME
+        username = st.text_input("", placeholder="Username", key="username_input", label_visibility="collapsed")
         
-        # Password
-        password = st.text_input(
-            "", 
-            placeholder="Password", 
-            type="password", 
-            key="password_input", 
-            label_visibility="collapsed"
-        )
+        # PASSWORD
+        password = st.text_input("", placeholder="Password", type="password", key="password_input", label_visibility="collapsed")
         
-        # Tombol Masuk
+        # TOMBOL MASUK
         if st.button("Masuk", use_container_width=True, key="login_button"):
             if username == "ryuu" and password == "12345":
                 st.session_state.logged_in = True
