@@ -31,18 +31,14 @@ st.markdown("""
 # =====================
 st.markdown("""
 <style>
-/* ===== BACKGROUND ===== */
 .stApp {
     background: #0a0a0a;
     min-height: 100vh;
 }
-
-/* ===== SIDEBAR ===== */
 [data-testid="stSidebar"] {
     background: rgba(18, 18, 18, 0.98);
     border-right: 1px solid rgba(255,255,255,0.05);
 }
-
 .online-box {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.06);
@@ -71,18 +67,6 @@ st.markdown("""
     font-size: 13px;
     color: rgba(255,255,255,0.7);
 }
-
-/* ======================================== */
-/* LOGIN PAGE - PRESISI */
-/* ======================================== */
-
-/* BUAT JUDUL & SUBTITLE SAMA LEBAR */
-.login-header {
-    text-align: center;
-    max-width: 400px;
-    margin: 0 auto 0 auto;
-}
-
 h1 {
     text-align: center !important;
     color: #ff8ad8 !important;
@@ -94,7 +78,6 @@ h1 {
     display: block !important;
     width: 100% !important;
 }
-
 .caption {
     text-align: center !important;
     color: rgba(255,255,255,0.8) !important;
@@ -105,8 +88,6 @@ h1 {
     display: block !important;
     width: 100% !important;
 }
-
-/* FORM */
 [data-testid="stForm"] {
     border: none !important;
     padding: 0 !important;
@@ -115,16 +96,12 @@ h1 {
     max-width: 380px !important;
     margin: 0 auto !important;
 }
-
-/* HILANGKAN LABEL & ICON */
 [data-testid="stTextInput"] label { 
     display: none !important; 
 }
 [data-testid="stTextInput"] svg { 
     display: none !important; 
 }
-
-/* INPUT */
 [data-testid="stTextInput"] {
     width: 100% !important;
     max-width: 380px !important;
@@ -157,8 +134,6 @@ h1 {
     text-align: center !important;
     font-size: 16px !important;
 }
-
-/* TOMBOL */
 div[data-testid="stButton"] > button {
     width: 100% !important;
     max-width: 380px !important;
@@ -186,18 +161,15 @@ div[data-testid="stButton"] > button:hover {
 div[data-testid="stButton"] > button:active {
     transform: scale(0.98) !important;
 }
-
 [data-testid="stForm"] div[data-testid="stButton"] {
     width: 100% !important;
     max-width: 380px !important;
     margin: 0 auto !important;
 }
-
 .stVerticalBlock {
     gap: 10px !important;
     align-items: center !important;
 }
-
 .stAlert {
     text-align: center !important;
     border-radius: 12px !important;
@@ -208,7 +180,6 @@ div[data-testid="stButton"] > button:active {
     margin: 0 auto !important;
     font-size: 14px !important;
 }
-
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
     background: rgba(255, 138, 216, 0.06);
     border: 1px solid rgba(255, 138, 216, 0.08);
@@ -228,10 +199,6 @@ div[data-testid="stButton"] > button:active {
     border: 1px solid rgba(255,255,255,0.06) !important;
     background: rgba(255,255,255,0.02) !important;
 }
-
-/* ======================================== */
-/* RESPONSIVE HP */
-/* ======================================== */
 @media (max-width: 768px) {
     h1 {
         font-size: 34px !important;
