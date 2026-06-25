@@ -199,15 +199,19 @@ if "messages" not in st.session_state:
 
 # LOGIN
 if not st.session_state.logged_in:
-    st.markdown('<div class="kei-title">✦ Kei AI</div>', unsafe_allow_html=True)
-    st.markdown('<p style="text-align:center; color:#bdbdbd;">Teman AI Pintar Kamu</p>', unsafe_allow_html=True)
-    
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
+        st.markdown("""
+        <div style="text-align:center; margin-bottom:30px;">
+            <h1 style="color:#ff8ad8; font-size:42px;">✦ Kei AI</h1>
+            <p style="color:#bdbdbd;">Teman AI Pintar Kamu</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
         
-        if st.button("Masuk"):
+        if st.button("Masuk", use_container_width=True):
             if username == "ryuu" and password == "12345":
                 st.session_state.logged_in = True
                 st.rerun()
