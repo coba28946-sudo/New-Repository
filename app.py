@@ -16,7 +16,6 @@ st.set_page_config(page_title="Kei AI", page_icon="🤖", layout="wide")
 # =====================
 # 2. VERIFIKASI GOOGLE SEARCH CONSOLE
 # =====================
-# ✅ PAKAI st.markdown() BUKAN st.search_query()
 st.markdown('''
 <meta name="google-site-verification" content="s2qr9m3w_y37dRvnCkmx1Sq2kx2CqYLB82sBNL6tVW" />
 ''', unsafe_allow_html=True)
@@ -24,10 +23,22 @@ st.markdown('''
 # =====================
 # 3. BUNGKUS APLIKASI DENGAN TRACKING
 # =====================
-with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
-    
+try:
+    with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
+        # KODE APLIKASI UTAMA
+        main_app()
+except Exception as e:
+    st.warning(f"⚠️ Analytics error: {str(e)}")
+    st.info("Aplikasi tetap berjalan tanpa tracking.")
+    # JALANKAN APLIKASI TANPA TRACKING
+    main_app()
+
+# =====================
+# 4. FUNGSI UTAMA APLIKASI
+# =====================
+def main_app():
     # =====================
-    # 4. CSS (PAKAI st.markdown())
+    # CSS
     # =====================
     st.markdown("""
     <style>
@@ -80,13 +91,13 @@ with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
     """, unsafe_allow_html=True)
     
     # =====================
-    # 5. JUDUL
+    # JUDUL
     # =====================
     st.markdown('<div class="kei-title">✦ Kei AI</div>', unsafe_allow_html=True)
     st.write("Halo Kak! Kei siap menemani hari Kakak. 💕")
     
     # =====================
-    # 6. GEMINI SETUP
+    # GEMINI SETUP
     # =====================
     API_KEY = os.environ.get("GEMINI_API_KEY")
     
@@ -116,7 +127,7 @@ with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
                 return f"⚠️ Terjadi kesalahan sistem: {str(e)}"
     
     # =====================
-    # 7. PERSONA KEI
+    # PERSONA KEI
     # =====================
     KEI_PERSONA = """
     Kamu adalah Kei, AI companion yang imut, perhatian, dan sedikit tsundere.
@@ -146,7 +157,7 @@ with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
     """
     
     # =====================
-    # 8. STIKER
+    # STIKER
     # =====================
     STICKERS = {
         "happy": ["(｡♥‿♥｡)", "✨(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "٩(◕‿◕｡)۶", "(≧◡≦)", "🎉✨💕"],
@@ -160,7 +171,7 @@ with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
         return random.choice(STICKERS.get(mood, STICKERS["happy"]))
     
     # =====================
-    # 9. DIARY & CHAT FILE
+    # DIARY & CHAT FILE
     # =====================
     DIARY_FILE = "dear_diary.json"
     CHAT_FILE = "chat_history.json"
@@ -186,7 +197,7 @@ with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
             json.dump(messages, f)
     
     # =====================
-    # 10. SESSION STATE
+    # SESSION STATE
     # =====================
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
@@ -201,7 +212,7 @@ with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
         st.session_state.messages = load_chat()
     
     # =====================
-    # 11. LOGIN
+    # LOGIN
     # =====================
     if not st.session_state.logged_in:
         st.markdown('<div class="kei-title">✦ Kei AI</div>', unsafe_allow_html=True)
@@ -222,7 +233,7 @@ with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
         st.stop()
     
     # =====================
-    # 12. SIDEBAR
+    # SIDEBAR
     # =====================
     with st.sidebar:
         avatar_exists = os.path.exists("kei_avatar.png")
@@ -320,7 +331,7 @@ with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
             st.rerun()
     
     # =====================
-    # 13. HEADER
+    # HEADER
     # =====================
     if st.session_state.mode == "diary":
         st.markdown("""
@@ -338,7 +349,7 @@ with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
         """, unsafe_allow_html=True)
     
     # =====================
-    # 14. DEAR DIARY MODE
+    # DEAR DIARY MODE
     # =====================
     if st.session_state.mode == "diary":
         diary_entries = load_diary()
@@ -398,14 +409,14 @@ with streamlit_analytics.track(measurement_id="G-PGLBV0H3KF"):
         st.stop()
     
     # =====================
-    # 15. CHAT DISPLAY
+    # CHAT DISPLAY
     # =====================
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
     
     # =====================
-    # 16. CHAT INPUT
+    # CHAT INPUT
     # =====================
     prompt = st.chat_input("Ketik pesan ke Kei...")
     
