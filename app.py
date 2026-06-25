@@ -13,7 +13,7 @@ from datetime import datetime
 st.set_page_config(page_title="Kei AI", page_icon="🤖", layout="wide")
 
 # =====================
-# 2. GOOGLE VERIFICATION & ANALYTICS
+# 2. ANALYTICS
 # =====================
 st.markdown("""
 <meta name="google-site-verification" content="s2qrn3my_Y37DRVnCKnxISqZkx2CqYL88z5BrNLGtvM" />
@@ -31,136 +31,134 @@ st.markdown("""
 # =====================
 st.markdown("""
 <style>
-/* Global */
-.stApp { background: #0a0a0a; }
-
-/* ---- LOGIN ---- */
-.login-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 80vh;
-    padding: 20px;
+/* ===== GLOBAL ===== */
+html, body, .stApp {
+    background-color: #0a0a0a !important;
+    color: white !important;
 }
+
+/* Hide streamlit default chrome on login */
+#MainMenu, footer, header { visibility: hidden; }
+
+/* ===== LOGIN PAGE ===== */
 .login-title {
     color: #ff8ad8;
-    font-size: 48px;
+    font-size: 46px;
     font-weight: 700;
     text-align: center;
+    letter-spacing: -1px;
     margin-bottom: 4px;
 }
-.login-subtitle {
-    color: rgba(255,255,255,0.5);
-    font-size: 18px;
+.login-sub {
+    color: rgba(255,255,255,0.4);
+    font-size: 17px;
     text-align: center;
     margin-bottom: 36px;
 }
 .login-footer {
-    text-align: center;
-    color: rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.2);
     font-size: 13px;
-    margin-top: 28px;
+    text-align: center;
+    margin-top: 24px;
 }
-.login-footer span { color: #ff8ad8; }
+.login-footer b { color: #ff8ad8; }
 
-/* Card */
-[data-testid="stForm"] {
+/* Form card */
+div[data-testid="stForm"] {
     background: #161616 !important;
-    border: 1px solid rgba(255,255,255,0.09) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
     border-radius: 20px !important;
-    padding: 32px 28px !important;
-    max-width: 480px !important;
-    margin: 0 auto !important;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.5) !important;
+    padding: 32px 28px 28px !important;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7) !important;
 }
 
-/* Input fields */
-[data-testid="stTextInput"] label { display: none !important; }
-[data-testid="stTextInput"] svg { display: none !important; }
-[data-testid="stTextInput"] > div > div {
-    background: #222222 !important;
+/* Input wrapper */
+div[data-testid="stTextInput"] > div {
+    background: #202020 !important;
     border: 1px solid rgba(255,255,255,0.08) !important;
     border-radius: 12px !important;
+    padding: 0 !important;
 }
-[data-testid="stTextInput"] input {
+div[data-testid="stTextInput"] > div:focus-within {
+    border-color: rgba(255,138,216,0.45) !important;
+    box-shadow: 0 0 0 2px rgba(255,138,216,0.08) !important;
+}
+
+/* Input element */
+div[data-testid="stTextInput"] input {
     background: transparent !important;
     color: white !important;
     font-size: 15px !important;
     padding: 14px 16px !important;
-    height: 52px !important;
-    caret-color: #ff8ad8;
-}
-[data-testid="stTextInput"] input::placeholder {
-    color: rgba(255,255,255,0.3) !important;
-}
-[data-testid="stTextInput"] input:focus {
-    border-color: rgba(255,138,216,0.4) !important;
-    box-shadow: none !important;
-}
-/* Password eye toggle */
-[data-testid="stTextInput"] button {
-    background: transparent !important;
     border: none !important;
-    color: rgba(255,255,255,0.4) !important;
+    box-shadow: none !important;
+    height: 50px !important;
+}
+div[data-testid="stTextInput"] input::placeholder {
+    color: rgba(255,255,255,0.28) !important;
 }
 
-/* Masuk button */
-[data-testid="stForm"] div[data-testid="stButton"] > button {
+/* Hide label & icon */
+div[data-testid="stTextInput"] label,
+div[data-testid="stTextInput"] svg { display: none !important; }
+
+/* Password toggle eye */
+div[data-testid="stTextInput"] button {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: rgba(255,255,255,0.35) !important;
+    padding-right: 12px !important;
+}
+
+/* Submit button inside form */
+div[data-testid="stForm"] div[data-testid="stButton"] > button {
     width: 100% !important;
-    background: #1c1c1c !important;
-    color: rgba(255,255,255,0.85) !important;
-    font-weight: 600 !important;
-    border: 1px solid rgba(255,255,255,0.12) !important;
+    background: #1e1e1e !important;
+    color: rgba(255,255,255,0.8) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
     border-radius: 12px !important;
     font-size: 16px !important;
-    height: 52px !important;
-    transition: all 0.2s ease !important;
+    font-weight: 600 !important;
+    padding: 13px !important;
+    height: 50px !important;
+    transition: all 0.2s !important;
+    cursor: pointer !important;
 }
-[data-testid="stForm"] div[data-testid="stButton"] > button:hover {
-    background: #252525 !important;
-    border-color: rgba(255,138,216,0.35) !important;
+div[data-testid="stForm"] div[data-testid="stButton"] > button:hover {
+    background: #262626 !important;
+    border-color: rgba(255,138,216,0.4) !important;
     color: #ff8ad8 !important;
 }
 
-/* ---- CHAT / SIDEBAR ---- */
-h1 { color: #ff8ad8; }
+/* Error box */
+div[data-testid="stAlert"] {
+    background: rgba(255,70,70,0.08) !important;
+    border: 1px solid rgba(255,70,70,0.2) !important;
+    border-radius: 10px !important;
+    color: #ff6b6b !important;
+    font-size: 14px !important;
+}
+
+/* ===== CHAT / APP ===== */
 [data-testid="stSidebar"] { background: #111111 !important; }
+[data-testid="stChatMessage"] { background: transparent !important; }
 [data-testid="stChatInput"] textarea {
     background: #1a1a1a !important;
     color: white !important;
     border: 1px solid rgba(255,255,255,0.08) !important;
     border-radius: 12px !important;
 }
-[data-testid="stChatMessage"] {
-    background: transparent !important;
-}
-
-/* Alert */
-.stAlert { max-width: 480px; margin: 0 auto; border-radius: 10px; }
-
-/* Vertical gap fix */
-.stVerticalBlock { gap: 10px !important; }
-
-@media (max-width: 768px) {
-    .login-title { font-size: 36px; }
-    .login-subtitle { font-size: 16px; margin-bottom: 24px; }
-    [data-testid="stForm"] { padding: 24px 18px !important; }
-}
+h1 { color: #ff8ad8 !important; }
 </style>
 """, unsafe_allow_html=True)
 
 # =====================
 # 4. SESSION STATE
 # =====================
-for key, default in {
-    "logged_in": False,
-    "avatar": None,
-    "mode": "chat",
-    "messages": [],
-}.items():
+for key, val in {"logged_in": False, "mode": "chat", "messages": [], "avatar": None}.items():
     if key not in st.session_state:
-        st.session_state[key] = default
+        st.session_state[key] = val
 
 # =====================
 # 5. FILE HELPERS
@@ -179,31 +177,29 @@ def save_json(path, data):
         json.dump(data, f, ensure_ascii=False)
 
 # =====================
-# 6. LOGIN PAGE
+# 6. LOGIN
 # =====================
 if not st.session_state.logged_in:
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
+    _, col, _ = st.columns([1, 1.4, 1])
+    with col:
         st.markdown('<div class="login-title">✦ Kei AI</div>', unsafe_allow_html=True)
-        st.markdown('<div class="login-subtitle">Teman AI Pintar Kamu</div>', unsafe_allow_html=True)
+        st.markdown('<div class="login-sub">Teman AI Pintar Kamu</div>', unsafe_allow_html=True)
 
-        with st.form("login_form"):
+        with st.form("login_form", clear_on_submit=False):
             username = st.text_input("u", placeholder="Username", label_visibility="collapsed")
             password = st.text_input("p", placeholder="Password", type="password", label_visibility="collapsed")
             submitted = st.form_submit_button("Masuk", use_container_width=True)
 
-            if submitted:
-                if username == "ryuu" and password == "12345":
-                    st.session_state.logged_in = True
-                    st.session_state.messages = load_json(CHAT_FILE)
-                    st.rerun()
-                else:
-                    st.error("Username atau password salah")
+        if submitted:
+            if username == "ryuu" and password == "12345":
+                st.session_state.logged_in = True
+                st.session_state.messages = load_json(CHAT_FILE)
+                st.rerun()
+            else:
+                st.error("Username atau password salah")
 
-        st.markdown(
-            '<div class="login-footer">Kei AI — Your AI Companion <span>✦</span></div>',
-            unsafe_allow_html=True,
-        )
+        st.markdown('<div class="login-footer">Kei AI — Your AI Companion <b>✦</b></div>', unsafe_allow_html=True)
+
     st.stop()
 
 # =====================
@@ -303,8 +299,8 @@ with st.sidebar:
 
     st.markdown("""
     <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
-    border-radius:12px;padding:15px;text-align:left;margin:10px 0 20px;color:rgba(255,255,255,0.7);">
-        🟢 Online<br>KEI AI
+    border-radius:12px;padding:15px;margin:10px 0 20px;color:rgba(255,255,255,0.7);">
+        🟢 Online &nbsp; KEI AI
     </div>
     """, unsafe_allow_html=True)
 
@@ -342,7 +338,7 @@ with st.sidebar:
                 search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
                 st.markdown(f"""
                 <div style="background:rgba(255,138,216,0.04);border:1px solid rgba(255,138,216,0.08);
-                border-radius:12px;padding:12px;margin:5px 0;font-size:13px;color:rgba(255,255,255,0.7);">
+                border-radius:12px;padding:12px;font-size:13px;color:rgba(255,255,255,0.7);">
                     🎵 <b>{music_query}</b><br>
                     <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube</a>
                 </div>
@@ -454,7 +450,6 @@ prompt = st.chat_input("Ketik pesan ke Kei...")
 if prompt:
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # Optional Google search link
     browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
     if any(kw in prompt.lower() for kw in browsing_keywords):
         search_url  = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
@@ -462,7 +457,6 @@ if prompt:
     else:
         search_note = ""
 
-    # Build history
     history_text = ""
     for m in st.session_state.messages[-10:]:
         role = "User" if m["role"] == "user" else "Kei"
