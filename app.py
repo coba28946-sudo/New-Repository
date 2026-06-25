@@ -85,7 +85,7 @@ st.markdown("""
 }
 
 /* ===================== */
-/* STYLE LOGIN PAGE */
+/* STYLE LOGIN PAGE - SIMETRIS */
 /* ===================== */
 .login-container {
     max-width: 400px;
@@ -109,28 +109,33 @@ st.markdown("""
     letter-spacing: 1px;
 }
 
-/* HILANGKAN ICON PENSIL DI TEXT INPUT */
-[data-testid="stTextInput"] svg {
-    display: none !important;
-}
-
+/* HILANGKAN SEMUA LABEL */
 [data-testid="stTextInput"] label {
     display: none !important;
 }
 
+/* HILANGKAN ICON PENSIL */
+[data-testid="stTextInput"] svg {
+    display: none !important;
+}
+
+/* STYLE INPUT FIELD - PUTIH & SIMETRIS */
 [data-testid="stTextInput"] input {
     border-radius: 12px !important;
     background: rgba(255,255,255,0.05) !important;
     color: white !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    padding: 14px !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    padding: 14px 20px !important;
     font-size: 16px !important;
     text-align: center !important;
+    width: 100% !important;
+    min-width: 280px !important;
 }
 
 [data-testid="stTextInput"] input:focus {
     border-color: #ff8ad8 !important;
-    box-shadow: 0 0 15px rgba(255, 138, 216, 0.1) !important;
+    box-shadow: 0 0 20px rgba(255, 138, 216, 0.15) !important;
+    outline: none !important;
 }
 
 [data-testid="stTextInput"] input::placeholder {
@@ -138,16 +143,24 @@ st.markdown("""
     text-align: center !important;
 }
 
-/* TOMBOL MASUK */
+/* BUAT INPUT FIELD SAMA LEBAR */
+[data-testid="stTextInput"] {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* TOMBOL MASUK - PUTIH */
 [data-testid="stButton"] button {
     background: white !important;
     color: #050816 !important;
     font-weight: bold !important;
     border: none !important;
     border-radius: 25px !important;
-    padding: 12px !important;
+    padding: 14px !important;
     font-size: 18px !important;
     transition: all 0.3s ease !important;
+    width: 100% !important;
+    min-width: 280px !important;
 }
 
 [data-testid="stButton"] button:hover {
@@ -156,14 +169,26 @@ st.markdown("""
     background: #f0f0f0 !important;
 }
 
-/* HILANGKAN ERROR MESSAGE YANG BIKIN GA SIMETRIS */
-.stAlert {
-    text-align: center !important;
+/* BUAT COLUMN JADI RATA TENGAH & SAMA LEBAR */
+[data-testid="column"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
 }
 
-/* BUAT FORM JADI SIMETRIS */
-[data-testid="stVerticalBlock"] {
-    gap: 15px !important;
+/* HILANGKAN BORDER BOTTOM PADA CONTAINER */
+.stTextInput > div {
+    border-bottom: none !important;
+}
+
+/* BUAT GAP ANTAR INPUT RAPI */
+.stVerticalBlock {
+    gap: 12px !important;
+}
+
+/* ERROR MESSAGE TETAP DI TENGAH */
+.stAlert {
+    text-align: center !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -184,7 +209,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # =====================
-# 6. LOGIN PAGE
+# 6. LOGIN PAGE - SIMETRIS
 # =====================
 if not st.session_state.logged_in:
     # Tampilan login
@@ -195,12 +220,16 @@ if not st.session_state.logged_in:
     </div>
     """, unsafe_allow_html=True)
     
-    # Form login - tengah sempurna
+    # Form login - pakai 1 kolom tengah
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        username = st.text_input("", placeholder="Username", key="username_input")
-        password = st.text_input("", placeholder="Password", type="password", key="password_input")
+        # INPUT USERNAME - tanpa label
+        username = st.text_input("", placeholder="Username", key="username_input", label_visibility="collapsed")
         
+        # INPUT PASSWORD - tanpa label
+        password = st.text_input("", placeholder="Password", type="password", key="password_input", label_visibility="collapsed")
+        
+        # TOMBOL MASUK
         if st.button("Masuk", use_container_width=True, key="login_button"):
             if username == "ryuu" and password == "12345":
                 st.session_state.logged_in = True
