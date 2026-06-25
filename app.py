@@ -77,18 +77,19 @@ st.markdown("""
 [data-testid="stTextInput"] label { display: none !important; }
 [data-testid="stTextInput"] svg   { display: none !important; }
 
-/* Input field */
+/* Input field - SAMA PANJANG */
 [data-testid="stTextInput"] input {
     width: 100% !important;
     border-radius: 12px !important;
     background: rgba(255,255,255,0.07) !important;
     color: white !important;
     border: 1px solid rgba(255,255,255,0.2) !important;
-    padding: 16px 20px !important;
+    padding: 18px 20px !important;
     font-size: 16px !important;
     box-sizing: border-box !important;
     transition: border-color 0.2s, box-shadow 0.2s !important;
     text-align: center !important;
+    min-height: 58px !important;
 }
 
 [data-testid="stTextInput"] input:focus {
@@ -100,9 +101,10 @@ st.markdown("""
 [data-testid="stTextInput"] input::placeholder {
     color: rgba(255,255,255,0.35) !important;
     text-align: center !important;
+    font-size: 16px !important;
 }
 
-/* Tombol Masuk */
+/* Tombol Masuk - DIPERBESAR */
 div[data-testid="stButton"] > button {
     width: 100% !important;
     background: white !important;
@@ -110,12 +112,13 @@ div[data-testid="stButton"] > button {
     font-weight: 700 !important;
     border: none !important;
     border-radius: 12px !important;
-    padding: 16px !important;
-    font-size: 16px !important;
-    letter-spacing: 0.5px !important;
+    padding: 18px !important;
+    font-size: 20px !important;
+    letter-spacing: 1px !important;
     transition: all 0.3s ease !important;
     margin-top: 8px !important;
     box-sizing: border-box !important;
+    min-height: 58px !important;
 }
 
 div[data-testid="stButton"] > button:hover {
@@ -232,9 +235,9 @@ if not st.session_state.logged_in:
     # Buat 3 kolom, ambil tengah
     col1, col2, col3 = st.columns([1, 2.2, 1])
     with col2:
-        # Judul utama - DIPERLEBAR
+        # Judul utama
         st.markdown("""
-        <div style="text-align:center; padding-top:60px; margin-bottom:2px;">
+        <div style="text-align:center; padding-top:50px; margin-bottom:2px;">
             <span style="font-size:64px; font-weight:800; color:#ff8ad8; letter-spacing:-1px; display:block;">✦ Kei AI</span>
         </div>
         <div style="text-align:center; margin-bottom:35px; padding:0 20px;">
@@ -250,23 +253,23 @@ if not st.session_state.logged_in:
             label_visibility="collapsed"
         )
         
-        # Input Password
+        # Input Password - PAKAI "Kata Sandi" biar sama panjang
         password = st.text_input(
             "", 
-            placeholder="Password",
+            placeholder="Kata Sandi",
             type="password",
             key="password_input",
             label_visibility="collapsed"
         )
         
-        # Tombol Masuk
+        # Tombol Masuk - DIPERBESAR
         if st.button("Masuk", use_container_width=True, key="login_button"):
             if username == "ryuu" and password == "12345":
                 st.session_state.logged_in = True
                 st.session_state.messages = load_chat()
                 st.rerun()
             else:
-                st.error("Username atau password salah")
+                st.error("Username atau kata sandi salah")
         
         # Footer kecil
         st.markdown("""
