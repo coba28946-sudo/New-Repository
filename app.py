@@ -93,7 +93,8 @@ div[data-testid="stTextInput"] input {
     border: none !important;
     box-shadow: none !important;
     height: 50px !important;
-    line-height: 50px !important;
+    line-height: normal !important;
+    padding-bottom: 8px !important;
 }
 div[data-testid="stTextInput"] input::placeholder {
     color: rgba(255,255,255,0.28) !important;
