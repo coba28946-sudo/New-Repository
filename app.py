@@ -31,7 +31,6 @@ st.markdown("""
 # =====================
 st.markdown("""
 <style>
-
 .stApp {
     background: linear-gradient(135deg, #050816, #081028, #050816);
 }
@@ -71,19 +70,14 @@ st.markdown("""
 }
 
 /* ===================== */
-/* INPUT LOGIN           */
+/* LOGIN PAGE - SEMPURNA */
 /* ===================== */
 
+/* Hilangkan label & icon */
 [data-testid="stTextInput"] label { display: none !important; }
 [data-testid="stTextInput"] svg   { display: none !important; }
 
-[data-testid="stTextInput"],
-[data-testid="stTextInput"] > div,
-[data-testid="stTextInput"] > div > div {
-    width: 100% !important;
-    max-width: 100% !important;
-}
-
+/* Input field */
 [data-testid="stTextInput"] input {
     width: 100% !important;
     border-radius: 12px !important;
@@ -91,19 +85,21 @@ st.markdown("""
     color: white !important;
     border: 1px solid rgba(255,255,255,0.2) !important;
     padding: 16px 20px !important;
-    font-size: 15px !important;
+    font-size: 16px !important;
     box-sizing: border-box !important;
     transition: border-color 0.2s, box-shadow 0.2s !important;
+    text-align: center !important;
 }
 
 [data-testid="stTextInput"] input:focus {
-    border-color: rgba(255,255,255,0.5) !important;
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.08) !important;
+    border-color: #ff8ad8 !important;
+    box-shadow: 0 0 20px rgba(255, 138, 216, 0.15) !important;
     outline: none !important;
 }
 
 [data-testid="stTextInput"] input::placeholder {
     color: rgba(255,255,255,0.35) !important;
+    text-align: center !important;
 }
 
 /* Tombol Masuk */
@@ -115,8 +111,8 @@ div[data-testid="stButton"] > button {
     border: none !important;
     border-radius: 12px !important;
     padding: 16px !important;
-    font-size: 15px !important;
-    letter-spacing: 0.3px !important;
+    font-size: 16px !important;
+    letter-spacing: 0.5px !important;
     transition: all 0.3s ease !important;
     margin-top: 8px !important;
     box-sizing: border-box !important;
@@ -128,6 +124,7 @@ div[data-testid="stButton"] > button:hover {
     background: #f0f0f0 !important;
 }
 
+/* Column jadi stretch */
 [data-testid="column"] {
     display: flex !important;
     flex-direction: column !important;
@@ -228,47 +225,56 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE
+# 5. LOGIN PAGE - SEMPURNA
 # =====================
 if not st.session_state.logged_in:
-
+    
+    # Buat 3 kolom, ambil tengah
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
+        # Judul utama - pas ukurannya
         st.markdown("""
-        <div style="text-align:center; padding-top:80px; margin-bottom:10px;">
-            <span style="font-size:76px; font-weight:800; color:#ff8ad8; letter-spacing:-2px;">✦ Kei AI</span>
+        <div style="text-align:center; padding-top:60px; margin-bottom:2px;">
+            <span style="font-size:64px; font-weight:800; color:#ff8ad8; letter-spacing:-1px; display:block;">✦ Kei AI</span>
         </div>
-        <div style="text-align:center; margin-bottom:40px;">
-            <span style="font-size:22px; color:#ffffff; letter-spacing:0.4px;">Teman AI Pintar Kamu</span>
+        <div style="text-align:center; margin-bottom:35px;">
+            <span style="font-size:20px; color:#ffffff; letter-spacing:0.3px; opacity:0.85;">Teman AI Pintar Kamu</span>
         </div>
         """, unsafe_allow_html=True)
-
+        
+        # Input Username
         username = st.text_input(
-            "", placeholder="  Username",
+            "", 
+            placeholder="Username",
             key="username_input",
             label_visibility="collapsed"
         )
+        
+        # Input Password
         password = st.text_input(
-            "", placeholder="  Password",
+            "", 
+            placeholder="Password",
             type="password",
             key="password_input",
             label_visibility="collapsed"
         )
-
-        if st.button("Masuk →", use_container_width=True, key="login_button"):
+        
+        # Tombol Masuk
+        if st.button("Masuk", use_container_width=True, key="login_button"):
             if username == "ryuu" and password == "12345":
                 st.session_state.logged_in = True
                 st.session_state.messages = load_chat()
                 st.rerun()
             else:
-                st.error("❌ Username atau password salah")
-
+                st.error("Username atau password salah")
+        
+        # Footer kecil
         st.markdown("""
-        <div style="text-align:center; margin-top:24px; font-size:13px; color:#ffffff;">
+        <div style="text-align:center; margin-top:20px; font-size:12px; color:rgba(255,255,255,0.25); letter-spacing:0.5px;">
             Kei AI · Your AI Companion
         </div>
         """, unsafe_allow_html=True)
-
+    
     st.stop()
 
 # =====================
