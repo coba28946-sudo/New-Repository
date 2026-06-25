@@ -6,8 +6,7 @@ import os
 import json
 import time
 
-# Tempel kode asli kamu tepat di sini (Baris 8):
-st.html('<meta name="google-site-verification" content="exaT0qFMS18pkgIzodJOo6rXtSw1bEymz3yJbQdai8A" />')
+
 
 # =====================
 # CONFIG
