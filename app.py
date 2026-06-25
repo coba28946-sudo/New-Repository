@@ -27,90 +27,83 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# 3. CSS
+# 3. CSS - MIRIP CHATGPT
 # =====================
 st.markdown("""
 <style>
-/* ===== BACKGROUND ===== */
+/* ===== BACKGROUND SOLID DARK ===== */
 .stApp {
-    background: linear-gradient(135deg, #0a0a1a, #150820, #0a0a1a);
+    background: #0a0a0a;
     min-height: 100vh;
 }
 
 /* ===== SIDEBAR ===== */
 [data-testid="stSidebar"] {
-    background: rgba(9, 15, 32, 0.95);
+    background: rgba(18, 18, 18, 0.98);
     border-right: 1px solid rgba(255,255,255,0.05);
 }
 
 .online-box {
-    background: rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 15px;
     text-align: left;
     margin-top: 10px;
     margin-bottom: 20px;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255,0.7);
 }
 .diary-box {
-    background: rgba(255,182,230,0.06);
-    border: 1px solid rgba(255,138,216,0.15);
-    border-radius: 16px;
+    background: rgba(255,182,230,0.05);
+    border: 1px solid rgba(255,138,216,0.1);
+    border-radius: 12px;
     padding: 16px;
     margin: 8px 0;
     font-style: italic;
     color: #f0c4e8;
 }
 .music-box {
-    background: rgba(255,138,216,0.06);
-    border: 1px solid rgba(255,138,216,0.12);
+    background: rgba(255,138,216,0.04);
+    border: 1px solid rgba(255,138,216,0.08);
     border-radius: 12px;
     padding: 12px;
     margin: 5px 0;
     font-size: 13px;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255,0.7);
 }
 
 /* ======================================== */
-/* LOGIN PAGE - CENTER, SIMETRIS, UKURAN PAS */
+/* LOGIN PAGE - MIRIP CHATGPT */
 /* ======================================== */
 
-/* JUDUL - PAKAI st.title() */
+/* JUDUL - KECIL, DI TENGAH */
 h1 {
     text-align: center !important;
     color: #ff8ad8 !important;
-    font-size: 48px !important;
-    font-weight: 800 !important;
-    margin-top: 50px !important;
-    margin-bottom: 0px !important;
-    letter-spacing: -1px !important;
+    font-size: 28px !important;
+    font-weight: 600 !important;
+    margin-top: 60px !important;
+    margin-bottom: 2px !important;
+    letter-spacing: -0.5px !important;
 }
 
-/* SUBTITLE - PAKAI st.caption() - DIPERBESAR & SAMA LEBAR */
+/* SUBTITLE - KECIL, PUTIH SOFT */
 .caption {
     text-align: center !important;
-    color: rgba(255,255,255,0.8) !important;
-    font-size: 20px !important;
+    color: rgba(255,255,255,0.4) !important;
+    font-size: 14px !important;
     font-weight: 400 !important;
-    margin-bottom: 28px !important;
-    letter-spacing: 1.5px !important;
+    margin-bottom: 32px !important;
+    letter-spacing: 0.5px !important;
 }
 
-/* BUAT SEMUA KONTEN DI TENGAH DENGAN LEBAR TERBATAS */
-[data-testid="column"] {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-}
-
-/* FORM - TANPA GARIS */
+/* FORM - TANPA GARIS, LEBAR TERBATAS */
 [data-testid="stForm"] {
     border: none !important;
     padding: 0 !important;
     background: transparent !important;
     width: 100% !important;
-    max-width: 380px !important;
+    max-width: 340px !important;
     margin: 0 auto !important;
 }
 
@@ -122,74 +115,73 @@ h1 {
     display: none !important; 
 }
 
-/* INPUT FIELD - LEBAR TERBATAS, CENTER */
+/* INPUT - CLEAN, BORDER TIPIS */
 [data-testid="stTextInput"] {
     width: 100% !important;
-    max-width: 380px !important;
+    max-width: 340px !important;
     margin: 0 auto !important;
 }
 [data-testid="stTextInput"] > div {
     width: 100% !important;
-    max-width: 380px !important;
+    max-width: 340px !important;
 }
 [data-testid="stTextInput"] input {
     width: 100% !important;
-    border-radius: 14px !important;
-    background: rgba(255,255,255,0.05) !important;
+    border-radius: 10px !important;
+    background: rgba(255,255,255,0.04) !important;
     color: white !important;
     border: 1px solid rgba(255,255,255,0.08) !important;
-    padding: 16px 20px !important;
-    font-size: 16px !important;
+    padding: 14px 16px !important;
+    font-size: 15px !important;
     box-sizing: border-box !important;
-    text-align: center !important;
-    height: 54px !important;
-    transition: all 0.3s ease !important;
+    text-align: left !important;
+    height: 48px !important;
+    transition: border-color 0.2s ease !important;
 }
 [data-testid="stTextInput"] input:focus {
     border-color: #ff8ad8 !important;
-    box-shadow: 0 0 25px rgba(255, 138, 216, 0.06) !important;
-    background: rgba(255,255,255,0.07) !important;
+    box-shadow: none !important;
+    background: rgba(255,255,255,0.06) !important;
 }
 [data-testid="stTextInput"] input::placeholder {
-    color: rgba(255,255,255,0.3) !important;
-    text-align: center !important;
-    font-size: 15px !important;
+    color: rgba(255,255,255,0.25) !important;
+    text-align: left !important;
+    font-size: 14px !important;
 }
 
-/* TOMBOL MASUK - SAMA LEBAR DENGAN INPUT */
+/* TOMBOL MASUK - SOLID PINK, MIRIP CHATGPT */
 div[data-testid="stButton"] > button {
     width: 100% !important;
-    max-width: 380px !important;
-    background: white !important;
-    color: #0a0a1a !important;
-    font-weight: 700 !important;
+    max-width: 340px !important;
+    background: #ff8ad8 !important;
+    color: white !important;
+    font-weight: 600 !important;
     border: none !important;
-    border-radius: 14px !important;
-    padding: 16px !important;
-    font-size: 17px !important;
-    letter-spacing: 1px !important;
-    transition: all 0.3s ease !important;
+    border-radius: 10px !important;
+    padding: 14px !important;
+    font-size: 15px !important;
+    letter-spacing: 0.3px !important;
+    transition: all 0.2s ease !important;
     margin-top: 4px !important;
-    height: 54px !important;
+    height: 48px !important;
     cursor: pointer !important;
-    box-shadow: 0 4px 20px rgba(255,255,255,0.04) !important;
     display: block !important;
     margin-left: auto !important;
     margin-right: auto !important;
 }
 div[data-testid="stButton"] > button:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 40px rgba(255,255,255,0.1) !important;
-    background: #f5f5f5 !important;
+    background: #e070c0 !important;
+    transform: none !important;
+    box-shadow: none !important;
 }
 div[data-testid="stButton"] > button:active {
-    transform: scale(0.97) !important;
+    transform: scale(0.98) !important;
 }
 
-/* BUAT FORM SUBMIT BUTTON TETAP SAMA LEBAR */
+/* FORM SUBMIT BUTTON */
 [data-testid="stForm"] div[data-testid="stButton"] {
     width: 100% !important;
-    max-width: 380px !important;
+    max-width: 340px !important;
     margin: 0 auto !important;
 }
 
@@ -199,36 +191,37 @@ div[data-testid="stButton"] > button:active {
     align-items: center !important;
 }
 
-/* ERROR MESSAGE */
+/* ERROR MESSAGE - CLEAN */
 .stAlert {
     text-align: center !important;
-    border-radius: 14px !important;
-    background: rgba(255, 138, 216, 0.08) !important;
-    border: 1px solid rgba(255, 138, 216, 0.15) !important;
+    border-radius: 10px !important;
+    background: rgba(255, 138, 216, 0.06) !important;
+    border: 1px solid rgba(255, 138, 216, 0.1) !important;
     color: #ff8ad8 !important;
-    max-width: 380px !important;
+    max-width: 340px !important;
     margin: 0 auto !important;
+    font-size: 14px !important;
 }
 
 /* CHAT MESSAGES */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
     background: rgba(255, 138, 216, 0.06);
-    border: 1px solid rgba(255, 138, 216, 0.12);
+    border: 1px solid rgba(255, 138, 216, 0.08);
     border-radius: 18px;
     padding: 10px 15px;
     margin: 8px 0;
 }
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
     border-radius: 18px;
     padding: 10px 15px;
     margin: 8px 0;
 }
 [data-testid="stChatInput"] {
     border-radius: 20px !important;
-    border: 1px solid rgba(255,138,216,0.15) !important;
-    background: rgba(255,255,255,0.03) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    background: rgba(255,255,255,0.02) !important;
 }
 
 /* ======================================== */
@@ -236,43 +229,38 @@ div[data-testid="stButton"] > button:active {
 /* ======================================== */
 @media (max-width: 768px) {
     h1 {
-        font-size: 36px !important;
-        margin-top: 35px !important;
+        font-size: 24px !important;
+        margin-top: 40px !important;
     }
     .caption {
-        font-size: 17px !important;
-        margin-bottom: 22px !important;
+        font-size: 13px !important;
+        margin-bottom: 28px !important;
     }
     [data-testid="stTextInput"] {
-        max-width: 320px !important;
+        max-width: 300px !important;
     }
     [data-testid="stTextInput"] > div {
-        max-width: 320px !important;
+        max-width: 300px !important;
     }
     [data-testid="stTextInput"] input {
-        height: 48px !important;
+        height: 44px !important;
         font-size: 14px !important;
         padding: 12px 14px !important;
-        border-radius: 12px !important;
-    }
-    [data-testid="stTextInput"] input::placeholder {
-        font-size: 14px !important;
     }
     div[data-testid="stButton"] > button {
-        max-width: 320px !important;
-        height: 48px !important;
-        font-size: 15px !important;
+        max-width: 300px !important;
+        height: 44px !important;
+        font-size: 14px !important;
         padding: 12px 14px !important;
-        border-radius: 12px !important;
     }
     [data-testid="stForm"] {
-        max-width: 320px !important;
+        max-width: 300px !important;
     }
     [data-testid="stForm"] div[data-testid="stButton"] {
-        max-width: 320px !important;
+        max-width: 300px !important;
     }
     .stAlert {
-        max-width: 320px !important;
+        max-width: 300px !important;
     }
 }
 </style>
@@ -317,7 +305,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE
+# 5. LOGIN PAGE - MIRIP CHATGPT
 # =====================
 if not st.session_state.logged_in:
     
