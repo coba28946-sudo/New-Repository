@@ -16,10 +16,12 @@ st.set_page_config(
 )
 
 # =====================
-# GOOGLE ANALYTICS
+# GOOGLE ANALYTICS & VERIFICATION
 # =====================
 
 st.markdown("""
+<meta name="google-site-verification" content="s2qrn3my_Y37DRVnCKnxISqZkx2CqYL88z5BrNLGtvM" />
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-PGLBV0H3KF"></script>
 <script>
