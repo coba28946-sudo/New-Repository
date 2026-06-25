@@ -84,7 +84,7 @@ st.markdown("""
     font-size: 13px;
 }
 
-/* Style untuk login page - RAPI */
+/* Style untuk login page */
 .login-container {
     max-width: 400px;
     margin: 0 auto;
@@ -94,7 +94,7 @@ st.markdown("""
 
 .login-title {
     color: #ff8ad8;
-    font-size: 48px;
+    font-size: 42px;
     font-weight: bold;
     margin-bottom: 5px;
 }
@@ -105,7 +105,7 @@ st.markdown("""
     margin-bottom: 25px;
 }
 
-/* Hilangkan icon pensil di text input */
+/* Hilangkan icon pensil dan label di text input */
 [data-testid="stTextInput"] svg {
     display: none !important;
 }
@@ -114,20 +114,36 @@ st.markdown("""
     display: none !important;
 }
 
-/* Rapiin tombol */
-[data-testid="stButton"] button {
-    background: linear-gradient(135deg, #ff8ad8, #ff6bcb) !important;
+/* Hilangkan border focus yang berlebihan */
+[data-testid="stTextInput"] input {
+    border-radius: 10px !important;
+    background: rgba(255,255,255,0.05) !important;
     color: white !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    padding: 12px !important;
+}
+
+[data-testid="stTextInput"] input:focus {
+    border-color: #ff8ad8 !important;
+    box-shadow: 0 0 10px rgba(255, 138, 216, 0.1) !important;
+}
+
+/* TOMBOL MASUK - SAMA KAYA DEFAULT STREAMLIT, TAPI BIKIN BAGUS */
+[data-testid="stButton"] button {
+    background: transparent !important;
+    color: #ff8ad8 !important;
     font-weight: bold !important;
-    border: none !important;
+    border: 2px solid #ff8ad8 !important;
     border-radius: 25px !important;
     padding: 10px !important;
     transition: all 0.3s ease !important;
 }
 
 [data-testid="stButton"] button:hover {
+    background: #ff8ad8 !important;
+    color: white !important;
     transform: scale(1.02) !important;
-    box-shadow: 0 0 20px rgba(255, 138, 216, 0.3) !important;
+    box-shadow: 0 0 25px rgba(255, 138, 216, 0.2) !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -148,10 +164,10 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # =====================
-# 6. LOGIN PAGE (RAPI)
+# 6. LOGIN PAGE
 # =====================
 if not st.session_state.logged_in:
-    # Tampilan login rapi
+    # Tampilan login
     st.markdown("""
     <div class="login-container">
         <div class="login-title">✦ Kei AI</div>
@@ -159,10 +175,9 @@ if not st.session_state.logged_in:
     </div>
     """, unsafe_allow_html=True)
     
-    # Form login di tengah
+    # Form login
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        # Kosongkan label biar ga muncul tulisan "Username"
         username = st.text_input("", placeholder="Username", key="username_input")
         password = st.text_input("", placeholder="Password", type="password", key="password_input")
         
