@@ -27,22 +27,17 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# 3. CSS - OPTIMASI HP & DESKTOP
+# 3. CSS - FINAL
 # =====================
 st.markdown("""
 <style>
-/* BACKGROUND */
 .stApp {
     background: linear-gradient(135deg, #050816, #081028, #050816);
 }
-
-/* SIDEBAR */
 [data-testid="stSidebar"] {
     background: #090F20;
     border-right: 1px solid rgba(255,255,255,0.08);
 }
-
-/* SIDEBAR COMPONENTS */
 .online-box {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.08);
@@ -71,10 +66,9 @@ st.markdown("""
 }
 
 /* ======================================== */
-/* LOGIN PAGE - OPTIMAL UNTUK HP & DESKTOP */
+/* LOGIN PAGE - FINAL & AMAN */
 /* ======================================== */
 
-/* HILANGKAN LABEL & ICON */
 [data-testid="stTextInput"] label { 
     display: none !important; 
 }
@@ -82,7 +76,6 @@ st.markdown("""
     display: none !important; 
 }
 
-/* BUAT INPUT SAMA PERSIS - LEBAR & TINGGI */
 [data-testid="stTextInput"] {
     width: 100% !important;
     max-width: 100% !important;
@@ -101,25 +94,24 @@ st.markdown("""
     background: rgba(255,255,255,0.07) !important;
     color: white !important;
     border: 1px solid rgba(255,255,255,0.2) !important;
-    padding: 12px 16px !important;
-    font-size: 15px !important;
+    padding: 14px 18px !important;
+    font-size: 16px !important;
     box-sizing: border-box !important;
     text-align: center !important;
-    height: 48px !important;
-    min-height: 48px !important;
-    max-height: 48px !important;
+    height: 50px !important;
+    min-height: 50px !important;
+    max-height: 50px !important;
 }
 [data-testid="stTextInput"] input:focus {
     border-color: #ff8ad8 !important;
     box-shadow: 0 0 20px rgba(255, 138, 216, 0.15) !important;
 }
 [data-testid="stTextInput"] input::placeholder {
-    color: rgba(255,255,255,0.35) !important;
+    color: rgba(255,255,255,0.4) !important;
     text-align: center !important;
-    font-size: 15px !important;
+    font-size: 16px !important;
 }
 
-/* TOMBOL MASUK - SAMA LEBAR & TINGGI DENGAN INPUT */
 div[data-testid="stButton"] > button {
     width: 100% !important;
     max-width: 100% !important;
@@ -129,23 +121,23 @@ div[data-testid="stButton"] > button {
     font-weight: 700 !important;
     border: none !important;
     border-radius: 12px !important;
-    padding: 12px 16px !important;
-    font-size: 16px !important;
+    padding: 14px 18px !important;
+    font-size: 17px !important;
     letter-spacing: 1px !important;
     transition: all 0.3s ease !important;
     margin-top: 8px !important;
     box-sizing: border-box !important;
-    height: 48px !important;
-    min-height: 48px !important;
-    max-height: 48px !important;
+    height: 50px !important;
+    min-height: 50px !important;
+    max-height: 50px !important;
+    box-shadow: 0 4px 15px rgba(255,255,255,0.08) !important;
 }
 div[data-testid="stButton"] > button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 24px rgba(255,255,255,0.15) !important;
-    background: #f0f0f0 !important;
+    box-shadow: 0 8px 30px rgba(255,255,255,0.2) !important;
+    background: #f5f5f5 !important;
 }
 
-/* COLUMN */
 [data-testid="column"] {
     display: flex !important;
     flex-direction: column !important;
@@ -153,13 +145,11 @@ div[data-testid="stButton"] > button:hover {
 }
 .stVerticalBlock { gap: 10px !important; }
 
-/* ERROR MESSAGE */
 .stAlert {
     text-align: center !important;
     border-radius: 12px !important;
 }
 
-/* CHAT MESSAGES */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
     background: rgba(255, 138, 216, 0.08);
     border: 1px solid rgba(255, 138, 216, 0.2);
@@ -184,14 +174,24 @@ div[data-testid="stButton"] > button:hover {
     height: 50px !important;
 }
 
-/* RESPONSIVE - HP */
+/* RESPONSIVE HP */
 @media (max-width: 768px) {
-    /* Judul lebih kecil di HP */
-    .login-title {
-        font-size: 38px !important;
-    }
-    .login-subtitle {
+    [data-testid="stTextInput"] input {
+        height: 48px !important;
+        min-height: 48px !important;
+        max-height: 48px !important;
         font-size: 15px !important;
+        padding: 12px 16px !important;
+    }
+    [data-testid="stTextInput"] input::placeholder {
+        font-size: 15px !important;
+    }
+    div[data-testid="stButton"] > button {
+        height: 48px !important;
+        min-height: 48px !important;
+        max-height: 48px !important;
+        font-size: 16px !important;
+        padding: 12px 16px !important;
     }
 }
 </style>
@@ -236,18 +236,18 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE - OPTIMAL HP & DESKTOP
+# 5. LOGIN PAGE - FINAL
 # =====================
 if not st.session_state.logged_in:
     
     col1, col2, col3 = st.columns([1, 2.2, 1])
     with col2:
-        # JUDUL - UKURAN OPTIMAL HP
+        # JUDUL - SPASI DITAMBAH
         st.markdown("""
-        <div style="text-align:center; padding-top:40px; margin-bottom:2px;">
+        <div style="text-align:center; padding-top:40px; margin-bottom:6px;">
             <span style="font-size:42px; font-weight:800; color:#ff8ad8; display:block; text-align:center; letter-spacing:-1px;">✦ Kei AI</span>
         </div>
-        <div style="text-align:center; margin-bottom:22px;">
+        <div style="text-align:center; margin-bottom:25px;">
             <span style="font-size:16px; color:#ffffff; opacity:0.85; display:block; text-align:center; letter-spacing:1.5px; word-spacing:3px;">Teman AI Pintar Kamu</span>
         </div>
         """, unsafe_allow_html=True)
