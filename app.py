@@ -8,21 +8,15 @@ import random
 from datetime import datetime
 
 # =====================
-# 1. KONFIGURASI HALAMAN
+# 1. CONFIG
 # =====================
 st.set_page_config(page_title="Kei AI", page_icon="🤖", layout="wide")
 
 # =====================
-# 2. VERIFIKASI GOOGLE SEARCH CONSOLE
+# 2. GOOGLE VERIFICATION & ANALYTICS
 # =====================
-st.markdown('''
-<meta name="google-site-verification" content="s2qr9m3w_y37dRvnCkmx1Sq2kx2CqYLB82sBNL6tVW" />
-''', unsafe_allow_html=True)
-
-# =====================
-# 3. GA4 TRACKING MANUAL
-# =====================
-st.markdown('''
+st.markdown("""
+<meta name="google-site-verification" content="s2qrn3my_Y37DRVnCKnxISqZkx2CqYL88z5BrNLGtvM" />
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-PGLBV0H3KF"></script>
 <script>
@@ -31,13 +25,14 @@ st.markdown('''
   gtag('js', new Date());
   gtag('config', 'G-PGLBV0H3KF');
 </script>
-''', unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # =====================
-# 4. CSS
+# 3. CSS
 # =====================
 st.markdown("""
 <style>
+
 .stApp {
     background: linear-gradient(135deg, #050816, #081028, #050816);
 }
@@ -45,14 +40,6 @@ st.markdown("""
 [data-testid="stSidebar"] {
     background: #090F20;
     border-right: 1px solid rgba(255,255,255,0.08);
-}
-
-.kei-title {
-    text-align: center;
-    color: #ff8ad8;
-    font-size: 48px;
-    font-weight: bold;
-    animation: fadeIn 1s ease;
 }
 
 .online-box {
@@ -85,116 +72,163 @@ st.markdown("""
 }
 
 /* ===================== */
-/* STYLE LOGIN PAGE - SIMETRIS */
+/* LOGIN MODERN          */
 /* ===================== */
-.login-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 30px 20px;
+
+.login-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px 20px;
+}
+
+.login-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,138,216,0.15);
+    border-radius: 24px;
+    padding: 48px 40px 32px;
+    width: 100%;
+    max-width: 420px;
     text-align: center;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 80px rgba(255,138,216,0.07);
+    animation: fadeUp 0.7s ease both;
 }
 
-.login-title {
-    color: #ff8ad8;
+.login-logo {
     font-size: 52px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    letter-spacing: 2px;
+    font-weight: 800;
+    color: #ff8ad8;
+    letter-spacing: -1px;
+    margin-bottom: 6px;
 }
 
-.login-subtitle {
-    color: #bdbdbd;
-    font-size: 20px;
-    margin-bottom: 30px;
-    letter-spacing: 1px;
+.login-tagline {
+    color: #7a7a9a;
+    font-size: 15px;
+    margin-bottom: 32px;
+    letter-spacing: 0.5px;
 }
 
-/* HILANGKAN SEMUA LABEL */
-[data-testid="stTextInput"] label {
-    display: none !important;
+.login-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin-bottom: 28px;
 }
 
-/* HILANGKAN ICON PENSIL */
-[data-testid="stTextInput"] svg {
-    display: none !important;
-}
+/* Input */
+[data-testid="stTextInput"] label { display: none !important; }
+[data-testid="stTextInput"] svg   { display: none !important; }
 
-/* STYLE INPUT FIELD - PUTIH & SIMETRIS */
 [data-testid="stTextInput"] input {
-    border-radius: 12px !important;
+    border-radius: 14px !important;
     background: rgba(255,255,255,0.05) !important;
     color: white !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
-    padding: 14px 20px !important;
-    font-size: 16px !important;
-    text-align: center !important;
-    width: 100% !important;
-    min-width: 280px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    padding: 16px 20px !important;
+    font-size: 15px !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
 }
 
 [data-testid="stTextInput"] input:focus {
     border-color: #ff8ad8 !important;
-    box-shadow: 0 0 20px rgba(255, 138, 216, 0.15) !important;
+    box-shadow: 0 0 0 3px rgba(255,138,216,0.12) !important;
     outline: none !important;
 }
 
 [data-testid="stTextInput"] input::placeholder {
-    color: #888 !important;
-    text-align: center !important;
+    color: #555575 !important;
 }
 
-/* BUAT INPUT FIELD SAMA LEBAR */
-[data-testid="stTextInput"] {
-    width: 100% !important;
-    max-width: 100% !important;
-}
-
-/* TOMBOL MASUK - PUTIH */
+/* Tombol login */
 [data-testid="stButton"] button {
-    background: white !important;
-    color: #050816 !important;
-    font-weight: bold !important;
+    background: linear-gradient(135deg, #ff8ad8, #e060b8) !important;
+    color: white !important;
+    font-weight: 700 !important;
     border: none !important;
-    border-radius: 25px !important;
-    padding: 14px !important;
-    font-size: 18px !important;
+    border-radius: 14px !important;
+    padding: 16px !important;
+    font-size: 16px !important;
+    letter-spacing: 0.3px !important;
     transition: all 0.3s ease !important;
     width: 100% !important;
-    min-width: 280px !important;
+    margin-top: 8px !important;
+    box-shadow: 0 4px 20px rgba(255,138,216,0.3) !important;
 }
 
 [data-testid="stButton"] button:hover {
-    transform: scale(1.02) !important;
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.2) !important;
-    background: #f0f0f0 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 30px rgba(255,138,216,0.45) !important;
 }
 
-/* BUAT COLUMN JADI RATA TENGAH & SAMA LEBAR */
 [data-testid="column"] {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
 }
 
-/* HILANGKAN BORDER BOTTOM PADA CONTAINER */
-.stTextInput > div {
-    border-bottom: none !important;
-}
+.stVerticalBlock { gap: 12px !important; }
 
-/* BUAT GAP ANTAR INPUT RAPI */
-.stVerticalBlock {
-    gap: 12px !important;
-}
-
-/* ERROR MESSAGE TETAP DI TENGAH */
 .stAlert {
     text-align: center !important;
+    border-radius: 12px !important;
 }
+
+/* Chat messages */
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
+    background: rgba(255, 138, 216, 0.08);
+    border: 1px solid rgba(255, 138, 216, 0.2);
+    border-radius: 18px;
+    padding: 10px 15px;
+    margin: 8px 0;
+    animation: slideRight 0.3s ease;
+}
+
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 10px 15px;
+    margin: 8px 0;
+    animation: slideLeft 0.3s ease;
+}
+
+[data-testid="stChatInput"] {
+    border-radius: 20px !important;
+    border: 1px solid rgba(255,138,216,0.3) !important;
+    background: rgba(255,255,255,0.04) !important;
+}
+
+.stButton > button {
+    border-radius: 15px !important;
+    height: 50px !important;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
 </style>
 """, unsafe_allow_html=True)
 
 # =====================
-# 5. SESSION STATE
+# 4. SESSION STATE
 # =====================
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -205,50 +239,78 @@ if "avatar" not in st.session_state:
 if "mode" not in st.session_state:
     st.session_state.mode = "chat"
 
+CHAT_FILE = "chat_history.json"
+DIARY_FILE = "dear_diary.json"
+
+def load_chat():
+    if os.path.exists(CHAT_FILE):
+        with open(CHAT_FILE, "r") as f:
+            return json.load(f)
+    return []
+
+def save_chat(messages):
+    with open(CHAT_FILE, "w") as f:
+        json.dump(messages, f)
+
+def load_diary():
+    if os.path.exists(DIARY_FILE):
+        with open(DIARY_FILE, "r") as f:
+            return json.load(f)
+    return []
+
+def save_diary(entries):
+    with open(DIARY_FILE, "w") as f:
+        json.dump(entries, f, ensure_ascii=False)
+
 if "messages" not in st.session_state:
-    st.session_state.messages = []
+    st.session_state.messages = load_chat()
 
 # =====================
-# 6. LOGIN PAGE - SIMETRIS
+# 5. LOGIN PAGE
 # =====================
 if not st.session_state.logged_in:
-    # Tampilan login
+
     st.markdown("""
-    <div class="login-container">
-        <div class="login-title">✦ Kei AI</div>
-        <div class="login-subtitle">Teman AI Pintar Kamu</div>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-logo">✦ Kei AI</div>
+            <div class="login-tagline">Teman AI Pintar Kamu</div>
+            <div class="login-divider"></div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
-    
-    # Form login - pakai 1 kolom tengah
+
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        # INPUT USERNAME - tanpa label
-        username = st.text_input("", placeholder="Username", key="username_input", label_visibility="collapsed")
-        
-        # INPUT PASSWORD - tanpa label
-        password = st.text_input("", placeholder="Password", type="password", key="password_input", label_visibility="collapsed")
-        
-        # TOMBOL MASUK
-        if st.button("Masuk", use_container_width=True, key="login_button"):
+        username = st.text_input(
+            "", placeholder="👤  Username",
+            key="username_input",
+            label_visibility="collapsed"
+        )
+        password = st.text_input(
+            "", placeholder="🔒  Password",
+            type="password",
+            key="password_input",
+            label_visibility="collapsed"
+        )
+
+        if st.button("Masuk →", use_container_width=True, key="login_button"):
             if username == "ryuu" and password == "12345":
                 st.session_state.logged_in = True
-                st.session_state.messages = []
+                st.session_state.messages = load_chat()
                 st.rerun()
             else:
-                st.error("Username atau password salah")
-    
+                st.error("❌ Username atau password salah")
+
     st.stop()
 
 # =====================
-# 7. MAIN APP
+# 6. GEMINI SETUP
 # =====================
-
-# GEMINI SETUP
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if not API_KEY:
-    st.error("API Key Gemini tidak ditemukan! Pastikan kamu sudah memasang 'GEMINI_API_KEY' di Secrets.")
+    st.error("❌ API Key Gemini tidak ditemukan! Pastikan kamu sudah memasang 'GEMINI_API_KEY' di Secrets.")
     st.stop()
 
 client = genai.Client(api_key=API_KEY)
@@ -268,11 +330,13 @@ def generate_content_with_retry(full_prompt):
                 else:
                     return "Waduh Kak, kuota Kei lagi penuh banget nih... (｡>﹏<｡) Coba tunggu beberapa saat lagi ya!"
             else:
-                return f"Terjadi kesalahan API: {e.message}"
+                return f"⚠️ Terjadi kesalahan API: {e.message}"
         except Exception as e:
-            return f"Terjadi kesalahan sistem: {str(e)}"
+            return f"⚠️ Terjadi kesalahan sistem: {str(e)}"
 
-# PERSONA KEI
+# =====================
+# 7. PERSONA KEI
+# =====================
 KEI_PERSONA = """
 Kamu adalah Kei, AI companion yang imut, perhatian, dan sedikit tsundere.
 Karaktermu:
@@ -300,7 +364,9 @@ Responmu harus:
 - Akhiri selalu dengan kalimat penyemangat yang tulus
 """
 
-# STIKER
+# =====================
+# 8. STIKER
+# =====================
 STICKERS = {
     "happy": ["(｡♥‿♥｡)", "✨(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "٩(◕‿◕｡)۶", "(≧◡≦)", "🎉✨💕"],
     "love":  ["(♥ω♥*)", "💕(｡･ω･｡)💕", "ʕ•ᴥ•ʔ♥", "(˘³˘)♥", "💖💖💖"],
@@ -312,49 +378,16 @@ STICKERS = {
 def get_sticker(mood):
     return random.choice(STICKERS.get(mood, STICKERS["happy"]))
 
-# DIARY & CHAT FILE
-DIARY_FILE = "dear_diary.json"
-CHAT_FILE = "chat_history.json"
-
-def load_diary():
-    if os.path.exists(DIARY_FILE):
-        with open(DIARY_FILE, "r") as f:
-            return json.load(f)
-    return []
-
-def save_diary(entries):
-    with open(DIARY_FILE, "w") as f:
-        json.dump(entries, f, ensure_ascii=False)
-
-def load_chat():
-    if os.path.exists(CHAT_FILE):
-        with open(CHAT_FILE, "r") as f:
-            return json.load(f)
-    return []
-
-def save_chat(messages):
-    with open(CHAT_FILE, "w") as f:
-        json.dump(messages, f)
-
-# Load chat history
-if "messages" not in st.session_state or not st.session_state.messages:
-    st.session_state.messages = load_chat()
-
-# =====================
-# 8. JUDUL MAIN APP
-# =====================
-st.markdown('<div class="kei-title">✦ Kei AI</div>', unsafe_allow_html=True)
-st.write("Halo Kak! Kei siap menemani hari Kakak. 💕")
-
 # =====================
 # 9. SIDEBAR
 # =====================
 with st.sidebar:
+
     avatar_exists = os.path.exists("kei_avatar.png")
-    
+
     if avatar_exists:
         st.image("kei_avatar.png", width=220)
-        with st.expander("Ganti / Hapus Foto"):
+        with st.expander("✏️ Ganti / Hapus Foto"):
             uploaded_avatar = st.file_uploader(
                 "Upload foto baru",
                 type=["png", "jpg", "jpeg"],
@@ -366,13 +399,13 @@ with st.sidebar:
                 st.session_state.avatar = uploaded_avatar
                 st.success("Foto berhasil diganti!")
                 st.rerun()
-            if st.button("Hapus Foto"):
+            if st.button("🗑 Hapus Foto"):
                 os.remove("kei_avatar.png")
                 st.session_state.avatar = None
                 st.rerun()
     else:
         uploaded_avatar = st.file_uploader(
-            "Upload Foto Kei",
+            "📷 Upload Foto Kei",
             type=["png", "jpg", "jpeg"]
         )
         if uploaded_avatar:
@@ -380,29 +413,29 @@ with st.sidebar:
                 f.write(uploaded_avatar.getbuffer())
             st.session_state.avatar = uploaded_avatar
             st.rerun()
-    
+
     st.markdown("""
     <div class="online-box">
         🟢 Online<br>
-        KEI AI
+        ✦ KEI AI
     </div>
     """, unsafe_allow_html=True)
-    
-    st.markdown("**Mode:**")
+
+    st.markdown("**✦ Mode:**")
     col_a, col_b = st.columns(2)
     with col_a:
-        if st.button("Chat", key="mode_chat"):
+        if st.button("💬 Chat", key="mode_chat"):
             st.session_state.mode = "chat"
             st.rerun()
     with col_b:
-        if st.button("Diary", key="mode_diary"):
+        if st.button("💌 Diary", key="mode_diary"):
             st.session_state.mode = "diary"
             st.rerun()
-    
-    st.markdown(f"*Mode aktif: {'Chat' if st.session_state.mode == 'chat' else 'Dear Diary'}*")
+
+    st.markdown(f"*Mode aktif: {'💬 Chat' if st.session_state.mode == 'chat' else '💌 Dear Diary'}*")
     st.markdown("---")
-    
-    with st.expander("Kirim Stiker"):
+
+    with st.expander("😊 Kirim Stiker"):
         cols = st.columns(5)
         moods = ["happy", "love", "sad", "cool", "shy"]
         emojis = ["😄", "💕", "😢", "😎", "🌸"]
@@ -414,50 +447,63 @@ with st.sidebar:
                     st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
                     save_chat(st.session_state.messages)
                     st.rerun()
-    
-    with st.expander("Putar Musik"):
+
+    with st.expander("🎵 Putar Musik"):
         music_query = st.text_input("Nama lagu / artis", key="music_input")
-        if st.button("Cari", key="music_search"):
+        if st.button("🔍 Cari", key="music_search"):
             if music_query:
                 search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
                 st.markdown(f"""
                 <div class="music-box">
                     🎵 <b>{music_query}</b><br>
-                    <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube</a>
+                    <a href="{search_url}" target="_blank" style="color:#ff8ad8;">▶ Buka di YouTube</a>
                 </div>
                 """, unsafe_allow_html=True)
-    
-    if st.button("New Chat"):
+
+    if st.button("💬 New Chat"):
         st.session_state.messages = []
         save_chat([])
         st.rerun()
-    
-    if st.button("Clear Chat"):
+
+    if st.button("🗑 Clear Chat"):
         st.session_state.messages = []
         save_chat([])
         st.rerun()
-    
+
     st.markdown("---")
-    
-    if st.button("Logout"):
+
+    if st.button("🚪 Logout"):
         st.session_state.logged_in = False
         st.session_state.messages = []
         st.rerun()
 
 # =====================
-# 10. DEAR DIARY MODE
+# 10. HEADER
 # =====================
 if st.session_state.mode == "diary":
     st.markdown("""
-    <div style="text-align:center; margin-bottom:20px;">
-        <p style="color:#bdbdbd; font-size:18px;">💌 Ceritain semua ke Kei ya~ 🥺</p>
+    <div style="text-align:center;">
+        <h1 style="color:#ff8ad8; margin-bottom:0px;">💌 Dear Diary</h1>
+        <p style="color:#bdbdbd; font-size:18px; margin-top:0px;">Ceritain semua ke Kei ya~ 🥺</p>
     </div>
     """, unsafe_allow_html=True)
-    
+else:
+    st.markdown("""
+    <div style="text-align:center;">
+        <h1 style="color:#ff8ad8; margin-bottom:0px;">✦ Kei AI</h1>
+        <p style="color:#bdbdbd; font-size:18px; margin-top:0px;">Your AI Companion</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# =====================
+# 11. DEAR DIARY MODE
+# =====================
+if st.session_state.mode == "diary":
+
     diary_entries = load_diary()
-    
+
     if diary_entries:
-        with st.expander(f"Lihat {len(diary_entries)} entri diary lama"):
+        with st.expander(f"📖 Lihat {len(diary_entries)} entri diary lama"):
             for entry in reversed(diary_entries[-10:]):
                 st.markdown(f"""
                 <div class="diary-box">
@@ -466,31 +512,31 @@ if st.session_state.mode == "diary":
                     <b>Kei:</b> {entry['kei']}
                 </div>
                 """, unsafe_allow_html=True)
-    
+
     st.markdown("---")
-    
+
     diary_input = st.text_area(
         "💌 Cerita ke Kei...",
         placeholder="Hari ini aku ngerasa... / Kei, aku mau curhat nih...",
         height=150
     )
-    
+
     col1, col2 = st.columns([3, 1])
     with col1:
-        send_diary = st.button("Kirim ke Kei", use_container_width=True)
+        send_diary = st.button("💌 Kirim ke Kei", use_container_width=True)
     with col2:
-        clear_diary = st.button("Hapus Diary", use_container_width=True)
-    
+        clear_diary = st.button("🗑 Hapus Diary", use_container_width=True)
+
     if clear_diary:
         save_diary([])
         st.success("Diary berhasil dihapus!")
         st.rerun()
-    
+
     if send_diary and diary_input:
         with st.spinner("Kei lagi baca curhatanmu... 🥺"):
             full_prompt = f"{KEI_DIARY_PERSONA}\n\nUser curhat: {diary_input}\n\nKei menjawab dengan hangat:"
             kei_reply = generate_content_with_retry(full_prompt)
-        
+
         entry = {
             "date": datetime.now().strftime("%d %B %Y, %H:%M"),
             "user": diary_input,
@@ -498,7 +544,7 @@ if st.session_state.mode == "diary":
         }
         diary_entries.append(entry)
         save_diary(diary_entries)
-        
+
         st.markdown(f"""
         <div class="diary-box">
             <b style="color:#ff8ad8;">Kamu tulis:</b><br>
@@ -507,43 +553,44 @@ if st.session_state.mode == "diary":
             {kei_reply}
         </div>
         """, unsafe_allow_html=True)
-    
+
     st.stop()
 
 # =====================
-# 11. CHAT DISPLAY
+# 12. CHAT DISPLAY
 # =====================
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
 # =====================
-# 12. CHAT INPUT
+# 13. CHAT INPUT
 # =====================
 prompt = st.chat_input("Ketik pesan ke Kei...")
 
 if prompt:
+
     st.session_state.messages.append({"role": "user", "content": prompt})
-    
+
     browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
     needs_search = any(kw in prompt.lower() for kw in browsing_keywords)
-    
+
     if needs_search:
         search_url = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
         search_note = f"\n\n🌐 *Kei juga nyariin buat Kak di sini ya:* [Klik untuk lihat hasil pencarian]({search_url})"
     else:
         search_note = ""
-    
+
     history_text = ""
     for m in st.session_state.messages[-10:]:
         role = "User" if m["role"] == "user" else "Kei"
         history_text += f"{role}: {m['content']}\n"
-    
+
     full_prompt = f"{KEI_PERSONA}\n\nRiwayat percakapan:\n{history_text}\nKei:"
-    
+
     with st.spinner("Kei sedang mengetik... ✨"):
         reply = generate_content_with_retry(full_prompt) + search_note
-    
+
     st.session_state.messages.append({"role": "assistant", "content": reply})
     save_chat(st.session_state.messages)
     st.rerun()
