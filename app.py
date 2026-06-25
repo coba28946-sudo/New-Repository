@@ -27,23 +27,22 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# 3. CSS - MODERN TAPI SIMPEL
+# 3. CSS - TANPA HTML, PAKAI KOMPONEN STREAMLIT
 # =====================
 st.markdown("""
 <style>
-/* BACKGROUND */
+/* ===== BACKGROUND ===== */
 .stApp {
     background: linear-gradient(135deg, #0a0a1a, #150820, #0a0a1a);
     min-height: 100vh;
 }
 
-/* SIDEBAR */
+/* ===== SIDEBAR ===== */
 [data-testid="stSidebar"] {
     background: rgba(9, 15, 32, 0.95);
     border-right: 1px solid rgba(255,255,255,0.05);
 }
 
-/* SIDEBAR COMPONENTS */
 .online-box {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.06);
@@ -74,27 +73,27 @@ st.markdown("""
 }
 
 /* ======================================== */
-/* LOGIN PAGE - MODERN */
+/* LOGIN PAGE - MODERN, CENTER, SIMETRIS */
 /* ======================================== */
 
-/* JUDUL - PAKAI st.title() */
+/* JUDUL - PAKAI st.title() - PINK, CENTER */
 h1 {
     text-align: center !important;
     color: #ff8ad8 !important;
     font-size: 48px !important;
     font-weight: 800 !important;
     margin-top: 50px !important;
-    margin-bottom: 4px !important;
+    margin-bottom: 2px !important;
     letter-spacing: -1px !important;
-    text-shadow: 0 0 30px rgba(255, 138, 216, 0.1) !important;
+    text-shadow: 0 0 30px rgba(255, 138, 216, 0.08) !important;
 }
 
-/* SUBTITLE - PAKAI st.caption() */
+/* SUBTITLE - PAKAI st.caption() - PUTIH, CENTER */
 .caption {
     text-align: center !important;
-    color: rgba(255,255,255,0.75) !important;
+    color: rgba(255,255,255,0.7) !important;
     font-size: 17px !important;
-    margin-bottom: 30px !important;
+    margin-bottom: 28px !important;
     letter-spacing: 1px !important;
 }
 
@@ -106,7 +105,7 @@ h1 {
     display: none !important; 
 }
 
-/* INPUT FIELD */
+/* INPUT FIELD - SAMA LEBAR, CENTER */
 [data-testid="stTextInput"] {
     width: 100% !important;
     max-width: 100% !important;
@@ -139,7 +138,7 @@ h1 {
     font-size: 15px !important;
 }
 
-/* TOMBOL MASUK - PUTIH */
+/* TOMBOL MASUK - PUTIH, SAMA LEBAR DENGAN INPUT */
 div[data-testid="stButton"] > button {
     width: 100% !important;
     background: white !important;
@@ -151,7 +150,7 @@ div[data-testid="stButton"] > button {
     font-size: 17px !important;
     letter-spacing: 1px !important;
     transition: all 0.3s ease !important;
-    margin-top: 6px !important;
+    margin-top: 4px !important;
     height: 54px !important;
     cursor: pointer !important;
     box-shadow: 0 4px 20px rgba(255,255,255,0.04) !important;
@@ -163,6 +162,13 @@ div[data-testid="stButton"] > button:hover {
 }
 div[data-testid="stButton"] > button:active {
     transform: scale(0.97) !important;
+}
+
+/* FORM - TANPA GARIS */
+[data-testid="stForm"] {
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
 }
 
 /* COLUMN */
@@ -217,10 +223,11 @@ div[data-testid="stButton"] > button:active {
     h1 {
         font-size: 36px !important;
         margin-top: 35px !important;
+        margin-bottom: 0px !important;
     }
     .caption {
         font-size: 15px !important;
-        margin-bottom: 25px !important;
+        margin-bottom: 22px !important;
     }
     [data-testid="stTextInput"] input {
         height: 48px !important;
@@ -280,31 +287,36 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE - SIMPEL & MODERN
+# 5. LOGIN PAGE - TANPA HTML, PAKAI KOMPONEN STREAMLIT
 # =====================
 if not st.session_state.logged_in:
     
-    # PAKAI KOMPONEN STREAMLIT
+    # ===== JUDUL =====
     st.title("✦ Kei AI")
+    
+    # ===== SUBTITLE =====
     st.caption("Teman AI Pintar Kamu")
     
-    # SPASI
-    st.markdown("---")
-    
-    # FORM
+    # ===== FORM LOGIN =====
     with st.form(key="login_form"):
+        # USERNAME
         username = st.text_input(
-            "Username",
-            placeholder="Masukkan username",
-            key="username_input"
-        )
-        password = st.text_input(
-            "Password",
-            placeholder="Masukkan password",
-            type="password",
-            key="password_input"
+            "",
+            placeholder="Username",
+            key="username_input",
+            label_visibility="collapsed"
         )
         
+        # PASSWORD
+        password = st.text_input(
+            "",
+            placeholder="Password",
+            type="password",
+            key="password_input",
+            label_visibility="collapsed"
+        )
+        
+        # TOMBOL MASUK
         submitted = st.form_submit_button("Masuk", use_container_width=True)
         
         if submitted:
