@@ -66,8 +66,19 @@ st.markdown("""
 }
 [data-testid="stTextInput"] label { display: none !important; }
 [data-testid="stTextInput"] svg   { display: none !important; }
+
+/* BUAT INPUT SAMA PANJANG */
+[data-testid="stTextInput"] {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+[data-testid="stTextInput"] > div {
+    width: 100% !important;
+    max-width: 100% !important;
+}
 [data-testid="stTextInput"] input {
     width: 100% !important;
+    min-width: 100% !important;
     border-radius: 12px !important;
     background: rgba(255,255,255,0.07) !important;
     color: white !important;
@@ -179,7 +190,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE - SIMETRIS
+# 5. LOGIN PAGE - SAMA PANJANG
 # =====================
 if not st.session_state.logged_in:
     
@@ -194,9 +205,24 @@ if not st.session_state.logged_in:
         </div>
         """, unsafe_allow_html=True)
         
-        username = st.text_input("", placeholder="Username", key="username_input", label_visibility="collapsed")
-        password = st.text_input("", placeholder="Password", type="password", key="password_input", label_visibility="collapsed")
+        # Username
+        username = st.text_input(
+            "", 
+            placeholder="Username", 
+            key="username_input", 
+            label_visibility="collapsed"
+        )
         
+        # Password
+        password = st.text_input(
+            "", 
+            placeholder="Password", 
+            type="password", 
+            key="password_input", 
+            label_visibility="collapsed"
+        )
+        
+        # Tombol Masuk
         if st.button("Masuk", use_container_width=True, key="login_button"):
             if username == "ryuu" and password == "12345":
                 st.session_state.logged_in = True
