@@ -1,12 +1,9 @@
-
 import streamlit as st
 from google import genai
-from google.genai.errors import APIError # Untuk mendeteksi error limit/API
+from google.genai.errors import APIError
 import os
 import json
 import time
-
-
 
 # =====================
 # CONFIG
@@ -17,6 +14,21 @@ st.set_page_config(
     page_icon="🤖",
     layout="wide"
 )
+
+# =====================
+# GOOGLE ANALYTICS
+# =====================
+
+st.markdown("""
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PGLBV0H3KF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PGLBV0H3KF');
+</script>
+""", unsafe_allow_html=True)
 
 # =====================
 # CSS
@@ -125,22 +137,19 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# GEMINI (SECURED)
+# GEMINI
 # =====================
 
-# PERBAIKAN UTAMA: API Key ditarik dari Streamlit Secrets, bukan ditulis langsung di kode!
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if not API_KEY:
-    st.error("❌ API Key Gemini tidak ditemukan! Pastikan kamu sudah memasang 'GEMINI_API_KEY' di Advanced Settings -> Secrets milik Streamlit Cloud.")
+    st.error("❌ API Key Gemini tidak ditemukan! Pastikan kamu sudah memasang 'GEMINI_API_KEY' di Secrets.")
     st.stop()
 
 client = genai.Client(api_key=API_KEY)
 
-# MODEL: Menggunakan gemini-1.5-flash demi batas kuota gratisan per menit yang lebih luas
 MODEL_NAME = "gemini-2.5-flash"
 
-# Fungsi pembantu untuk memanggil API secara aman dari error limit 429
 def generate_content_with_retry(full_prompt):
     max_retries = 3
     for attempt in range(max_retries):
@@ -148,13 +157,12 @@ def generate_content_with_retry(full_prompt):
             response = client.models.generate_content(model=MODEL_NAME, contents=full_prompt)
             return response.text
         except APIError as e:
-            # Jika error 429 (Resource Exhausted / Limit)
             if e.code == 429:
                 if attempt < max_retries - 1:
-                    time.sleep(5) # Otomatis nunggu 5 detik lalu coba lagi
+                    time.sleep(5)
                     continue
                 else:
-                    return "Waduh Kak, kuota pencarian Kei lagi penuh banget nih... (｡>﹏<｡) Coba tunggu beberapa saat lagi ya!"
+                    return "Waduh Kak, kuota Kei lagi penuh banget nih... (｡>﹏<｡) Coba tunggu beberapa saat lagi ya!"
             else:
                 return f"⚠️ Terjadi kesalahan API: {e.message}"
         except Exception as e:
@@ -184,7 +192,7 @@ Sekarang kamu dalam mode DEAR DIARY — user sedang curhat ke kamu.
 Responmu harus:
 - Sangat hangat, empatik, dan penuh kasih sayang
 - Dengarkan dengan sepenuh hati, jangan menghakimi
-- Berikan pelukan virtual dan kata-kata penyemagat
+- Berikan pelukan virtual dan kata-kata penyemangat
 - Kalau user sedih, ikut rasain kesedihan mereka lalu perlahan hibur
 - Pakai bahasa yang lembut dan personal
 - Boleh pakai emoji hati dan ekspresi hangat 💕🥺🫂
@@ -197,10 +205,10 @@ Responmu harus:
 
 STICKERS = {
     "happy": ["(｡♥‿♥｡)", "✨(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "٩(◕‿◕｡)۶", "(≧◡≦)", "🎉✨💕"],
-    "love":   ["(♥ω♥*)", "💕(｡･ω･｡)💕", "ʕ•ᴥ•ʔ♥", "(˘³˘)♥", "💖💖💖"],
-    "sad":    ["(´；ω；`)", "(T_T)", "｡ﾟ(ﾟ´ω`ﾟ)ﾟ｡", "(っ˘̩╭╮˘̩)っ", "🥺💧"],
-    "cool":   ["(•̀ᴗ•́)u", "✌️😎", "(¬‿¬)", "( ͡° ͜ʖ ͡°)", "🔥💪"],
-    "shy":    ["(///▽///)", "(/ω＼)", "(〃＞＿＜;〃)", "///(^v^)///", "🌸💗"],
+    "love":  ["(♥ω♥*)", "💕(｡･ω･｡)💕", "ʕ•ᴥ•ʔ♥", "(˘³˘)♥", "💖💖💖"],
+    "sad":   ["(´；ω；`)", "(T_T)", "｡ﾟ(ﾟ´ω`ﾟ)ﾟ｡", "(っ˘̩╭╮˘̩)っ", "🥺💧"],
+    "cool":  ["(•̀ᴗ•́)و", "✌️😎", "(¬‿¬)", "( ͡° ͜ʖ ͡°)", "🔥💪"],
+    "shy":   ["(///▽///)", "(/ω＼)", "(〃＞＿＜;〃)", "///(^v^)///", "🌸💗"],
 }
 
 def get_sticker(mood):
@@ -434,7 +442,6 @@ if st.session_state.mode == "diary":
     if send_diary and diary_input:
         with st.spinner("Kei lagi baca curhatanmu... 🥺"):
             full_prompt = f"{KEI_DIARY_PERSONA}\n\nUser curhat: {diary_input}\n\nKei menjawab dengan hangat:"
-            # Menggunakan fungsi pembantu yang sudah aman dari limit/retry
             kei_reply = generate_content_with_retry(full_prompt)
 
         from datetime import datetime
@@ -491,8 +498,7 @@ if prompt:
 
     full_prompt = f"{KEI_PERSONA}\n\nRiwayat percakapan:\n{history_text}\nKei:"
 
-    with st.spinner("Kei sedang mengetik..."):
-        # Menggunakan fungsi pembantu yang sudah aman dari limit/retry
+    with st.spinner("Kei sedang mengetik... ✨"):
         reply = generate_content_with_retry(full_prompt) + search_note
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
