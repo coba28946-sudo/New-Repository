@@ -27,17 +27,22 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# 3. CSS - FINAL OPTIMAL
+# 3. CSS - TANPA HTML, PAKAI KOMPONEN STREAMLIT
 # =====================
 st.markdown("""
 <style>
+/* BACKGROUND */
 .stApp {
     background: linear-gradient(135deg, #050816, #081028, #050816);
 }
+
+/* SIDEBAR */
 [data-testid="stSidebar"] {
     background: #090F20;
     border-right: 1px solid rgba(255,255,255,0.08);
 }
+
+/* SIDEBAR COMPONENTS */
 .online-box {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.08);
@@ -66,9 +71,30 @@ st.markdown("""
 }
 
 /* ======================================== */
-/* LOGIN PAGE - OPTIMAL */
+/* LOGIN PAGE - PAKAI KOMPONEN STREAMLIT */
 /* ======================================== */
 
+/* BUAT JUDUL PAKAI st.title() - TAPI KITA STYLE */
+h1 {
+    text-align: center !important;
+    color: #ff8ad8 !important;
+    font-size: 48px !important;
+    font-weight: 800 !important;
+    margin-top: 60px !important;
+    margin-bottom: 5px !important;
+    letter-spacing: -1px !important;
+}
+
+/* SUBTITLE PAKAI st.caption() - TAPI KITA STYLE */
+.caption {
+    text-align: center !important;
+    color: rgba(255,255,255,0.85) !important;
+    font-size: 18px !important;
+    margin-bottom: 30px !important;
+    letter-spacing: 1.5px !important;
+}
+
+/* HILANGKAN LABEL & ICON */
 [data-testid="stTextInput"] label { 
     display: none !important; 
 }
@@ -76,6 +102,7 @@ st.markdown("""
     display: none !important; 
 }
 
+/* BUAT INPUT SAMA PERSIS */
 [data-testid="stTextInput"] {
     width: 100% !important;
     max-width: 100% !important;
@@ -115,6 +142,7 @@ st.markdown("""
     line-height: 1.5 !important;
 }
 
+/* TOMBOL MASUK */
 div[data-testid="stButton"] > button {
     width: 100% !important;
     max-width: 100% !important;
@@ -146,6 +174,7 @@ div[data-testid="stButton"] > button:active {
     transform: scale(0.98) !important;
 }
 
+/* COLUMN */
 [data-testid="column"] {
     display: flex !important;
     flex-direction: column !important;
@@ -159,6 +188,7 @@ div[data-testid="stButton"] > button:active {
     animation: fadeIn 0.5s ease !important;
 }
 
+/* CHAT MESSAGES */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
     background: rgba(255, 138, 216, 0.08);
     border: 1px solid rgba(255, 138, 216, 0.2);
@@ -188,8 +218,16 @@ div[data-testid="stButton"] > button:active {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* RESPONSIVE HP - OPTIMAL */
+/* RESPONSIVE HP */
 @media (max-width: 768px) {
+    h1 {
+        font-size: 38px !important;
+        margin-top: 40px !important;
+    }
+    .caption {
+        font-size: 16px !important;
+        margin-bottom: 25px !important;
+    }
     [data-testid="stTextInput"] input {
         height: 48px !important;
         min-height: 48px !important;
@@ -250,41 +288,40 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE - FINAL OPTIMAL
+# 5. LOGIN PAGE - PAKAI KOMPONEN STREAMLIT
 # =====================
 if not st.session_state.logged_in:
     
-    col1, col2, col3 = st.columns([1, 2.2, 1])
-    with col2:
-        # JUDUL - OPTIMAL
-        st.markdown("""
-        <div style="text-align:center; padding-top:40px; margin-bottom:6px;">
-            <span style="font-size:42px; font-weight:800; color:#ff8ad8; display:block; text-align:center; letter-spacing:-1px;">✦ Kei AI</span>
-        </div>
-        <div style="text-align:center; margin-bottom:25px;">
-            <span style="font-size:16px; color:#ffffff; opacity:0.85; display:block; text-align:center; letter-spacing:1.5px; word-spacing:3px;">Teman AI Pintar Kamu</span>
-        </div>
-        """, unsafe_allow_html=True)
-        
+    # PAKAI st.title() UNTUK JUDUL
+    st.title("✦ Kei AI")
+    
+    # PAKAI st.caption() UNTUK SUBTITLE
+    st.caption("Teman AI Pintar Kamu")
+    
+    # SPASI
+    st.markdown("---")
+    
+    # FORM LOGIN - PAKAI KOMPONEN STREAMLIT
+    with st.form(key="login_form"):
         # USERNAME
         username = st.text_input(
-            "", 
-            placeholder="Username", 
-            key="username_input", 
-            label_visibility="collapsed"
+            "Username", 
+            placeholder="Masukkan username",
+            key="username_input"
         )
         
         # PASSWORD
         password = st.text_input(
-            "", 
-            placeholder="Password", 
+            "Password", 
+            placeholder="Masukkan password",
             type="password", 
-            key="password_input", 
-            label_visibility="collapsed"
+            key="password_input"
         )
         
         # TOMBOL MASUK
-        if st.button("Masuk", use_container_width=True, key="login_button"):
+        submitted = st.form_submit_button("Masuk", use_container_width=True)
+        
+        if submitted:
             if username == "ryuu" and password == "12345":
                 st.session_state.logged_in = True
                 st.session_state.messages = load_chat()
