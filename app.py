@@ -27,11 +27,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# 3. CSS - MIRIP CHATGPT
+# 3. CSS
 # =====================
 st.markdown("""
 <style>
-/* ===== BACKGROUND SOLID DARK ===== */
+/* ===== BACKGROUND ===== */
 .stApp {
     background: #0a0a0a;
     min-height: 100vh;
@@ -73,37 +73,46 @@ st.markdown("""
 }
 
 /* ======================================== */
-/* LOGIN PAGE - MIRIP CHATGPT */
+/* LOGIN PAGE - PRESISI */
 /* ======================================== */
 
-/* JUDUL - KECIL, DI TENGAH */
+/* BUAT JUDUL & SUBTITLE SAMA LEBAR */
+.login-header {
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto 0 auto;
+}
+
 h1 {
     text-align: center !important;
     color: #ff8ad8 !important;
-    font-size: 28px !important;
-    font-weight: 600 !important;
-    margin-top: 60px !important;
+    font-size: 44px !important;
+    font-weight: 800 !important;
+    margin-top: 50px !important;
     margin-bottom: 2px !important;
-    letter-spacing: -0.5px !important;
+    letter-spacing: -1px !important;
+    display: block !important;
+    width: 100% !important;
 }
 
-/* SUBTITLE - KECIL, PUTIH SOFT */
 .caption {
     text-align: center !important;
-    color: rgba(255,255,255,0.4) !important;
-    font-size: 14px !important;
+    color: rgba(255,255,255,0.8) !important;
+    font-size: 20px !important;
     font-weight: 400 !important;
-    margin-bottom: 32px !important;
-    letter-spacing: 0.5px !important;
+    margin-bottom: 30px !important;
+    letter-spacing: 1px !important;
+    display: block !important;
+    width: 100% !important;
 }
 
-/* FORM - TANPA GARIS, LEBAR TERBATAS */
+/* FORM */
 [data-testid="stForm"] {
     border: none !important;
     padding: 0 !important;
     background: transparent !important;
     width: 100% !important;
-    max-width: 340px !important;
+    max-width: 380px !important;
     margin: 0 auto !important;
 }
 
@@ -115,62 +124,62 @@ h1 {
     display: none !important; 
 }
 
-/* INPUT - CLEAN, BORDER TIPIS */
+/* INPUT */
 [data-testid="stTextInput"] {
     width: 100% !important;
-    max-width: 340px !important;
+    max-width: 380px !important;
     margin: 0 auto !important;
 }
 [data-testid="stTextInput"] > div {
     width: 100% !important;
-    max-width: 340px !important;
+    max-width: 380px !important;
 }
 [data-testid="stTextInput"] input {
     width: 100% !important;
-    border-radius: 10px !important;
-    background: rgba(255,255,255,0.04) !important;
+    border-radius: 12px !important;
+    background: rgba(255,255,255,0.05) !important;
     color: white !important;
     border: 1px solid rgba(255,255,255,0.08) !important;
-    padding: 14px 16px !important;
-    font-size: 15px !important;
+    padding: 16px 18px !important;
+    font-size: 16px !important;
     box-sizing: border-box !important;
-    text-align: left !important;
-    height: 48px !important;
+    text-align: center !important;
+    height: 56px !important;
     transition: border-color 0.2s ease !important;
 }
 [data-testid="stTextInput"] input:focus {
     border-color: #ff8ad8 !important;
     box-shadow: none !important;
-    background: rgba(255,255,255,0.06) !important;
+    background: rgba(255,255,255,0.07) !important;
 }
 [data-testid="stTextInput"] input::placeholder {
-    color: rgba(255,255,255,0.25) !important;
-    text-align: left !important;
-    font-size: 14px !important;
+    color: rgba(255,255,255,0.3) !important;
+    text-align: center !important;
+    font-size: 16px !important;
 }
 
-/* TOMBOL MASUK - SOLID PINK, MIRIP CHATGPT */
+/* TOMBOL */
 div[data-testid="stButton"] > button {
     width: 100% !important;
-    max-width: 340px !important;
-    background: #ff8ad8 !important;
-    color: white !important;
-    font-weight: 600 !important;
+    max-width: 380px !important;
+    background: white !important;
+    color: #0a0a0a !important;
+    font-weight: 700 !important;
     border: none !important;
-    border-radius: 10px !important;
-    padding: 14px !important;
-    font-size: 15px !important;
-    letter-spacing: 0.3px !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+    font-size: 17px !important;
+    letter-spacing: 0.5px !important;
     transition: all 0.2s ease !important;
     margin-top: 4px !important;
-    height: 48px !important;
+    height: 56px !important;
     cursor: pointer !important;
     display: block !important;
     margin-left: auto !important;
     margin-right: auto !important;
 }
 div[data-testid="stButton"] > button:hover {
-    background: #e070c0 !important;
+    background: #f0f0f0 !important;
     transform: none !important;
     box-shadow: none !important;
 }
@@ -178,32 +187,28 @@ div[data-testid="stButton"] > button:active {
     transform: scale(0.98) !important;
 }
 
-/* FORM SUBMIT BUTTON */
 [data-testid="stForm"] div[data-testid="stButton"] {
     width: 100% !important;
-    max-width: 340px !important;
+    max-width: 380px !important;
     margin: 0 auto !important;
 }
 
-/* VERTICAL BLOCK */
 .stVerticalBlock {
     gap: 10px !important;
     align-items: center !important;
 }
 
-/* ERROR MESSAGE - CLEAN */
 .stAlert {
     text-align: center !important;
-    border-radius: 10px !important;
+    border-radius: 12px !important;
     background: rgba(255, 138, 216, 0.06) !important;
     border: 1px solid rgba(255, 138, 216, 0.1) !important;
     color: #ff8ad8 !important;
-    max-width: 340px !important;
+    max-width: 380px !important;
     margin: 0 auto !important;
     font-size: 14px !important;
 }
 
-/* CHAT MESSAGES */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
     background: rgba(255, 138, 216, 0.06);
     border: 1px solid rgba(255, 138, 216, 0.08);
@@ -229,38 +234,38 @@ div[data-testid="stButton"] > button:active {
 /* ======================================== */
 @media (max-width: 768px) {
     h1 {
-        font-size: 24px !important;
-        margin-top: 40px !important;
+        font-size: 34px !important;
+        margin-top: 35px !important;
     }
     .caption {
-        font-size: 13px !important;
-        margin-bottom: 28px !important;
+        font-size: 17px !important;
+        margin-bottom: 24px !important;
     }
     [data-testid="stTextInput"] {
-        max-width: 300px !important;
+        max-width: 320px !important;
     }
     [data-testid="stTextInput"] > div {
-        max-width: 300px !important;
+        max-width: 320px !important;
     }
     [data-testid="stTextInput"] input {
-        height: 44px !important;
-        font-size: 14px !important;
-        padding: 12px 14px !important;
+        height: 50px !important;
+        font-size: 15px !important;
+        padding: 14px 16px !important;
     }
     div[data-testid="stButton"] > button {
-        max-width: 300px !important;
-        height: 44px !important;
-        font-size: 14px !important;
-        padding: 12px 14px !important;
+        max-width: 320px !important;
+        height: 50px !important;
+        font-size: 15px !important;
+        padding: 14px 16px !important;
     }
     [data-testid="stForm"] {
-        max-width: 300px !important;
+        max-width: 320px !important;
     }
     [data-testid="stForm"] div[data-testid="stButton"] {
-        max-width: 300px !important;
+        max-width: 320px !important;
     }
     .stAlert {
-        max-width: 300px !important;
+        max-width: 320px !important;
     }
 }
 </style>
@@ -305,7 +310,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE - MIRIP CHATGPT
+# 5. LOGIN PAGE
 # =====================
 if not st.session_state.logged_in:
     
