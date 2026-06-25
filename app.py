@@ -136,7 +136,7 @@ if not API_KEY:
 client = genai.Client(api_key=API_KEY)
 
 # MODEL: Menggunakan gemini-1.5-flash demi batas kuota gratisan per menit yang lebih luas
-MODEL_NAME = "gemini-1.5-flash" 
+MODEL_NAME = "models/gemini-1.5-flash"
 
 # Fungsi pembantu untuk memanggil API secara aman dari error limit 429
 def generate_content_with_retry(full_prompt):
