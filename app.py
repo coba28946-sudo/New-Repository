@@ -15,7 +15,16 @@ st.set_page_config(page_title="Kei AI", page_icon="🤖", layout="wide")
 # =====================
 # 2. GOOGLE VERIFICATION & ANALYTICS
 # =====================
-
+st.markdown("""
+<meta name="google-site-verification" content="s2qrn3my_Y37DRVnCKnxISqZkx2CqYL88z5BrNLGtvM" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PGLBV0H3KF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PGLBV0H3KF');
+</script>
+""", unsafe_allow_html=True)
 
 # =====================
 # 3. CSS
@@ -62,65 +71,28 @@ st.markdown("""
 }
 
 /* ===================== */
-/* LOGIN MODERN          */
+/* INPUT LOGIN           */
 /* ===================== */
 
-.login-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px 20px;
-}
-
-.login-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 24px;
-    padding: 48px 36px 40px;
-    width: 100%;
-    max-width: 420px;
-    text-align: center;
-    animation: fadeUp 0.7s ease both;
-}
-
-.login-logo {
-    font-size: 42px;
-    font-weight: 800;
-    color: #ff8ad8;
-    letter-spacing: -1px;
-    margin-bottom: 6px;
-}
-
-.login-tagline {
-    color: #ffffff;
-    font-size: 14px;
-    margin-bottom: 32px;
-    letter-spacing: 0.4px;
-}
-
-.login-divider {
-    height: 1px;
-    background: rgba(255,255,255,0.12);
-    margin-bottom: 28px;
-}
-
-.login-footer {
-    font-size: 12px;
-    color: #ffffff;
-    margin-top: 24px;
-}
-
-/* Input */
 [data-testid="stTextInput"] label { display: none !important; }
 [data-testid="stTextInput"] svg   { display: none !important; }
 
+[data-testid="stTextInput"],
+[data-testid="stTextInput"] > div,
+[data-testid="stTextInput"] > div > div {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
 [data-testid="stTextInput"] input {
-    border-radius: 10px !important;
+    width: 100% !important;
+    border-radius: 12px !important;
     background: rgba(255,255,255,0.07) !important;
     color: white !important;
     border: 1px solid rgba(255,255,255,0.2) !important;
-    padding: 14px 20px 14px 44px !important;
+    padding: 16px 20px !important;
     font-size: 15px !important;
+    box-sizing: border-box !important;
     transition: border-color 0.2s, box-shadow 0.2s !important;
 }
 
@@ -131,22 +103,23 @@ st.markdown("""
 }
 
 [data-testid="stTextInput"] input::placeholder {
-    color: rgba(255,255,255,0.4) !important;
+    color: rgba(255,255,255,0.35) !important;
 }
 
-/* Tombol login */
+/* Tombol Masuk */
 div[data-testid="stButton"] > button {
+    width: 100% !important;
     background: white !important;
     color: #07080f !important;
     font-weight: 700 !important;
     border: none !important;
-    border-radius: 10px !important;
-    padding: 14px !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
     font-size: 15px !important;
     letter-spacing: 0.3px !important;
     transition: all 0.3s ease !important;
-    width: 100% !important;
     margin-top: 8px !important;
+    box-sizing: border-box !important;
 }
 
 div[data-testid="stButton"] > button:hover {
@@ -158,7 +131,7 @@ div[data-testid="stButton"] > button:hover {
 [data-testid="column"] {
     display: flex !important;
     flex-direction: column !important;
-    align-items: center !important;
+    align-items: stretch !important;
 }
 
 .stVerticalBlock { gap: 12px !important; }
@@ -200,11 +173,6 @@ div[data-testid="stButton"] > button:hover {
 
 @keyframes fadeUp {
     from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -264,25 +232,24 @@ if "messages" not in st.session_state:
 # =====================
 if not st.session_state.logged_in:
 
-    st.markdown("""
-    <div style="height:80px;"></div>
-    <div style="text-align:center; margin-bottom:8px;">
-        <span style="font-size:42px; font-weight:800; color:#ff8ad8; letter-spacing:-1px;">✦ Kei AI</span>
-    </div>
-    <div style="text-align:center; margin-bottom:32px;">
-        <span style="font-size:14px; color:#ffffff; letter-spacing:0.4px;">Teman AI Pintar Kamu</span>
-    </div>
-    """, unsafe_allow_html=True)
-
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
+        st.markdown("""
+        <div style="text-align:center; padding-top:80px; margin-bottom:10px;">
+            <span style="font-size:76px; font-weight:800; color:#ff8ad8; letter-spacing:-2px;">✦ Kei AI</span>
+        </div>
+        <div style="text-align:center; margin-bottom:40px;">
+            <span style="font-size:22px; color:#ffffff; letter-spacing:0.4px;">Teman AI Pintar Kamu</span>
+        </div>
+        """, unsafe_allow_html=True)
+
         username = st.text_input(
-            "", placeholder="👤  Username",
+            "", placeholder="  Username",
             key="username_input",
             label_visibility="collapsed"
         )
         password = st.text_input(
-            "", placeholder="🔒  Password",
+            "", placeholder="  Password",
             type="password",
             key="password_input",
             label_visibility="collapsed"
@@ -297,7 +264,7 @@ if not st.session_state.logged_in:
                 st.error("❌ Username atau password salah")
 
         st.markdown("""
-        <div style="text-align:center; margin-top:20px; font-size:12px; color:#ffffff;">
+        <div style="text-align:center; margin-top:24px; font-size:13px; color:#ffffff;">
             Kei AI · Your AI Companion
         </div>
         """, unsafe_allow_html=True)
