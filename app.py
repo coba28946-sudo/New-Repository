@@ -83,18 +83,77 @@ st.markdown("""
     margin: 5px 0;
     font-size: 13px;
 }
+
+/* Style untuk login page */
+.login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.login-title {
+    color: #ff8ad8;
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.login-subtitle {
+    color: #bdbdbd;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
 </style>
 """, unsafe_allow_html=True)
 
 # =====================
-# 5. JUDUL (HANYA SATU KALI)
+# 5. SESSION STATE
 # =====================
-st.markdown('<div class="kei-title">✦ Kei AI</div>', unsafe_allow_html=True)
-st.write("Halo Kak! Kei siap menemani hari Kakak. 💕")
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if "avatar" not in st.session_state:
+    st.session_state.avatar = None
+
+if "mode" not in st.session_state:
+    st.session_state.mode = "chat"
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
 # =====================
-# 6. GEMINI SETUP
+# 6. LOGIN PAGE (TERPISAH TOTAL)
 # =====================
+if not st.session_state.logged_in:
+    # TAMPILAN LOGIN - TANPA JUDUL DARI MAIN APP
+    st.markdown("""
+    <div class="login-container">
+        <div class="login-title">✦ Kei AI</div>
+        <div class="login-subtitle">Teman AI Pintar Kamu</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        username = st.text_input("Username", placeholder="Masukkan username")
+        password = st.text_input("Password", placeholder="Masukkan password", type="password")
+        
+        if st.button("Masuk", use_container_width=True):
+            if username == "ryuu" and password == "12345":
+                st.session_state.logged_in = True
+                st.session_state.messages = []  # Reset chat
+                st.rerun()
+            else:
+                st.error("❌ Username atau password salah")
+    
+    st.stop()  # STOP DI SINI, TIDAK LANJUT KE BAWAH
+
+# =====================
+# 7. MAIN APP (HANYA TAMPIL KALAU SUDAH LOGIN)
+# =====================
+
+# GEMINI SETUP
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if not API_KEY:
@@ -122,9 +181,7 @@ def generate_content_with_retry(full_prompt):
         except Exception as e:
             return f"⚠️ Terjadi kesalahan sistem: {str(e)}"
 
-# =====================
-# 7. PERSONA KEI
-# =====================
+# PERSONA KEI
 KEI_PERSONA = """
 Kamu adalah Kei, AI companion yang imut, perhatian, dan sedikit tsundere.
 Karaktermu:
@@ -152,9 +209,7 @@ Responmu harus:
 - Akhiri selalu dengan kalimat penyemangat yang tulus
 """
 
-# =====================
-# 8. STIKER
-# =====================
+# STIKER
 STICKERS = {
     "happy": ["(｡♥‿♥｡)", "✨(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "٩(◕‿◕｡)۶", "(≧◡≦)", "🎉✨💕"],
     "love":  ["(♥ω♥*)", "💕(｡･ω･｡)💕", "ʕ•ᴥ•ʔ♥", "(˘³˘)♥", "💖💖💖"],
@@ -166,9 +221,7 @@ STICKERS = {
 def get_sticker(mood):
     return random.choice(STICKERS.get(mood, STICKERS["happy"]))
 
-# =====================
-# 9. DIARY & CHAT FILE
-# =====================
+# DIARY & CHAT FILE
 DIARY_FILE = "dear_diary.json"
 CHAT_FILE = "chat_history.json"
 
@@ -192,48 +245,18 @@ def save_chat(messages):
     with open(CHAT_FILE, "w") as f:
         json.dump(messages, f)
 
-# =====================
-# 10. SESSION STATE
-# =====================
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-
-if "avatar" not in st.session_state:
-    st.session_state.avatar = None
-
-if "mode" not in st.session_state:
-    st.session_state.mode = "chat"
-
-if "messages" not in st.session_state:
+# Load chat history
+if "messages" not in st.session_state or not st.session_state.messages:
     st.session_state.messages = load_chat()
 
 # =====================
-# 11. LOGIN (TANPA DUPLIKASI JUDUL)
+# 8. JUDUL MAIN APP
 # =====================
-if not st.session_state.logged_in:
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.markdown("""
-        <div style="text-align:center; margin-bottom:30px;">
-            <h1 style="color:#ff8ad8; font-size:42px;">✦ Kei AI</h1>
-            <p style="color:#bdbdbd;">Teman AI Pintar Kamu</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        
-        if st.button("Masuk", use_container_width=True):
-            if username == "ryuu" and password == "12345":
-                st.session_state.logged_in = True
-                st.rerun()
-            else:
-                st.error("Username atau password salah")
-    
-    st.stop()
+st.markdown('<div class="kei-title">✦ Kei AI</div>', unsafe_allow_html=True)
+st.write("Halo Kak! Kei siap menemani hari Kakak. 💕")
 
 # =====================
-# 12. SIDEBAR
+# 9. SIDEBAR
 # =====================
 with st.sidebar:
     avatar_exists = os.path.exists("kei_avatar.png")
@@ -331,19 +354,15 @@ with st.sidebar:
         st.rerun()
 
 # =====================
-# 13. HEADER (TANPA DUPLIKASI JUDUL)
+# 10. DEAR DIARY MODE
 # =====================
 if st.session_state.mode == "diary":
     st.markdown("""
-    <div style="text-align:center;">
-        <p style="color:#bdbdbd; font-size:18px; margin-top:0px;">💌 Ceritain semua ke Kei ya~ 🥺</p>
+    <div style="text-align:center; margin-bottom:20px;">
+        <p style="color:#bdbdbd; font-size:18px;">💌 Ceritain semua ke Kei ya~ 🥺</p>
     </div>
     """, unsafe_allow_html=True)
-
-# =====================
-# 14. DEAR DIARY MODE
-# =====================
-if st.session_state.mode == "diary":
+    
     diary_entries = load_diary()
     
     if diary_entries:
@@ -401,14 +420,14 @@ if st.session_state.mode == "diary":
     st.stop()
 
 # =====================
-# 15. CHAT DISPLAY
+# 11. CHAT DISPLAY
 # =====================
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
 # =====================
-# 16. CHAT INPUT
+# 12. CHAT INPUT
 # =====================
 prompt = st.chat_input("Ketik pesan ke Kei...")
 
