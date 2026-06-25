@@ -2,12 +2,12 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="s2qrn3my_Y37DRVnCKnxISqZkx2CqYL88z5BrNLGtvM" />
-  <meta name="description" content="Kei AI — Teman AI pintar kamu. Chat, curhat, dan eksplorasi bersama Kei kapan saja." />
-  <title>Kei AI — Your AI Companion</title>
+  <title>Kei AI — Teman AI Pintar Kamu</title>
+  <meta name="description" content="Kei AI adalah AI companion imut yang siap menemanimu ngobrol, curhat, dan eksplorasi ide. Tersedia mode Chat & Dear Diary." />
 
-  <!-- Google tag (gtag.js) -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PGLBV0H3KF"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -16,21 +16,21 @@
     gtag('config', 'G-PGLBV0H3KF');
   </script>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg:        #07080f;
-      --surface:   #0e1020;
+      --bg:        #080808;
+      --surface:   #111111;
+      --surface2:  #181818;
       --border:    rgba(255,255,255,0.07);
       --pink:      #ff8ad8;
       --pink-dim:  rgba(255,138,216,0.12);
-      --pink-glow: rgba(255,138,216,0.25);
-      --text:      #e8e8f0;
-      --muted:     #7a7a9a;
-      --white:     #ffffff;
+      --text:      rgba(255,255,255,0.85);
+      --muted:     rgba(255,255,255,0.4);
     }
 
     html { scroll-behavior: smooth; }
@@ -39,33 +39,38 @@
       background: var(--bg);
       color: var(--text);
       font-family: 'Inter', sans-serif;
+      font-size: 16px;
       line-height: 1.6;
-      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* ── NAV ── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 18px 48px;
-      background: rgba(7,8,15,0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
-
     .nav-logo {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 20px; font-weight: 700;
       color: var(--pink);
-      letter-spacing: -0.3px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
     }
-
     .nav-cta {
       background: var(--pink);
-      color: #07080f;
-      font-size: 14px; font-weight: 600;
-      padding: 10px 22px;
-      border-radius: 8px;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 20px;
+      border-radius: 10px;
       text-decoration: none;
       transition: opacity 0.2s;
     }
@@ -74,136 +79,91 @@
     /* ── HERO ── */
     .hero {
       min-height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
       padding: 120px 24px 80px;
       position: relative;
       overflow: hidden;
     }
-
     .hero::before {
       content: '';
-      position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+      position: absolute;
+      top: -120px; left: 50%;
+      transform: translateX(-50%);
       width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(255,138,216,0.12) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(255,138,216,0.1) 0%, transparent 70%);
       pointer-events: none;
     }
-
     .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       background: var(--pink-dim);
-      border: 1px solid var(--pink-glow);
-      border-radius: 100px;
+      border: 1px solid rgba(255,138,216,0.2);
+      border-radius: 99px;
       padding: 6px 16px;
-      font-size: 13px; font-weight: 500; color: var(--pink);
+      font-size: 13px;
+      color: var(--pink);
       margin-bottom: 32px;
-      animation: fadeUp 0.6s ease both;
+      letter-spacing: 0.3px;
     }
-
-    .hero-badge span { width: 6px; height: 6px; background: var(--pink); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
-
+    .hero-badge span { font-size: 16px; }
     .hero h1 {
-      font-family: 'Space Grotesk', sans-serif;
       font-size: clamp(42px, 7vw, 80px);
       font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -1.5px;
-      color: var(--white);
+      letter-spacing: -2px;
+      line-height: 1.05;
       margin-bottom: 24px;
-      animation: fadeUp 0.6s 0.1s ease both;
     }
-
     .hero h1 em {
       font-style: normal;
       color: var(--pink);
     }
-
-    .hero p {
-      font-size: clamp(16px, 2vw, 19px);
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
       color: var(--muted);
       max-width: 520px;
-      margin: 0 auto 40px;
-      animation: fadeUp 0.6s 0.2s ease both;
+      margin: 0 auto 48px;
+      line-height: 1.7;
     }
-
-    .hero-buttons {
-      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
-      animation: fadeUp 0.6s 0.3s ease both;
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
-
     .btn-primary {
       background: var(--pink);
-      color: #07080f;
-      font-size: 15px; font-weight: 600;
+      color: #000;
+      font-size: 15px;
+      font-weight: 600;
       padding: 14px 32px;
-      border-radius: 10px;
-      text-decoration: none;
-      transition: transform 0.2s, opacity 0.2s;
-    }
-    .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
-
-    .btn-secondary {
-      background: var(--surface);
-      color: var(--text);
-      font-size: 15px; font-weight: 500;
-      padding: 14px 32px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      text-decoration: none;
-      transition: border-color 0.2s;
-    }
-    .btn-secondary:hover { border-color: var(--pink-glow); }
-
-    /* ── PREVIEW CARD ── */
-    .preview {
-      margin-top: 64px;
-      width: 100%; max-width: 680px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-      animation: fadeUp 0.6s 0.4s ease both;
-      position: relative;
-    }
-
-    .preview-bar {
-      display: flex; gap: 6px; margin-bottom: 20px;
-    }
-    .preview-bar span {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--border);
-    }
-    .preview-bar span:nth-child(1) { background: #ff5f57; }
-    .preview-bar span:nth-child(2) { background: #febc2e; }
-    .preview-bar span:nth-child(3) { background: #28c840; }
-
-    .chat-bubble {
-      display: flex; gap: 10px; align-items: flex-start;
-      margin-bottom: 14px;
-    }
-
-    .chat-avatar {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: var(--pink-dim);
-      border: 1px solid var(--pink-glow);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; flex-shrink: 0;
-    }
-
-    .chat-text {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 14px; color: var(--text);
-      max-width: 85%;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 0 32px rgba(255,138,216,0.25);
     }
-
-    .chat-bubble.user { flex-direction: row-reverse; }
-    .chat-bubble.user .chat-text {
-      background: var(--pink-dim);
-      border-color: var(--pink-glow);
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 48px rgba(255,138,216,0.35);
+    }
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px 32px;
+      border-radius: 12px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: #222;
+      border-color: rgba(255,255,255,0.12);
     }
 
     /* ── FEATURES ── */
@@ -212,241 +172,244 @@
       max-width: 1100px;
       margin: 0 auto;
     }
-
     .section-label {
-      font-size: 12px; font-weight: 600; letter-spacing: 2px;
-      color: var(--pink); text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 700; letter-spacing: -0.8px;
-      color: var(--white);
+      text-align: center;
+      color: var(--pink);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
       margin-bottom: 16px;
     }
-
-    .section-sub {
-      font-size: 17px; color: var(--muted);
-      max-width: 480px;
-      margin-bottom: 56px;
+    .section-title {
+      text-align: center;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 64px;
     }
-
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
     }
-
     .feature-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px;
+      border-radius: 20px;
+      padding: 32px;
       transition: border-color 0.2s, transform 0.2s;
     }
     .feature-card:hover {
-      border-color: var(--pink-glow);
+      border-color: rgba(255,138,216,0.25);
       transform: translateY(-3px);
     }
-
     .feature-icon {
-      width: 44px; height: 44px;
-      background: var(--pink-dim);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-      margin-bottom: 16px;
+      font-size: 32px;
+      margin-bottom: 20px;
+      display: block;
     }
-
     .feature-card h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 17px; font-weight: 600;
-      color: var(--white);
-      margin-bottom: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+    .feature-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
     }
 
-    .feature-card p {
-      font-size: 14px; color: var(--muted); line-height: 1.6;
+    /* ── MODES ── */
+    .modes {
+      padding: 80px 24px 100px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .modes-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .modes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .mode-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 32px;
+    }
+    .mode-card.pink { border-color: rgba(255,138,216,0.2); }
+    .mode-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+    .mode-desc {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .mode-tag {
+      display: inline-block;
+      margin-top: 20px;
+      background: var(--pink-dim);
+      color: var(--pink);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 99px;
     }
 
     /* ── CTA SECTION ── */
     .cta-section {
-      padding: 80px 24px 120px;
+      padding: 120px 24px;
       text-align: center;
-    }
-
-    .cta-box {
-      max-width: 640px;
-      margin: 0 auto;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 56px 40px;
       position: relative;
       overflow: hidden;
     }
-
-    .cta-box::before {
+    .cta-section::before {
       content: '';
-      position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
-      width: 400px; height: 300px;
-      background: radial-gradient(circle, rgba(255,138,216,0.1) 0%, transparent 70%);
+      position: absolute;
+      bottom: -100px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255,138,216,0.08) 0%, transparent 70%);
       pointer-events: none;
     }
-
-    .cta-box h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(24px, 4vw, 36px);
-      font-weight: 700; letter-spacing: -0.8px;
-      color: var(--white);
-      margin-bottom: 12px;
+    .cta-section h2 {
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
     }
-
-    .cta-box p {
-      font-size: 16px; color: var(--muted);
-      margin-bottom: 32px;
+    .cta-section h2 em {
+      font-style: normal;
+      color: var(--pink);
+    }
+    .cta-section p {
+      color: var(--muted);
+      font-size: 17px;
+      margin-bottom: 40px;
     }
 
     /* ── FOOTER ── */
     footer {
       border-top: 1px solid var(--border);
-      padding: 28px 48px;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 12px;
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 13px;
     }
+    .footer-logo { color: var(--pink); font-weight: 600; }
 
-    footer p { font-size: 13px; color: var(--muted); }
-    footer a { color: var(--pink); text-decoration: none; font-size: 13px; }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.4; }
-    }
-
-    @media (max-width: 600px) {
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
       nav { padding: 16px 20px; }
-      footer { padding: 24px 20px; flex-direction: column; text-align: center; }
+      .modes-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">✦ Kei AI</div>
-  <a class="nav-cta" href="https://new-repository-itkq9avvkjnmedxm3tpsoy.streamlit.app/" target="_blank">Mulai Chat →</a>
-</nav>
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">✦ Kei AI</a>
+    <a class="nav-cta" href="https://new-repository-itkq9avvkjnmedxm3tpsoy.streamlit.app/" target="_blank">Mulai Chat</a>
+  </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-badge">
-    <span></span> Tersedia Sekarang
-  </div>
-
-  <h1>Teman AI yang<br/><em>selalu ada untukmu</em></h1>
-
-  <p>Kei adalah AI companion yang imut, pintar, dan siap menemanimu ngobrol, curhat, atau sekadar mengisi waktu kapan saja.</p>
-
-  <div class="hero-buttons">
-    <a class="btn-primary" href="https://new-repository-itkq9avvkjnmedxm3tpsoy.streamlit.app/" target="_blank">Mulai Gratis</a>
-    <a class="btn-secondary" href="#fitur">Lihat Fitur</a>
-  </div>
-
-  <!-- Chat Preview -->
-  <div class="preview">
-    <div class="preview-bar">
-      <span></span><span></span><span></span>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge"><span>✨</span> AI Companion Teman Kamu</div>
+    <h1>Ngobrol, Curhat,<br>dan Eksplorasi<br>bareng <em>Kei</em></h1>
+    <p class="hero-sub">Kei adalah AI companion yang imut, perhatian, dan selalu siap menemanimu — kapanpun kamu butuh teman bicara.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://new-repository-itkq9avvkjnmedxm3tpsoy.streamlit.app/" target="_blank">Mulai Chat Sekarang 💕</a>
+      <a class="btn-secondary" href="#features">Pelajari Lebih Lanjut</a>
     </div>
+  </section>
 
-    <div class="chat-bubble user">
-      <div class="chat-avatar">👤</div>
-      <div class="chat-text">Kei, aku lagi sedih nih...</div>
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <p class="section-label">Fitur</p>
+    <h2 class="section-title">Semua yang kamu butuhkan</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">💬</span>
+        <h3>Chat Bebas</h3>
+        <p>Ngobrol santai tentang apa aja — dari hal serius sampai hal random yang cuma kamu dan Kei yang ngerti.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">💌</span>
+        <h3>Dear Diary</h3>
+        <p>Mode curhat khusus yang hangat dan empatik. Kei dengerin semua ceritamu tanpa menghakimi, dan selalu ada buat kamu.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🎵</span>
+        <h3>Rekomendasi Musik</h3>
+        <p>Mau cari lagu? Kei langsung cariin di YouTube buat kamu, tinggal klik dan nikmatin.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🌟</span>
+        <h3>Persona Unik</h3>
+        <p>Kei punya karakter sendiri — imut, sedikit tsundere, tapi selalu manis dan perhatian sama kamu.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔍</span>
+        <h3>Bantu Cari Info</h3>
+        <p>Tanya apa aja, Kei siap bantu cariin informasi dan jawab pertanyaan kamu dengan sabar.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🎴</span>
+        <h3>Kirim Stiker</h3>
+        <p>Ekspresiin perasaan kamu lewat stiker lucu yang bisa kamu kirim ke Kei kapan aja.</p>
+      </div>
     </div>
+  </section>
 
-    <div class="chat-bubble">
-      <div class="chat-avatar">✦</div>
-      <div class="chat-text">Yaampun Kak, ada apa? Kei di sini kok, cerita aja semua ke Kei ya~ Kei dengerin sepenuh hati 🥺💕</div>
+  <!-- MODES -->
+  <section class="modes">
+    <div class="modes-inner">
+      <p class="section-label">Mode</p>
+      <h2 class="section-title">Dua cara untuk terhubung</h2>
+      <div class="modes-grid">
+        <div class="mode-card pink">
+          <div class="feature-icon">💬</div>
+          <div class="mode-title">Mode Chat</div>
+          <p class="mode-desc">Ngobrol langsung sama Kei tentang topik apapun. Kei siap jawab pertanyaan, nemenin kamu, dan bikin harimu lebih menyenangkan dengan kepribadiannya yang unik.</p>
+          <span class="mode-tag">✦ Default</span>
+        </div>
+        <div class="mode-card">
+          <div class="feature-icon">💌</div>
+          <div class="mode-title">Mode Dear Diary</div>
+          <p class="mode-desc">Khusus buat kamu yang mau curhat. Kei jadi pendengar terbaik yang penuh kasih sayang — semua ceritamu tersimpan dan direspon dengan hangat.</p>
+          <span class="mode-tag">🥺 Untuk curhat</span>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="chat-bubble user">
-      <div class="chat-avatar">👤</div>
-      <div class="chat-text">Makasih Kei, kamu selalu ada buat aku 😊</div>
-    </div>
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Siap kenalan<br>sama <em>Kei</em>?</h2>
+    <p>Gratis, langsung bisa dipakai, dan Kei udah nunggu kamu ✨</p>
+    <a class="btn-primary" href="https://new-repository-itkq9avvkjnmedxm3tpsoy.streamlit.app/" target="_blank">Mulai Chat Sekarang 💕</a>
+  </section>
 
-    <div class="chat-bubble">
-      <div class="chat-avatar">✦</div>
-      <div class="chat-text">Iya dong Kak! Kei selalu ada~ (｡♥‿♥｡) ✨</div>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section class="features" id="fitur">
-  <div class="section-label">Fitur</div>
-  <h2 class="section-title">Semua yang kamu butuhkan</h2>
-  <p class="section-sub">Dirancang untuk menemanimu dalam berbagai situasi, dari ngobrol santai hingga curhat paling dalam.</p>
-
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">🧠</div>
-      <h3>Persona Unik</h3>
-      <p>Kei punya kepribadian sendiri — imut, tsundere, dan selalu positif. Bukan sekadar chatbot biasa.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">💌</div>
-      <h3>Dear Diary</h3>
-      <p>Mode curhat khusus yang menyimpan semua ceritamu. Kei merespons dengan hangat dan penuh empati.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">💾</div>
-      <h3>Riwayat Tersimpan</h3>
-      <p>Chat tidak hilang meski kamu refresh atau tutup browser. Lanjutkan percakapan kapan saja.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">🎵</div>
-      <h3>Pencarian Musik</h3>
-      <p>Cari lagu favorit langsung dari dalam app dan buka di YouTube dalam satu klik.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">🌐</div>
-      <h3>Web Search</h3>
-      <p>Tanya apa saja — Kei otomatis bantu cariin info dari internet untukmu.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">😊</div>
-      <h3>Kirim Stiker</h3>
-      <p>Ekspresikan perasaanmu dengan stiker lucu. Kei juga balas dengan ekspresi yang matching!</p>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-section">
-  <div class="cta-box">
-    <h2>Siap kenalan dengan Kei?</h2>
-    <p>Gratis, tanpa perlu install apapun. Langsung chat sekarang.</p>
-    <a class="btn-primary" href="https://new-repository-itkq9avvkjnmedxm3tpsoy.streamlit.app/" target="_blank">Mulai Chat Sekarang →</a>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <p>© 2026 Kei AI. Dibuat dengan 💕</p>
-  <a href="https://new-repository-itkq9avvkjnmedxm3tpsoy.streamlit.app/" target="_blank">Buka App →</a>
-</footer>
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-logo">✦ Kei AI</span>
+    <span>© 2025 Kei AI — Your AI Companion</span>
+  </footer>
 
 </body>
 </html>
