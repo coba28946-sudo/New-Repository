@@ -145,11 +145,42 @@ div[data-testid="stAlert"] {
 /* ===== CHAT / APP ===== */
 [data-testid="stSidebar"] { background: #111111 !important; }
 [data-testid="stChatMessage"] { background: transparent !important; }
+/* ===== CHAT INPUT ===== */
+[data-testid="stChatInput"] {
+    background: #2b2b2b !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 16px !important;
+    padding: 4px 8px !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+}
 [data-testid="stChatInput"] textarea {
-    background: #1a1a1a !important;
+    background: transparent !important;
     color: white !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
-    border-radius: 12px !important;
+    border: none !important;
+    border-radius: 16px !important;
+    font-size: 15px !important;
+    padding: 12px 16px !important;
+    line-height: 1.5 !important;
+    resize: none !important;
+}
+[data-testid="stChatInput"] textarea::placeholder {
+    color: rgba(255,255,255,0.3) !important;
+}
+[data-testid="stChatInput"] button {
+    background: #ffffff !important;
+    border-radius: 10px !important;
+    border: none !important;
+    width: 34px !important;
+    height: 34px !important;
+    color: black !important;
+    margin: 4px !important;
+}
+[data-testid="stChatInput"] button:hover {
+    background: #e0e0e0 !important;
+}
+[data-testid="stChatInput"] button svg {
+    fill: black !important;
+    color: black !important;
 }
 h1 { color: #ff8ad8 !important; }
 </style>
