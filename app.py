@@ -8,7 +8,7 @@ import random
 from datetime import datetime
 
 # =====================
-# 1. CONFIG
+# 1. CONFIG - GAMBAR HIDUP
 # =====================
 st.set_page_config(page_title="Kei AI", page_icon="🤖", layout="wide")
 
@@ -31,209 +31,33 @@ st.markdown("""
 # =====================
 st.markdown("""
 <style>
-.stApp {
-    background: #0a0a0a;
-    min-height: 100vh;
+.stApp { background: #0a0a0a; }
+h1 { text-align: center; color: #ff8ad8; font-size: 44px; margin-top: 50px; margin-bottom: 2px; }
+.caption { text-align: center; color: rgba(255,255,255,0.8); font-size: 20px; margin-bottom: 30px; }
+[data-testid="stTextInput"] label { display: none; }
+[data-testid="stTextInput"] svg { display: none; }
+[data-testid="stTextInput"] input { 
+    width: 100%; border-radius: 12px; background: rgba(255,255,255,0.05); 
+    color: white; border: 1px solid rgba(255,255,255,0.08); 
+    padding: 16px; font-size: 16px; text-align: center; height: 56px;
 }
-[data-testid="stSidebar"] {
-    background: rgba(18, 18, 18, 0.98);
-    border-right: 1px solid rgba(255,255,255,0.05);
+[data-testid="stTextInput"] input::placeholder { color: rgba(255,255,255,0.3); text-align: center; }
+div[data-testid="stButton"] > button { 
+    width: 100%; background: white; color: black; font-weight: bold;
+    border: none; border-radius: 12px; padding: 16px; font-size: 17px; height: 56px;
 }
-.online-box {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 12px;
-    padding: 15px;
-    text-align: left;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    color: rgba(255,255,255,0.7);
-}
-.diary-box {
-    background: rgba(255,182,230,0.05);
-    border: 1px solid rgba(255,138,216,0.1);
-    border-radius: 12px;
-    padding: 16px;
-    margin: 8px 0;
-    font-style: italic;
-    color: #f0c4e8;
-}
-.music-box {
-    background: rgba(255,138,216,0.04);
-    border: 1px solid rgba(255,138,216,0.08);
-    border-radius: 12px;
-    padding: 12px;
-    margin: 5px 0;
-    font-size: 13px;
-    color: rgba(255,255,255,0.7);
-}
-h1 {
-    text-align: center !important;
-    color: #ff8ad8 !important;
-    font-size: 44px !important;
-    font-weight: 800 !important;
-    margin-top: 50px !important;
-    margin-bottom: 2px !important;
-    letter-spacing: -1px !important;
-    display: block !important;
-    width: 100% !important;
-}
-.caption {
-    text-align: center !important;
-    color: rgba(255,255,255,0.8) !important;
-    font-size: 20px !important;
-    font-weight: 400 !important;
-    margin-bottom: 30px !important;
-    letter-spacing: 1px !important;
-    display: block !important;
-    width: 100% !important;
-}
-[data-testid="stForm"] {
-    border: none !important;
-    padding: 0 !important;
-    background: transparent !important;
-    width: 100% !important;
-    max-width: 380px !important;
-    margin: 0 auto !important;
-}
-[data-testid="stTextInput"] label { 
-    display: none !important; 
-}
-[data-testid="stTextInput"] svg { 
-    display: none !important; 
-}
-[data-testid="stTextInput"] {
-    width: 100% !important;
-    max-width: 380px !important;
-    margin: 0 auto !important;
-}
-[data-testid="stTextInput"] > div {
-    width: 100% !important;
-    max-width: 380px !important;
-}
-[data-testid="stTextInput"] input {
-    width: 100% !important;
-    border-radius: 12px !important;
-    background: rgba(255,255,255,0.05) !important;
-    color: white !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
-    padding: 16px 18px !important;
-    font-size: 16px !important;
-    box-sizing: border-box !important;
-    text-align: center !important;
-    height: 56px !important;
-    transition: border-color 0.2s ease !important;
-}
-[data-testid="stTextInput"] input:focus {
-    border-color: #ff8ad8 !important;
-    box-shadow: none !important;
-    background: rgba(255,255,255,0.07) !important;
-}
-[data-testid="stTextInput"] input::placeholder {
-    color: rgba(255,255,255,0.3) !important;
-    text-align: center !important;
-    font-size: 16px !important;
-}
-div[data-testid="stButton"] > button {
-    width: 100% !important;
-    max-width: 380px !important;
-    background: white !important;
-    color: #0a0a0a !important;
-    font-weight: 700 !important;
-    border: none !important;
-    border-radius: 12px !important;
-    padding: 16px !important;
-    font-size: 17px !important;
-    letter-spacing: 0.5px !important;
-    transition: all 0.2s ease !important;
-    margin-top: 4px !important;
-    height: 56px !important;
-    cursor: pointer !important;
-    display: block !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-}
-div[data-testid="stButton"] > button:hover {
-    background: #f0f0f0 !important;
-    transform: none !important;
-    box-shadow: none !important;
-}
-div[data-testid="stButton"] > button:active {
-    transform: scale(0.98) !important;
-}
-[data-testid="stForm"] div[data-testid="stButton"] {
-    width: 100% !important;
-    max-width: 380px !important;
-    margin: 0 auto !important;
-}
-.stVerticalBlock {
-    gap: 10px !important;
-    align-items: center !important;
-}
-.stAlert {
-    text-align: center !important;
-    border-radius: 12px !important;
-    background: rgba(255, 138, 216, 0.06) !important;
-    border: 1px solid rgba(255, 138, 216, 0.1) !important;
-    color: #ff8ad8 !important;
-    max-width: 380px !important;
-    margin: 0 auto !important;
-    font-size: 14px !important;
-}
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
-    background: rgba(255, 138, 216, 0.06);
-    border: 1px solid rgba(255, 138, 216, 0.08);
-    border-radius: 18px;
-    padding: 10px 15px;
-    margin: 8px 0;
-}
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.04);
-    border-radius: 18px;
-    padding: 10px 15px;
-    margin: 8px 0;
-}
-[data-testid="stChatInput"] {
-    border-radius: 20px !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
-    background: rgba(255,255,255,0.02) !important;
-}
+[data-testid="stForm"] { border: none; padding: 0; background: transparent; max-width: 380px; margin: 0 auto; }
+[data-testid="stTextInput"] { max-width: 380px; margin: 0 auto; }
+.stVerticalBlock { gap: 10px; align-items: center; }
+.stAlert { text-align: center; max-width: 380px; margin: 0 auto; }
 @media (max-width: 768px) {
-    h1 {
-        font-size: 34px !important;
-        margin-top: 35px !important;
-    }
-    .caption {
-        font-size: 17px !important;
-        margin-bottom: 24px !important;
-    }
-    [data-testid="stTextInput"] {
-        max-width: 320px !important;
-    }
-    [data-testid="stTextInput"] > div {
-        max-width: 320px !important;
-    }
-    [data-testid="stTextInput"] input {
-        height: 50px !important;
-        font-size: 15px !important;
-        padding: 14px 16px !important;
-    }
-    div[data-testid="stButton"] > button {
-        max-width: 320px !important;
-        height: 50px !important;
-        font-size: 15px !important;
-        padding: 14px 16px !important;
-    }
-    [data-testid="stForm"] {
-        max-width: 320px !important;
-    }
-    [data-testid="stForm"] div[data-testid="stButton"] {
-        max-width: 320px !important;
-    }
-    .stAlert {
-        max-width: 320px !important;
-    }
+    h1 { font-size: 34px; margin-top: 35px; }
+    .caption { font-size: 17px; margin-bottom: 24px; }
+    [data-testid="stTextInput"] input { height: 50px; font-size: 15px; padding: 14px; }
+    div[data-testid="stButton"] > button { height: 50px; font-size: 15px; padding: 14px; }
+    [data-testid="stForm"] { max-width: 320px; }
+    [data-testid="stTextInput"] { max-width: 320px; }
+    .stAlert { max-width: 320px; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -243,12 +67,12 @@ div[data-testid="stButton"] > button:active {
 # =====================
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
-
 if "avatar" not in st.session_state:
     st.session_state.avatar = None
-
 if "mode" not in st.session_state:
     st.session_state.mode = "chat"
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
 CHAT_FILE = "chat_history.json"
 DIARY_FILE = "dear_diary.json"
@@ -280,26 +104,14 @@ if "messages" not in st.session_state:
 # 5. LOGIN PAGE
 # =====================
 if not st.session_state.logged_in:
-    
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.title("✦ Kei AI")
         st.caption("Teman AI Pintar Kamu")
         
         with st.form(key="login_form"):
-            username = st.text_input(
-                "",
-                placeholder="Username",
-                key="username_input",
-                label_visibility="collapsed"
-            )
-            password = st.text_input(
-                "",
-                placeholder="Password",
-                type="password",
-                key="password_input",
-                label_visibility="collapsed"
-            )
+            username = st.text_input("", placeholder="Username", key="username_input", label_visibility="collapsed")
+            password = st.text_input("", placeholder="Password", type="password", key="password_input", label_visibility="collapsed")
             submitted = st.form_submit_button("Masuk", use_container_width=True)
             
             if submitted:
@@ -316,7 +128,6 @@ if not st.session_state.logged_in:
 # 6. GEMINI SETUP
 # =====================
 API_KEY = os.environ.get("GEMINI_API_KEY")
-
 if not API_KEY:
     st.error("API Key Gemini tidak ditemukan! Pastikan kamu sudah memasang 'GEMINI_API_KEY' di Secrets.")
     st.stop()
@@ -343,7 +154,7 @@ def generate_content_with_retry(full_prompt):
             return f"Terjadi kesalahan sistem: {str(e)}"
 
 # =====================
-# 7. PERSONA KEI
+# 7. PERSONA
 # =====================
 KEI_PERSONA = """
 Kamu adalah Kei, AI companion yang imut, perhatian, dan sedikit tsundere.
@@ -390,17 +201,11 @@ def get_sticker(mood):
 # 9. SIDEBAR
 # =====================
 with st.sidebar:
-
     avatar_exists = os.path.exists("kei_avatar.png")
-
     if avatar_exists:
         st.image("kei_avatar.png", width=220)
         with st.expander("Ganti / Hapus Foto"):
-            uploaded_avatar = st.file_uploader(
-                "Upload foto baru",
-                type=["png", "jpg", "jpeg"],
-                key="ganti_foto"
-            )
+            uploaded_avatar = st.file_uploader("Upload foto baru", type=["png", "jpg", "jpeg"], key="ganti_foto")
             if uploaded_avatar:
                 with open("kei_avatar.png", "wb") as f:
                     f.write(uploaded_avatar.getbuffer())
@@ -412,10 +217,7 @@ with st.sidebar:
                 st.session_state.avatar = None
                 st.rerun()
     else:
-        uploaded_avatar = st.file_uploader(
-            "Upload Foto Kei",
-            type=["png", "jpg", "jpeg"]
-        )
+        uploaded_avatar = st.file_uploader("Upload Foto Kei", type=["png", "jpg", "jpeg"])
         if uploaded_avatar:
             with open("kei_avatar.png", "wb") as f:
                 f.write(uploaded_avatar.getbuffer())
@@ -423,9 +225,8 @@ with st.sidebar:
             st.rerun()
 
     st.markdown("""
-    <div class="online-box">
-        🟢 Online<br>
-        KEI AI
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:15px;text-align:left;margin-top:10px;margin-bottom:20px;color:rgba(255,255,255,0.7);">
+        🟢 Online<br>KEI AI
     </div>
     """, unsafe_allow_html=True)
 
@@ -462,7 +263,7 @@ with st.sidebar:
             if music_query:
                 search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
                 st.markdown(f"""
-                <div class="music-box">
+                <div style="background:rgba(255,138,216,0.04);border:1px solid rgba(255,138,216,0.08);border-radius:12px;padding:12px;margin:5px 0;font-size:13px;color:rgba(255,255,255,0.7);">
                     🎵 <b>{music_query}</b><br>
                     <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube</a>
                 </div>
@@ -507,14 +308,12 @@ else:
 # 11. DEAR DIARY MODE
 # =====================
 if st.session_state.mode == "diary":
-
     diary_entries = load_diary()
-
     if diary_entries:
         with st.expander(f"Lihat {len(diary_entries)} entri diary lama"):
             for entry in reversed(diary_entries[-10:]):
                 st.markdown(f"""
-                <div class="diary-box">
+                <div style="background:rgba(255,182,230,0.05);border:1px solid rgba(255,138,216,0.1);border-radius:12px;padding:16px;margin:8px 0;font-style:italic;color:#f0c4e8;">
                     <small style="color:#ff8ad8;">📅 {entry['date']}</small><br><br>
                     <b>Kamu:</b> {entry['user']}<br><br>
                     <b>Kei:</b> {entry['kei']}
@@ -522,13 +321,7 @@ if st.session_state.mode == "diary":
                 """, unsafe_allow_html=True)
 
     st.markdown("---")
-
-    diary_input = st.text_area(
-        "💌 Cerita ke Kei...",
-        placeholder="Hari ini aku ngerasa... / Kei, aku mau curhat nih...",
-        height=150
-    )
-
+    diary_input = st.text_area("💌 Cerita ke Kei...", placeholder="Hari ini aku ngerasa... / Kei, aku mau curhat nih...", height=150)
     col1, col2 = st.columns([3, 1])
     with col1:
         send_diary = st.button("Kirim ke Kei", use_container_width=True)
@@ -544,7 +337,6 @@ if st.session_state.mode == "diary":
         with st.spinner("Kei lagi baca curhatanmu... 🥺"):
             full_prompt = f"{KEI_DIARY_PERSONA}\n\nUser curhat: {diary_input}\n\nKei menjawab dengan hangat:"
             kei_reply = generate_content_with_retry(full_prompt)
-
         entry = {
             "date": datetime.now().strftime("%d %B %Y, %H:%M"),
             "user": diary_input,
@@ -552,16 +344,14 @@ if st.session_state.mode == "diary":
         }
         diary_entries.append(entry)
         save_diary(diary_entries)
-
         st.markdown(f"""
-        <div class="diary-box">
+        <div style="background:rgba(255,182,230,0.05);border:1px solid rgba(255,138,216,0.1);border-radius:12px;padding:16px;margin:8px 0;font-style:italic;color:#f0c4e8;">
             <b style="color:#ff8ad8;">Kamu tulis:</b><br>
             {diary_input}<br><br>
             <b style="color:#ff8ad8;">Kei menjawab:</b><br>
             {kei_reply}
         </div>
         """, unsafe_allow_html=True)
-
     st.stop()
 
 # =====================
@@ -575,30 +365,22 @@ for msg in st.session_state.messages:
 # 13. CHAT INPUT
 # =====================
 prompt = st.chat_input("Ketik pesan ke Kei...")
-
 if prompt:
-
     st.session_state.messages.append({"role": "user", "content": prompt})
-
     browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
     needs_search = any(kw in prompt.lower() for kw in browsing_keywords)
-
     if needs_search:
         search_url = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
         search_note = f"\n\n🌐 *Kei juga nyariin buat Kak di sini ya:* [Klik untuk lihat hasil pencarian]({search_url})"
     else:
         search_note = ""
-
     history_text = ""
     for m in st.session_state.messages[-10:]:
         role = "User" if m["role"] == "user" else "Kei"
         history_text += f"{role}: {m['content']}\n"
-
     full_prompt = f"{KEI_PERSONA}\n\nRiwayat percakapan:\n{history_text}\nKei:"
-
     with st.spinner("Kei sedang mengetik... ✨"):
         reply = generate_content_with_retry(full_prompt) + search_note
-
     st.session_state.messages.append({"role": "assistant", "content": reply})
     save_chat(st.session_state.messages)
     st.rerun()
