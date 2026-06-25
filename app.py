@@ -27,7 +27,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# 3. CSS - TANPA HTML, PAKAI KOMPONEN STREAMLIT
+# 3. CSS
 # =====================
 st.markdown("""
 <style>
@@ -73,28 +73,45 @@ st.markdown("""
 }
 
 /* ======================================== */
-/* LOGIN PAGE - MODERN, CENTER, SIMETRIS */
+/* LOGIN PAGE - CENTER, SIMETRIS, UKURAN PAS */
 /* ======================================== */
 
-/* JUDUL - PAKAI st.title() - PINK, CENTER */
+/* JUDUL - PAKAI st.title() */
 h1 {
     text-align: center !important;
     color: #ff8ad8 !important;
     font-size: 48px !important;
     font-weight: 800 !important;
     margin-top: 50px !important;
-    margin-bottom: 2px !important;
+    margin-bottom: 0px !important;
     letter-spacing: -1px !important;
-    text-shadow: 0 0 30px rgba(255, 138, 216, 0.08) !important;
 }
 
-/* SUBTITLE - PAKAI st.caption() - PUTIH, CENTER */
+/* SUBTITLE - PAKAI st.caption() - DIPERBESAR & SAMA LEBAR */
 .caption {
     text-align: center !important;
-    color: rgba(255,255,255,0.7) !important;
-    font-size: 17px !important;
+    color: rgba(255,255,255,0.8) !important;
+    font-size: 20px !important;
+    font-weight: 400 !important;
     margin-bottom: 28px !important;
-    letter-spacing: 1px !important;
+    letter-spacing: 1.5px !important;
+}
+
+/* BUAT SEMUA KONTEN DI TENGAH DENGAN LEBAR TERBATAS */
+[data-testid="column"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+/* FORM - TANPA GARIS */
+[data-testid="stForm"] {
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    width: 100% !important;
+    max-width: 380px !important;
+    margin: 0 auto !important;
 }
 
 /* HILANGKAN LABEL & ICON */
@@ -105,14 +122,15 @@ h1 {
     display: none !important; 
 }
 
-/* INPUT FIELD - SAMA LEBAR, CENTER */
+/* INPUT FIELD - LEBAR TERBATAS, CENTER */
 [data-testid="stTextInput"] {
     width: 100% !important;
-    max-width: 100% !important;
+    max-width: 380px !important;
+    margin: 0 auto !important;
 }
 [data-testid="stTextInput"] > div {
     width: 100% !important;
-    max-width: 100% !important;
+    max-width: 380px !important;
 }
 [data-testid="stTextInput"] input {
     width: 100% !important;
@@ -138,9 +156,10 @@ h1 {
     font-size: 15px !important;
 }
 
-/* TOMBOL MASUK - PUTIH, SAMA LEBAR DENGAN INPUT */
+/* TOMBOL MASUK - SAMA LEBAR DENGAN INPUT */
 div[data-testid="stButton"] > button {
     width: 100% !important;
+    max-width: 380px !important;
     background: white !important;
     color: #0a0a1a !important;
     font-weight: 700 !important;
@@ -154,6 +173,9 @@ div[data-testid="stButton"] > button {
     height: 54px !important;
     cursor: pointer !important;
     box-shadow: 0 4px 20px rgba(255,255,255,0.04) !important;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 div[data-testid="stButton"] > button:hover {
     transform: translateY(-2px) !important;
@@ -164,20 +186,18 @@ div[data-testid="stButton"] > button:active {
     transform: scale(0.97) !important;
 }
 
-/* FORM - TANPA GARIS */
-[data-testid="stForm"] {
-    border: none !important;
-    padding: 0 !important;
-    background: transparent !important;
+/* BUAT FORM SUBMIT BUTTON TETAP SAMA LEBAR */
+[data-testid="stForm"] div[data-testid="stButton"] {
+    width: 100% !important;
+    max-width: 380px !important;
+    margin: 0 auto !important;
 }
 
-/* COLUMN */
-[data-testid="column"] {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
+/* VERTICAL BLOCK */
+.stVerticalBlock {
+    gap: 10px !important;
+    align-items: center !important;
 }
-.stVerticalBlock { gap: 10px !important; }
 
 /* ERROR MESSAGE */
 .stAlert {
@@ -186,7 +206,8 @@ div[data-testid="stButton"] > button:active {
     background: rgba(255, 138, 216, 0.08) !important;
     border: 1px solid rgba(255, 138, 216, 0.15) !important;
     color: #ff8ad8 !important;
-    animation: fadeIn 0.4s ease !important;
+    max-width: 380px !important;
+    margin: 0 auto !important;
 }
 
 /* CHAT MESSAGES */
@@ -210,12 +231,6 @@ div[data-testid="stButton"] > button:active {
     background: rgba(255,255,255,0.03) !important;
 }
 
-/* ANIMASI */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
 /* ======================================== */
 /* RESPONSIVE HP */
 /* ======================================== */
@@ -223,11 +238,16 @@ div[data-testid="stButton"] > button:active {
     h1 {
         font-size: 36px !important;
         margin-top: 35px !important;
-        margin-bottom: 0px !important;
     }
     .caption {
-        font-size: 15px !important;
+        font-size: 17px !important;
         margin-bottom: 22px !important;
+    }
+    [data-testid="stTextInput"] {
+        max-width: 320px !important;
+    }
+    [data-testid="stTextInput"] > div {
+        max-width: 320px !important;
     }
     [data-testid="stTextInput"] input {
         height: 48px !important;
@@ -239,10 +259,20 @@ div[data-testid="stButton"] > button:active {
         font-size: 14px !important;
     }
     div[data-testid="stButton"] > button {
+        max-width: 320px !important;
         height: 48px !important;
         font-size: 15px !important;
         padding: 12px 14px !important;
         border-radius: 12px !important;
+    }
+    [data-testid="stForm"] {
+        max-width: 320px !important;
+    }
+    [data-testid="stForm"] div[data-testid="stButton"] {
+        max-width: 320px !important;
+    }
+    .stAlert {
+        max-width: 320px !important;
     }
 }
 </style>
@@ -287,45 +317,38 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE - TANPA HTML, PAKAI KOMPONEN STREAMLIT
+# 5. LOGIN PAGE
 # =====================
 if not st.session_state.logged_in:
     
-    # ===== JUDUL =====
-    st.title("✦ Kei AI")
-    
-    # ===== SUBTITLE =====
-    st.caption("Teman AI Pintar Kamu")
-    
-    # ===== FORM LOGIN =====
-    with st.form(key="login_form"):
-        # USERNAME
-        username = st.text_input(
-            "",
-            placeholder="Username",
-            key="username_input",
-            label_visibility="collapsed"
-        )
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.title("✦ Kei AI")
+        st.caption("Teman AI Pintar Kamu")
         
-        # PASSWORD
-        password = st.text_input(
-            "",
-            placeholder="Password",
-            type="password",
-            key="password_input",
-            label_visibility="collapsed"
-        )
-        
-        # TOMBOL MASUK
-        submitted = st.form_submit_button("Masuk", use_container_width=True)
-        
-        if submitted:
-            if username == "ryuu" and password == "12345":
-                st.session_state.logged_in = True
-                st.session_state.messages = load_chat()
-                st.rerun()
-            else:
-                st.error("Username atau password salah")
+        with st.form(key="login_form"):
+            username = st.text_input(
+                "",
+                placeholder="Username",
+                key="username_input",
+                label_visibility="collapsed"
+            )
+            password = st.text_input(
+                "",
+                placeholder="Password",
+                type="password",
+                key="password_input",
+                label_visibility="collapsed"
+            )
+            submitted = st.form_submit_button("Masuk", use_container_width=True)
+            
+            if submitted:
+                if username == "ryuu" and password == "12345":
+                    st.session_state.logged_in = True
+                    st.session_state.messages = load_chat()
+                    st.rerun()
+                else:
+                    st.error("Username atau password salah")
     
     st.stop()
 
