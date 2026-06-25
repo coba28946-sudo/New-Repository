@@ -93,9 +93,11 @@ div[data-testid="stTextInput"] input {
     border: none !important;
     box-shadow: none !important;
     height: 50px !important;
+    text-align: center !important;
 }
 div[data-testid="stTextInput"] input::placeholder {
     color: rgba(255,255,255,0.28) !important;
+    text-align: center !important;
 }
 
 /* Hide label & icon */
