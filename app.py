@@ -84,11 +84,11 @@ st.markdown("""
     font-size: 13px;
 }
 
-/* Style untuk login page */
+/* Style untuk login page - RAPI */
 .login-container {
     max-width: 400px;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 20px 20px;
     text-align: center;
 }
 
@@ -96,13 +96,38 @@ st.markdown("""
     color: #ff8ad8;
     font-size: 48px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .login-subtitle {
     color: #bdbdbd;
-    font-size: 18px;
-    margin-bottom: 30px;
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+/* Hilangkan icon pensil di text input */
+[data-testid="stTextInput"] svg {
+    display: none !important;
+}
+
+[data-testid="stTextInput"] label {
+    display: none !important;
+}
+
+/* Rapiin tombol */
+[data-testid="stButton"] button {
+    background: linear-gradient(135deg, #ff8ad8, #ff6bcb) !important;
+    color: white !important;
+    font-weight: bold !important;
+    border: none !important;
+    border-radius: 25px !important;
+    padding: 10px !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-testid="stButton"] button:hover {
+    transform: scale(1.02) !important;
+    box-shadow: 0 0 20px rgba(255, 138, 216, 0.3) !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -123,10 +148,10 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # =====================
-# 6. LOGIN PAGE (TERPISAH TOTAL)
+# 6. LOGIN PAGE (RAPI)
 # =====================
 if not st.session_state.logged_in:
-    # TAMPILAN LOGIN - TANPA JUDUL DARI MAIN APP
+    # Tampilan login rapi
     st.markdown("""
     <div class="login-container">
         <div class="login-title">✦ Kei AI</div>
@@ -134,23 +159,25 @@ if not st.session_state.logged_in:
     </div>
     """, unsafe_allow_html=True)
     
+    # Form login di tengah
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        username = st.text_input("Username", placeholder="Masukkan username")
-        password = st.text_input("Password", placeholder="Masukkan password", type="password")
+        # Kosongkan label biar ga muncul tulisan "Username"
+        username = st.text_input("", placeholder="Username", key="username_input")
+        password = st.text_input("", placeholder="Password", type="password", key="password_input")
         
-        if st.button("Masuk", use_container_width=True):
+        if st.button("Masuk", use_container_width=True, key="login_button"):
             if username == "ryuu" and password == "12345":
                 st.session_state.logged_in = True
-                st.session_state.messages = []  # Reset chat
+                st.session_state.messages = []
                 st.rerun()
             else:
                 st.error("❌ Username atau password salah")
     
-    st.stop()  # STOP DI SINI, TIDAK LANJUT KE BAWAH
+    st.stop()
 
 # =====================
-# 7. MAIN APP (HANYA TAMPIL KALAU SUDAH LOGIN)
+# 7. MAIN APP
 # =====================
 
 # GEMINI SETUP
