@@ -27,17 +27,22 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# 3. CSS
+# 3. CSS - OPTIMASI HP & DESKTOP
 # =====================
 st.markdown("""
 <style>
+/* BACKGROUND */
 .stApp {
     background: linear-gradient(135deg, #050816, #081028, #050816);
 }
+
+/* SIDEBAR */
 [data-testid="stSidebar"] {
     background: #090F20;
     border-right: 1px solid rgba(255,255,255,0.08);
 }
+
+/* SIDEBAR COMPONENTS */
 .online-box {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.08);
@@ -65,6 +70,10 @@ st.markdown("""
     font-size: 13px;
 }
 
+/* ======================================== */
+/* LOGIN PAGE - OPTIMAL UNTUK HP & DESKTOP */
+/* ======================================== */
+
 /* HILANGKAN LABEL & ICON */
 [data-testid="stTextInput"] label { 
     display: none !important; 
@@ -73,7 +82,7 @@ st.markdown("""
     display: none !important; 
 }
 
-/* BUAT INPUT SAMA PERSIS */
+/* BUAT INPUT SAMA PERSIS - LEBAR & TINGGI */
 [data-testid="stTextInput"] {
     width: 100% !important;
     max-width: 100% !important;
@@ -92,13 +101,13 @@ st.markdown("""
     background: rgba(255,255,255,0.07) !important;
     color: white !important;
     border: 1px solid rgba(255,255,255,0.2) !important;
-    padding: 16px 20px !important;
-    font-size: 16px !important;
+    padding: 12px 16px !important;
+    font-size: 15px !important;
     box-sizing: border-box !important;
     text-align: center !important;
-    height: 56px !important;
-    min-height: 56px !important;
-    max-height: 56px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
 }
 [data-testid="stTextInput"] input:focus {
     border-color: #ff8ad8 !important;
@@ -107,9 +116,10 @@ st.markdown("""
 [data-testid="stTextInput"] input::placeholder {
     color: rgba(255,255,255,0.35) !important;
     text-align: center !important;
+    font-size: 15px !important;
 }
 
-/* BUAT TOMBOL SAMA LEBAR */
+/* TOMBOL MASUK - SAMA LEBAR & TINGGI DENGAN INPUT */
 div[data-testid="stButton"] > button {
     width: 100% !important;
     max-width: 100% !important;
@@ -119,31 +129,37 @@ div[data-testid="stButton"] > button {
     font-weight: 700 !important;
     border: none !important;
     border-radius: 12px !important;
-    padding: 16px !important;
-    font-size: 18px !important;
+    padding: 12px 16px !important;
+    font-size: 16px !important;
     letter-spacing: 1px !important;
     transition: all 0.3s ease !important;
     margin-top: 8px !important;
     box-sizing: border-box !important;
-    height: 56px !important;
-    min-height: 56px !important;
-    max-height: 56px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
 }
 div[data-testid="stButton"] > button:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 8px 24px rgba(255,255,255,0.15) !important;
     background: #f0f0f0 !important;
 }
+
+/* COLUMN */
 [data-testid="column"] {
     display: flex !important;
     flex-direction: column !important;
     align-items: stretch !important;
 }
-.stVerticalBlock { gap: 12px !important; }
+.stVerticalBlock { gap: 10px !important; }
+
+/* ERROR MESSAGE */
 .stAlert {
     text-align: center !important;
     border-radius: 12px !important;
 }
+
+/* CHAT MESSAGES */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
     background: rgba(255, 138, 216, 0.08);
     border: 1px solid rgba(255, 138, 216, 0.2);
@@ -166,6 +182,17 @@ div[data-testid="stButton"] > button:hover {
 .stButton > button {
     border-radius: 15px !important;
     height: 50px !important;
+}
+
+/* RESPONSIVE - HP */
+@media (max-width: 768px) {
+    /* Judul lebih kecil di HP */
+    .login-title {
+        font-size: 38px !important;
+    }
+    .login-subtitle {
+        font-size: 15px !important;
+    }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -209,27 +236,38 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE - SIMETRIS
+# 5. LOGIN PAGE - OPTIMAL HP & DESKTOP
 # =====================
 if not st.session_state.logged_in:
     
     col1, col2, col3 = st.columns([1, 2.2, 1])
     with col2:
-        # JUDUL
+        # JUDUL - UKURAN OPTIMAL HP
         st.markdown("""
-        <div style="text-align:center; padding-top:60px; margin-bottom:0px;">
-            <span style="font-size:64px; font-weight:800; color:#ff8ad8; display:block; text-align:center;">✦ Kei AI</span>
+        <div style="text-align:center; padding-top:40px; margin-bottom:2px;">
+            <span style="font-size:42px; font-weight:800; color:#ff8ad8; display:block; text-align:center; letter-spacing:-1px;">✦ Kei AI</span>
         </div>
-        <div style="text-align:center; margin-bottom:30px;">
-            <span style="font-size:20px; color:#ffffff; opacity:0.85; display:block; text-align:center; letter-spacing:1.5px; word-spacing:3px;">Teman AI Pintar Kamu</span>
+        <div style="text-align:center; margin-bottom:22px;">
+            <span style="font-size:16px; color:#ffffff; opacity:0.85; display:block; text-align:center; letter-spacing:1.5px; word-spacing:3px;">Teman AI Pintar Kamu</span>
         </div>
         """, unsafe_allow_html=True)
         
         # USERNAME
-        username = st.text_input("", placeholder="Username", key="username_input", label_visibility="collapsed")
+        username = st.text_input(
+            "", 
+            placeholder="Username", 
+            key="username_input", 
+            label_visibility="collapsed"
+        )
         
         # PASSWORD
-        password = st.text_input("", placeholder="Password", type="password", key="password_input", label_visibility="collapsed")
+        password = st.text_input(
+            "", 
+            placeholder="Password", 
+            type="password", 
+            key="password_input", 
+            label_visibility="collapsed"
+        )
         
         # TOMBOL MASUK
         if st.button("Masuk", use_container_width=True, key="login_button"):
