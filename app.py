@@ -109,7 +109,7 @@ st.markdown("""
     letter-spacing: 1px;
 }
 
-/* Hilangkan icon pensil dan label di text input */
+/* HILANGKAN ICON PENSIL DI TEXT INPUT */
 [data-testid="stTextInput"] svg {
     display: none !important;
 }
@@ -125,6 +125,7 @@ st.markdown("""
     border: 1px solid rgba(255,255,255,0.1) !important;
     padding: 14px !important;
     font-size: 16px !important;
+    text-align: center !important;
 }
 
 [data-testid="stTextInput"] input:focus {
@@ -132,7 +133,12 @@ st.markdown("""
     box-shadow: 0 0 15px rgba(255, 138, 216, 0.1) !important;
 }
 
-/* TOMBOL MASUK - WARNA PUTIH */
+[data-testid="stTextInput"] input::placeholder {
+    color: #888 !important;
+    text-align: center !important;
+}
+
+/* TOMBOL MASUK */
 [data-testid="stButton"] button {
     background: white !important;
     color: #050816 !important;
@@ -148,6 +154,16 @@ st.markdown("""
     transform: scale(1.02) !important;
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.2) !important;
     background: #f0f0f0 !important;
+}
+
+/* HILANGKAN ERROR MESSAGE YANG BIKIN GA SIMETRIS */
+.stAlert {
+    text-align: center !important;
+}
+
+/* BUAT FORM JADI SIMETRIS */
+[data-testid="stVerticalBlock"] {
+    gap: 15px !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -179,7 +195,7 @@ if not st.session_state.logged_in:
     </div>
     """, unsafe_allow_html=True)
     
-    # Form login
+    # Form login - tengah sempurna
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         username = st.text_input("", placeholder="Username", key="username_input")
