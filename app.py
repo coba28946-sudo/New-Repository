@@ -16,16 +16,14 @@ st.set_page_config(page_title="Kei AI", page_icon="🤖", layout="wide")
 # 2. GOOGLE VERIFICATION & ANALYTICS
 # =====================
 st.markdown("""
-<meta name="google-site-verification" content="s2qrn3my_Y37DRVnCKnxISqZkx2CqYL88z5BrNLGtvM" />
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-PGLBV0H3KF"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-PGLBV0H3KF');
-</script>
-""", unsafe_allow_html=True)
+    <div style="height:80px;"></div>
+    <div style="text-align:center; margin-bottom:10px;">
+        <span style="font-size:64px; font-weight:800; color:#ff8ad8; letter-spacing:-2px;">✦ Kei AI</span>
+    </div>
+    <div style="text-align:center; margin-bottom:36px;">
+        <span style="font-size:20px; color:#ffffff; letter-spacing:0.4px;">Teman AI Pintar Kamu</span>
+    </div>
+    """, unsafe_allow_html=True)
 
 # =====================
 # 3. CSS
