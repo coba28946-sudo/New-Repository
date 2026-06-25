@@ -27,27 +27,26 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# 3. CSS - MODERN GLASSMORPHISM
+# 3. CSS - MODERN TAPI SIMPEL
 # =====================
 st.markdown("""
 <style>
-/* ===== BACKGROUND ===== */
+/* BACKGROUND */
 .stApp {
-    background: linear-gradient(135deg, #0a0a1a, #1a0a2a, #0a0a1a);
+    background: linear-gradient(135deg, #0a0a1a, #150820, #0a0a1a);
     min-height: 100vh;
 }
 
-/* ===== SIDEBAR ===== */
+/* SIDEBAR */
 [data-testid="stSidebar"] {
-    background: rgba(9, 15, 32, 0.9);
-    backdrop-filter: blur(20px);
+    background: rgba(9, 15, 32, 0.95);
     border-right: 1px solid rgba(255,255,255,0.05);
 }
 
-/* ===== SIDEBAR COMPONENTS ===== */
+/* SIDEBAR COMPONENTS */
 .online-box {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
     border-radius: 16px;
     padding: 15px;
     text-align: left;
@@ -57,7 +56,7 @@ st.markdown("""
 }
 .diary-box {
     background: rgba(255,182,230,0.06);
-    border: 1px solid rgba(255,138,216,0.2);
+    border: 1px solid rgba(255,138,216,0.15);
     border-radius: 16px;
     padding: 16px;
     margin: 8px 0;
@@ -65,8 +64,8 @@ st.markdown("""
     color: #f0c4e8;
 }
 .music-box {
-    background: rgba(255,138,216,0.08);
-    border: 1px solid rgba(255,138,216,0.15);
+    background: rgba(255,138,216,0.06);
+    border: 1px solid rgba(255,138,216,0.12);
     border-radius: 12px;
     padding: 12px;
     margin: 5px 0;
@@ -75,41 +74,28 @@ st.markdown("""
 }
 
 /* ======================================== */
-/* LOGIN PAGE - GLASSMORPHISM */
+/* LOGIN PAGE - MODERN */
 /* ======================================== */
 
-/* CARD LOGIN - EFEK KACA */
-.login-card {
-    background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(30px);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 24px;
-    padding: 50px 40px 40px 40px;
-    max-width: 420px;
-    margin: 0 auto;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-    animation: fadeInUp 0.8s ease;
+/* JUDUL - PAKAI st.title() */
+h1 {
+    text-align: center !important;
+    color: #ff8ad8 !important;
+    font-size: 48px !important;
+    font-weight: 800 !important;
+    margin-top: 50px !important;
+    margin-bottom: 4px !important;
+    letter-spacing: -1px !important;
+    text-shadow: 0 0 30px rgba(255, 138, 216, 0.1) !important;
 }
 
-/* JUDUL - PINK */
-.login-title {
-    text-align: center;
-    font-size: 52px;
-    font-weight: 800;
-    color: #ff8ad8;
-    margin-bottom: 6px;
-    letter-spacing: -1px;
-    text-shadow: 0 0 40px rgba(255, 138, 216, 0.15);
-}
-
-/* SUBTITLE - PUTIH */
-.login-subtitle {
-    text-align: center;
-    font-size: 17px;
-    color: rgba(255,255,255,0.8);
-    margin-bottom: 32px;
-    letter-spacing: 1.5px;
-    font-weight: 300;
+/* SUBTITLE - PAKAI st.caption() */
+.caption {
+    text-align: center !important;
+    color: rgba(255,255,255,0.75) !important;
+    font-size: 17px !important;
+    margin-bottom: 30px !important;
+    letter-spacing: 1px !important;
 }
 
 /* HILANGKAN LABEL & ICON */
@@ -120,72 +106,60 @@ st.markdown("""
     display: none !important; 
 }
 
-/* INPUT FIELD - GLASS EFFECT */
+/* INPUT FIELD */
 [data-testid="stTextInput"] {
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 100% !important;
 }
 [data-testid="stTextInput"] > div {
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 100% !important;
 }
 [data-testid="stTextInput"] input {
     width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
     border-radius: 14px !important;
-    background: rgba(255,255,255,0.06) !important;
+    background: rgba(255,255,255,0.05) !important;
     color: white !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
     padding: 16px 20px !important;
     font-size: 16px !important;
     box-sizing: border-box !important;
     text-align: center !important;
-    height: 56px !important;
-    min-height: 56px !important;
-    max-height: 56px !important;
+    height: 54px !important;
     transition: all 0.3s ease !important;
 }
 [data-testid="stTextInput"] input:focus {
     border-color: #ff8ad8 !important;
-    box-shadow: 0 0 30px rgba(255, 138, 216, 0.08) !important;
-    background: rgba(255,255,255,0.08) !important;
+    box-shadow: 0 0 25px rgba(255, 138, 216, 0.06) !important;
+    background: rgba(255,255,255,0.07) !important;
 }
 [data-testid="stTextInput"] input::placeholder {
     color: rgba(255,255,255,0.3) !important;
     text-align: center !important;
     font-size: 15px !important;
-    font-weight: 300 !important;
 }
 
 /* TOMBOL MASUK - PUTIH */
 div[data-testid="stButton"] > button {
     width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
     background: white !important;
     color: #0a0a1a !important;
     font-weight: 700 !important;
     border: none !important;
     border-radius: 14px !important;
-    padding: 16px 20px !important;
+    padding: 16px !important;
     font-size: 17px !important;
     letter-spacing: 1px !important;
     transition: all 0.3s ease !important;
-    margin-top: 8px !important;
-    box-sizing: border-box !important;
-    height: 56px !important;
-    min-height: 56px !important;
-    max-height: 56px !important;
+    margin-top: 6px !important;
+    height: 54px !important;
     cursor: pointer !important;
-    box-shadow: 0 4px 20px rgba(255,255,255,0.05) !important;
+    box-shadow: 0 4px 20px rgba(255,255,255,0.04) !important;
 }
 div[data-testid="stButton"] > button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 40px rgba(255,255,255,0.15) !important;
-    background: #f0f0f0 !important;
+    box-shadow: 0 8px 40px rgba(255,255,255,0.1) !important;
+    background: #f5f5f5 !important;
 }
 div[data-testid="stButton"] > button:active {
     transform: scale(0.97) !important;
@@ -203,46 +177,36 @@ div[data-testid="stButton"] > button:active {
 .stAlert {
     text-align: center !important;
     border-radius: 14px !important;
-    background: rgba(255, 138, 216, 0.1) !important;
-    border: 1px solid rgba(255, 138, 216, 0.2) !important;
+    background: rgba(255, 138, 216, 0.08) !important;
+    border: 1px solid rgba(255, 138, 216, 0.15) !important;
     color: #ff8ad8 !important;
-    animation: fadeIn 0.5s ease !important;
+    animation: fadeIn 0.4s ease !important;
 }
 
 /* CHAT MESSAGES */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
-    background: rgba(255, 138, 216, 0.08);
-    border: 1px solid rgba(255, 138, 216, 0.15);
+    background: rgba(255, 138, 216, 0.06);
+    border: 1px solid rgba(255, 138, 216, 0.12);
     border-radius: 18px;
     padding: 10px 15px;
     margin: 8px 0;
 }
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
     border-radius: 18px;
     padding: 10px 15px;
     margin: 8px 0;
 }
 [data-testid="stChatInput"] {
     border-radius: 20px !important;
-    border: 1px solid rgba(255,138,216,0.2) !important;
-    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,138,216,0.15) !important;
+    background: rgba(255,255,255,0.03) !important;
 }
 
 /* ANIMASI */
-@keyframes fadeInUp {
-    from { 
-        opacity: 0; 
-        transform: translateY(30px) scale(0.98); 
-    }
-    to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
-    }
-}
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
+    from { opacity: 0; transform: translateY(-8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -250,22 +214,16 @@ div[data-testid="stButton"] > button:active {
 /* RESPONSIVE HP */
 /* ======================================== */
 @media (max-width: 768px) {
-    .login-card {
-        padding: 35px 24px 30px 24px !important;
-        margin: 10px 12px !important;
-        border-radius: 20px !important;
+    h1 {
+        font-size: 36px !important;
+        margin-top: 35px !important;
     }
-    .login-title {
-        font-size: 38px !important;
-    }
-    .login-subtitle {
+    .caption {
         font-size: 15px !important;
         margin-bottom: 25px !important;
     }
     [data-testid="stTextInput"] input {
         height: 48px !important;
-        min-height: 48px !important;
-        max-height: 48px !important;
         font-size: 14px !important;
         padding: 12px 14px !important;
         border-radius: 12px !important;
@@ -275,8 +233,6 @@ div[data-testid="stButton"] > button:active {
     }
     div[data-testid="stButton"] > button {
         height: 48px !important;
-        min-height: 48px !important;
-        max-height: 48px !important;
         font-size: 15px !important;
         padding: 12px 14px !important;
         border-radius: 12px !important;
@@ -324,45 +280,40 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE - GLASSMORPHISM
+# 5. LOGIN PAGE - SIMPEL & MODERN
 # =====================
 if not st.session_state.logged_in:
     
-    col1, col2, col3 = st.columns([1, 2.2, 1])
-    with col2:
-        st.markdown("""
-        <div class="login-card">
-            <div class="login-title">✦ Kei AI</div>
-            <div class="login-subtitle">Teman AI Pintar Kamu</div>
-        """, unsafe_allow_html=True)
-        
-        # USERNAME
+    # PAKAI KOMPONEN STREAMLIT
+    st.title("✦ Kei AI")
+    st.caption("Teman AI Pintar Kamu")
+    
+    # SPASI
+    st.markdown("---")
+    
+    # FORM
+    with st.form(key="login_form"):
         username = st.text_input(
-            "", 
-            placeholder="Username", 
-            key="username_input", 
-            label_visibility="collapsed"
+            "Username",
+            placeholder="Masukkan username",
+            key="username_input"
         )
-        
-        # PASSWORD
         password = st.text_input(
-            "", 
-            placeholder="Password", 
-            type="password", 
-            key="password_input", 
-            label_visibility="collapsed"
+            "Password",
+            placeholder="Masukkan password",
+            type="password",
+            key="password_input"
         )
         
-        # TOMBOL MASUK
-        if st.button("Masuk", use_container_width=True, key="login_button"):
+        submitted = st.form_submit_button("Masuk", use_container_width=True)
+        
+        if submitted:
             if username == "ryuu" and password == "12345":
                 st.session_state.logged_in = True
                 st.session_state.messages = load_chat()
                 st.rerun()
             else:
                 st.error("Username atau password salah")
-        
-        st.markdown("</div>", unsafe_allow_html=True)
     
     st.stop()
 
