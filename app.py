@@ -15,15 +15,7 @@ st.set_page_config(page_title="Kei AI", page_icon="🤖", layout="wide")
 # =====================
 # 2. GOOGLE VERIFICATION & ANALYTICS
 # =====================
-st.markdown("""
-    <div style="height:80px;"></div>
-    <div style="text-align:center; margin-bottom:10px;">
-        <span style="font-size:64px; font-weight:800; color:#ff8ad8; letter-spacing:-2px;">✦ Kei AI</span>
-    </div>
-    <div style="text-align:center; margin-bottom:36px;">
-        <span style="font-size:20px; color:#ffffff; letter-spacing:0.4px;">Teman AI Pintar Kamu</span>
-    </div>
-    """, unsafe_allow_html=True)
+
 
 # =====================
 # 3. CSS
