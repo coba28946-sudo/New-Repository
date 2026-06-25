@@ -179,18 +179,18 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE
+# 5. LOGIN PAGE - SIMETRIS
 # =====================
 if not st.session_state.logged_in:
     
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2, col3 = st.columns([1, 2.2, 1])
     with col2:
         st.markdown("""
         <div style="text-align:center; padding-top:60px; margin-bottom:0px;">
-            <span style="font-size:64px; font-weight:800; color:#ff8ad8;">✦ Kei AI</span>
+            <span style="font-size:64px; font-weight:800; color:#ff8ad8; display:inline-block; width:100%; text-align:center;">✦ Kei AI</span>
         </div>
         <div style="text-align:center; margin-bottom:30px;">
-            <span style="font-size:18px; color:#ffffff; opacity:0.8;">Teman AI Pintar Kamu</span>
+            <span style="font-size:20px; color:#ffffff; opacity:0.85; display:inline-block; width:100%; text-align:center; letter-spacing:1.5px; word-spacing:3px;">Teman AI Pintar Kamu</span>
         </div>
         """, unsafe_allow_html=True)
         
