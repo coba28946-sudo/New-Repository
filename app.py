@@ -83,20 +83,18 @@ st.markdown("""
 }
 
 .login-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,138,216,0.15);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
     border-radius: 24px;
-    padding: 48px 40px 32px;
+    padding: 48px 36px 40px;
     width: 100%;
     max-width: 420px;
     text-align: center;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 80px rgba(255,138,216,0.07);
     animation: fadeUp 0.7s ease both;
 }
 
 .login-logo {
-    font-size: 52px;
+    font-size: 42px;
     font-weight: 800;
     color: #ff8ad8;
     letter-spacing: -1px;
@@ -104,16 +102,22 @@ st.markdown("""
 }
 
 .login-tagline {
-    color: #7a7a9a;
-    font-size: 15px;
+    color: #ffffff;
+    font-size: 14px;
     margin-bottom: 32px;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
 }
 
 .login-divider {
     height: 1px;
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.12);
     margin-bottom: 28px;
+}
+
+.login-footer {
+    font-size: 12px;
+    color: #ffffff;
+    margin-top: 24px;
 }
 
 /* Input */
@@ -121,44 +125,44 @@ st.markdown("""
 [data-testid="stTextInput"] svg   { display: none !important; }
 
 [data-testid="stTextInput"] input {
-    border-radius: 14px !important;
-    background: rgba(255,255,255,0.05) !important;
+    border-radius: 10px !important;
+    background: rgba(255,255,255,0.07) !important;
     color: white !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    padding: 16px 20px !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    padding: 14px 20px 14px 44px !important;
     font-size: 15px !important;
     transition: border-color 0.2s, box-shadow 0.2s !important;
 }
 
 [data-testid="stTextInput"] input:focus {
-    border-color: #ff8ad8 !important;
-    box-shadow: 0 0 0 3px rgba(255,138,216,0.12) !important;
+    border-color: rgba(255,255,255,0.5) !important;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.08) !important;
     outline: none !important;
 }
 
 [data-testid="stTextInput"] input::placeholder {
-    color: #555575 !important;
+    color: rgba(255,255,255,0.4) !important;
 }
 
 /* Tombol login */
-[data-testid="stButton"] button {
-    background: linear-gradient(135deg, #ff8ad8, #e060b8) !important;
-    color: white !important;
+div[data-testid="stButton"] > button {
+    background: white !important;
+    color: #07080f !important;
     font-weight: 700 !important;
     border: none !important;
-    border-radius: 14px !important;
-    padding: 16px !important;
-    font-size: 16px !important;
+    border-radius: 10px !important;
+    padding: 14px !important;
+    font-size: 15px !important;
     letter-spacing: 0.3px !important;
     transition: all 0.3s ease !important;
     width: 100% !important;
     margin-top: 8px !important;
-    box-shadow: 0 4px 20px rgba(255,138,216,0.3) !important;
 }
 
-[data-testid="stButton"] button:hover {
+div[data-testid="stButton"] > button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 30px rgba(255,138,216,0.45) !important;
+    box-shadow: 0 8px 24px rgba(255,255,255,0.15) !important;
+    background: #f0f0f0 !important;
 }
 
 [data-testid="column"] {
@@ -301,6 +305,8 @@ if not st.session_state.logged_in:
                 st.rerun()
             else:
                 st.error("❌ Username atau password salah")
+
+        st.markdown('<div class="login-footer">Kei AI · Your AI Companion</div>', unsafe_allow_html=True)
 
     st.stop()
 
