@@ -27,7 +27,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# 3. CSS - FINAL
+# 3. CSS - FINAL OPTIMAL
 # =====================
 st.markdown("""
 <style>
@@ -66,7 +66,7 @@ st.markdown("""
 }
 
 /* ======================================== */
-/* LOGIN PAGE - FINAL & AMAN */
+/* LOGIN PAGE - OPTIMAL */
 /* ======================================== */
 
 [data-testid="stTextInput"] label { 
@@ -102,6 +102,7 @@ st.markdown("""
     min-height: 56px !important;
     max-height: 56px !important;
     line-height: 1.5 !important;
+    transition: border-color 0.3s, box-shadow 0.3s !important;
 }
 [data-testid="stTextInput"] input:focus {
     border-color: #ff8ad8 !important;
@@ -134,11 +135,15 @@ div[data-testid="stButton"] > button {
     max-height: 56px !important;
     box-shadow: 0 4px 15px rgba(255,255,255,0.08) !important;
     line-height: 1.5 !important;
+    cursor: pointer !important;
 }
 div[data-testid="stButton"] > button:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 8px 30px rgba(255,255,255,0.2) !important;
     background: #f5f5f5 !important;
+}
+div[data-testid="stButton"] > button:active {
+    transform: scale(0.98) !important;
 }
 
 [data-testid="column"] {
@@ -151,6 +156,7 @@ div[data-testid="stButton"] > button:hover {
 .stAlert {
     text-align: center !important;
     border-radius: 12px !important;
+    animation: fadeIn 0.5s ease !important;
 }
 
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
@@ -177,24 +183,29 @@ div[data-testid="stButton"] > button:hover {
     height: 50px !important;
 }
 
-/* RESPONSIVE HP */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVE HP - OPTIMAL */
 @media (max-width: 768px) {
     [data-testid="stTextInput"] input {
-        height: 52px !important;
-        min-height: 52px !important;
-        max-height: 52px !important;
-        font-size: 15px !important;
-        padding: 14px 16px !important;
+        height: 48px !important;
+        min-height: 48px !important;
+        max-height: 48px !important;
+        font-size: 14px !important;
+        padding: 12px 14px !important;
     }
     [data-testid="stTextInput"] input::placeholder {
-        font-size: 15px !important;
+        font-size: 14px !important;
     }
     div[data-testid="stButton"] > button {
-        height: 52px !important;
-        min-height: 52px !important;
-        max-height: 52px !important;
-        font-size: 16px !important;
-        padding: 14px 16px !important;
+        height: 48px !important;
+        min-height: 48px !important;
+        max-height: 48px !important;
+        font-size: 15px !important;
+        padding: 12px 14px !important;
     }
 }
 </style>
@@ -239,13 +250,13 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
 # =====================
-# 5. LOGIN PAGE - FINAL
+# 5. LOGIN PAGE - FINAL OPTIMAL
 # =====================
 if not st.session_state.logged_in:
     
     col1, col2, col3 = st.columns([1, 2.2, 1])
     with col2:
-        # JUDUL
+        # JUDUL - OPTIMAL
         st.markdown("""
         <div style="text-align:center; padding-top:40px; margin-bottom:6px;">
             <span style="font-size:42px; font-weight:800; color:#ff8ad8; display:block; text-align:center; letter-spacing:-1px;">✦ Kei AI</span>
