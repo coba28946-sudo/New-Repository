@@ -20,7 +20,7 @@ st.markdown('''
 ''', unsafe_allow_html=True)
 
 # =====================
-# 3. TARUH GA4 TRACKING MANUAL (LEBIH MUDAH)
+# 3. GA4 TRACKING MANUAL
 # =====================
 st.markdown('''
 <!-- Google tag (gtag.js) -->
@@ -34,10 +34,8 @@ st.markdown('''
 ''', unsafe_allow_html=True)
 
 # =====================
-# 4. LANGSUNG KODE APLIKASI
+# 4. CSS
 # =====================
-
-# CSS
 st.markdown("""
 <style>
 .stApp {
@@ -88,11 +86,15 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# JUDUL
+# =====================
+# 5. JUDUL (HANYA SATU KALI)
+# =====================
 st.markdown('<div class="kei-title">✦ Kei AI</div>', unsafe_allow_html=True)
 st.write("Halo Kak! Kei siap menemani hari Kakak. 💕")
 
-# GEMINI SETUP
+# =====================
+# 6. GEMINI SETUP
+# =====================
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if not API_KEY:
@@ -120,7 +122,9 @@ def generate_content_with_retry(full_prompt):
         except Exception as e:
             return f"⚠️ Terjadi kesalahan sistem: {str(e)}"
 
-# PERSONA KEI
+# =====================
+# 7. PERSONA KEI
+# =====================
 KEI_PERSONA = """
 Kamu adalah Kei, AI companion yang imut, perhatian, dan sedikit tsundere.
 Karaktermu:
@@ -148,7 +152,9 @@ Responmu harus:
 - Akhiri selalu dengan kalimat penyemangat yang tulus
 """
 
-# STIKER
+# =====================
+# 8. STIKER
+# =====================
 STICKERS = {
     "happy": ["(｡♥‿♥｡)", "✨(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "٩(◕‿◕｡)۶", "(≧◡≦)", "🎉✨💕"],
     "love":  ["(♥ω♥*)", "💕(｡･ω･｡)💕", "ʕ•ᴥ•ʔ♥", "(˘³˘)♥", "💖💖💖"],
@@ -160,7 +166,9 @@ STICKERS = {
 def get_sticker(mood):
     return random.choice(STICKERS.get(mood, STICKERS["happy"]))
 
-# DIARY & CHAT FILE
+# =====================
+# 9. DIARY & CHAT FILE
+# =====================
 DIARY_FILE = "dear_diary.json"
 CHAT_FILE = "chat_history.json"
 
@@ -184,7 +192,9 @@ def save_chat(messages):
     with open(CHAT_FILE, "w") as f:
         json.dump(messages, f)
 
-# SESSION STATE
+# =====================
+# 10. SESSION STATE
+# =====================
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
@@ -197,7 +207,9 @@ if "mode" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = load_chat()
 
-# LOGIN
+# =====================
+# 11. LOGIN (TANPA DUPLIKASI JUDUL)
+# =====================
 if not st.session_state.logged_in:
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
@@ -220,7 +232,9 @@ if not st.session_state.logged_in:
     
     st.stop()
 
-# SIDEBAR
+# =====================
+# 12. SIDEBAR
+# =====================
 with st.sidebar:
     avatar_exists = os.path.exists("kei_avatar.png")
     
@@ -316,23 +330,19 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-# HEADER
+# =====================
+# 13. HEADER (TANPA DUPLIKASI JUDUL)
+# =====================
 if st.session_state.mode == "diary":
     st.markdown("""
     <div style="text-align:center;">
-        <h1 style="color:#ff8ad8; margin-bottom:0px;">💌 Dear Diary</h1>
-        <p style="color:#bdbdbd; font-size:18px; margin-top:0px;">Ceritain semua ke Kei ya~ 🥺</p>
-    </div>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-    <div style="text-align:center;">
-        <h1 style="color:#ff8ad8; margin-bottom:0px;">✦ Kei AI</h1>
-        <p style="color:#bdbdbd; font-size:18px; margin-top:0px;">Your AI Companion</p>
+        <p style="color:#bdbdbd; font-size:18px; margin-top:0px;">💌 Ceritain semua ke Kei ya~ 🥺</p>
     </div>
     """, unsafe_allow_html=True)
 
-# DEAR DIARY MODE
+# =====================
+# 14. DEAR DIARY MODE
+# =====================
 if st.session_state.mode == "diary":
     diary_entries = load_diary()
     
@@ -390,12 +400,16 @@ if st.session_state.mode == "diary":
     
     st.stop()
 
-# CHAT DISPLAY
+# =====================
+# 15. CHAT DISPLAY
+# =====================
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# CHAT INPUT
+# =====================
+# 16. CHAT INPUT
+# =====================
 prompt = st.chat_input("Ketik pesan ke Kei...")
 
 if prompt:
