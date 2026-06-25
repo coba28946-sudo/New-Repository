@@ -89,15 +89,14 @@ div[data-testid="stTextInput"] input {
     background: transparent !important;
     color: white !important;
     font-size: 15px !important;
-    padding: 14px 16px !important;
+    padding: 0 16px !important;
     border: none !important;
     box-shadow: none !important;
     height: 50px !important;
-    text-align: center !important;
+    line-height: 50px !important;
 }
 div[data-testid="stTextInput"] input::placeholder {
     color: rgba(255,255,255,0.28) !important;
-    text-align: center !important;
 }
 
 /* Hide label & icon */
