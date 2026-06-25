@@ -230,15 +230,15 @@ if "messages" not in st.session_state:
 if not st.session_state.logged_in:
     
     # Buat 3 kolom, ambil tengah
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2, col3 = st.columns([1, 2.2, 1])
     with col2:
-        # Judul utama - pas ukurannya
+        # Judul utama - DIPERLEBAR
         st.markdown("""
         <div style="text-align:center; padding-top:60px; margin-bottom:2px;">
             <span style="font-size:64px; font-weight:800; color:#ff8ad8; letter-spacing:-1px; display:block;">✦ Kei AI</span>
         </div>
-        <div style="text-align:center; margin-bottom:35px;">
-            <span style="font-size:20px; color:#ffffff; letter-spacing:0.3px; opacity:0.85;">Teman AI Pintar Kamu</span>
+        <div style="text-align:center; margin-bottom:35px; padding:0 20px;">
+            <span style="font-size:20px; color:#ffffff; letter-spacing:1.5px; opacity:0.85; display:block; word-spacing:3px;">Teman AI Pintar Kamu</span>
         </div>
         """, unsafe_allow_html=True)
         
