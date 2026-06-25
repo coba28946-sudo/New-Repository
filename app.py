@@ -275,12 +275,12 @@ if "messages" not in st.session_state:
 if not st.session_state.logged_in:
 
     st.markdown("""
-    <div class="login-wrapper">
-        <div class="login-card">
-            <div class="login-logo">✦ Kei AI</div>
-            <div class="login-tagline">Teman AI Pintar Kamu</div>
-            <div class="login-divider"></div>
-        </div>
+    <div style="height:80px;"></div>
+    <div style="text-align:center; margin-bottom:8px;">
+        <span style="font-size:42px; font-weight:800; color:#ff8ad8; letter-spacing:-1px;">✦ Kei AI</span>
+    </div>
+    <div style="text-align:center; margin-bottom:32px;">
+        <span style="font-size:14px; color:#ffffff; letter-spacing:0.4px;">Teman AI Pintar Kamu</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -306,7 +306,11 @@ if not st.session_state.logged_in:
             else:
                 st.error("❌ Username atau password salah")
 
-        st.markdown('<div class="login-footer">Kei AI · Your AI Companion</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="text-align:center; margin-top:20px; font-size:12px; color:#ffffff;">
+            Kei AI · Your AI Companion
+        </div>
+        """, unsafe_allow_html=True)
 
     st.stop()
 
