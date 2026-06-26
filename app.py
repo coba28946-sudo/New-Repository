@@ -85,17 +85,33 @@ html, body, .stApp {
 }
 
 /* Sembunyikan chrome bawaan Streamlit, TANPA menghilangkan tombol toggle sidebar */
-#MainMenu, footer { visibility: hidden; }
-header {
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; }
+
+header[data-testid="stHeader"] {
     background: transparent !important;
     box-shadow: none !important;
+    height: 3rem !important;
+    z-index: 999991 !important;
 }
-header [data-testid="stToolbar"] { visibility: hidden; }
-header [data-testid="collapsedControl"] {
+header[data-testid="stHeader"] [data-testid="stToolbar"] {
+    display: none !important;
+}
+[data-testid="collapsedControl"] {
+    display: flex !important;
     visibility: visible !important;
-    display: block !important;
+    opacity: 1 !important;
+    z-index: 999999 !important;
+    position: fixed !important;
+    top: 0.5rem !important;
+    left: 0.5rem !important;
 }
-header [data-testid="collapsedControl"] svg {
+[data-testid="collapsedControl"] button {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+}
+[data-testid="collapsedControl"] svg {
     color: var(--text-primary) !important;
     fill: var(--text-primary) !important;
 }
@@ -411,6 +427,13 @@ p, span, label, div { color: inherit; }
         max-width: 300px !important;
     }
 }
+
+/* Batasi lebar konten utama biar simetris (layout wide tapi konten center) */
+.main .block-container {
+    max-width: 800px !important;
+    margin: 0 auto !important;
+    padding-top: 2rem !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -720,24 +743,12 @@ with chat_container:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-# ===== CHAT INPUT DENGAN FALLBACK =====
-# Gunakan st.chat_input standar
+# ===== CHAT INPUT =====
+# st.chat_input mengembalikan None setiap saat sampai user benar-benar
+# mengirim pesan — ini normal, BUKAN tanda bahwa input gagal render.
+# Fallback manual sebelumnya selalu ikut muncul karena salah membaca None
+# sebagai "input tidak muncul", makanya jadi dobel. Sekarang dihapus.
 prompt = st.chat_input("Ketik pesan ke Kei...", key="chat_input_main")
-
-# Fallback: jika st.chat_input tidak muncul di mobile, gunakan form
-if prompt is None:
-    # Tampilkan input manual sebagai fallback
-    with st.container():
-        st.markdown("---")
-        cols = st.columns([5, 1])
-        with cols[0]:
-            user_input = st.text_input("", placeholder="Ketik pesan ke Kei...", key="fallback_input", label_visibility="collapsed")
-        with cols[1]:
-            send_btn = st.button("Kirim", key="send_btn", use_container_width=True)
-
-        if send_btn and user_input:
-            prompt = user_input
-            st.session_state.input_text = ""
 
 if prompt:
     # Proses pesan
