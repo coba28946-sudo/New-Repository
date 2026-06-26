@@ -560,6 +560,43 @@ if not st.session_state.logged_in:
     </div>
     """, unsafe_allow_html=True)
 
+    # JS: paksa hapus glow/shadow Streamlit saat focus
+    st.markdown("""
+    <style>
+    input:focus, input:focus-visible, input:active,
+    [data-baseweb="base-input"]:focus-within,
+    [data-testid="stTextInput"] > div:focus-within {
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    [data-baseweb="base-input"] { box-shadow: none !important; }
+    </style>
+    <script>
+    (function() {
+        function killGlow() {
+            document.querySelectorAll(
+                'input, [data-baseweb="base-input"], [data-testid="stTextInput"] > div, [data-testid="stTextInput"] > div > div'
+            ).forEach(function(el) {
+                el.style.setProperty('box-shadow', 'none', 'important');
+                el.style.setProperty('outline', 'none', 'important');
+                el.addEventListener('focus', function() {
+                    this.style.setProperty('box-shadow', 'none', 'important');
+                    this.style.setProperty('outline', 'none', 'important');
+                }, true);
+                el.addEventListener('mousedown', function() {
+                    setTimeout(() => {
+                        this.style.setProperty('box-shadow', 'none', 'important');
+                        this.style.setProperty('outline', 'none', 'important');
+                    }, 0);
+                }, true);
+            });
+        }
+        killGlow();
+        new MutationObserver(killGlow).observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['style']});
+    })();
+    </script>
+    """, unsafe_allow_html=True)
+
     # Card login — pakai columns untuk centering
     _, col, _ = st.columns([1, 1.1, 1])
     with col:
