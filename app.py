@@ -44,6 +44,8 @@ st.markdown("""
     --border-hover: rgba(255,138,216,0.45);
     --chat-bg: #2b2b2b;
     --shadow: rgba(0,0,0,0.7);
+    --msg-user: rgba(255,138,216,0.15);
+    --msg-assistant: rgba(255,255,255,0.05);
 }
 
 /* ===== LIGHT THEME ===== */
@@ -60,6 +62,8 @@ st.markdown("""
         --border-hover: rgba(255,138,216,0.6);
         --chat-bg: #ffffff;
         --shadow: rgba(0,0,0,0.1);
+        --msg-user: rgba(255,138,216,0.12);
+        --msg-assistant: rgba(0,0,0,0.04);
     }
 }
 
@@ -70,7 +74,7 @@ html, body, .stApp {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Hide streamlit default chrome on login */
+/* Hide streamlit default chrome */
 #MainMenu, footer, header { visibility: hidden; }
 
 /* ===== LOGIN PAGE ===== */
@@ -180,7 +184,21 @@ div[data-testid="stAlert"] {
     background: var(--bg-secondary) !important;
     transition: background-color 0.3s ease;
 }
-[data-testid="stChatMessage"] { background: transparent !important; }
+
+/* ===== CHAT MESSAGES ===== */
+[data-testid="stChatMessage"] { 
+    background: transparent !important;
+}
+[data-testid="stChatMessage"] div[data-testid="stMarkdownContainer"] {
+    background: var(--msg-assistant) !important;
+    padding: 12px 16px !important;
+    border-radius: 12px !important;
+}
+
+/* User messages */
+[data-testid="stChatMessage"][data-testid*="user"] div[data-testid="stMarkdownContainer"] {
+    background: var(--msg-user) !important;
+}
 
 /* ===== CHAT INPUT ===== */
 [data-testid="stChatInput"] {
@@ -189,6 +207,7 @@ div[data-testid="stAlert"] {
     border-radius: 16px !important;
     padding: 4px 8px !important;
     box-shadow: 0 2px 12px var(--shadow) !important;
+    margin-bottom: 20px !important;
 }
 [data-testid="stChatInput"] textarea {
     background: transparent !important;
@@ -199,6 +218,7 @@ div[data-testid="stAlert"] {
     padding: 12px 16px !important;
     line-height: 1.5 !important;
     resize: none !important;
+    min-height: 50px !important;
 }
 [data-testid="stChatInput"] textarea::placeholder {
     color: var(--text-muted) !important;
@@ -219,6 +239,7 @@ div[data-testid="stAlert"] {
     fill: black !important;
     color: black !important;
 }
+
 h1 { color: #ff8ad8 !important; }
 
 /* ===== MODE BUTTONS (FLOATING AT TOP) ===== */
@@ -261,20 +282,17 @@ h1 { color: #ff8ad8 !important; }
 
 /* ===== MOBILE RESPONSIVE ===== */
 @media (max-width: 768px) {
-    /* Sidebar lebih tipis di mobile */
     [data-testid="stSidebar"] {
         min-width: 200px !important;
         max-width: 280px !important;
     }
     
-    /* Mode buttons tetap terlihat */
     [data-testid="stSidebar"] .stButton button {
         font-size: 14px !important;
         padding: 8px 12px !important;
         width: 100% !important;
     }
     
-    /* Login form lebih compact */
     .login-title {
         font-size: 32px !important;
     }
@@ -282,7 +300,6 @@ h1 { color: #ff8ad8 !important; }
         padding: 20px 16px !important;
     }
     
-    /* Mode switcher di mobile */
     .mode-switcher {
         gap: 8px;
         margin: 8px 0 16px 0;
@@ -295,6 +312,28 @@ h1 { color: #ff8ad8 !important; }
         justify-content: center;
         min-width: 80px;
     }
+    
+    /* Pastikan chat input terlihat di mobile */
+    [data-testid="stChatInput"] {
+        position: sticky !important;
+        bottom: 0 !important;
+        background: var(--bg-primary) !important;
+        z-index: 100 !important;
+        border-top: 1px solid var(--border-color) !important;
+        border-radius: 0 !important;
+        padding: 8px 12px !important;
+        margin: 0 !important;
+    }
+    [data-testid="stChatInput"] textarea {
+        font-size: 14px !important;
+        min-height: 44px !important;
+        padding: 8px 12px !important;
+    }
+    
+    /* Chat messages container */
+    .main > div {
+        padding-bottom: 80px !important;
+    }
 }
 
 /* Tablet */
@@ -304,13 +343,46 @@ h1 { color: #ff8ad8 !important; }
         max-width: 300px !important;
     }
 }
+
+/* ===== CUSTOM CHAT INPUT FALLBACK ===== */
+.custom-chat-input {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-color);
+    z-index: 1000;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.custom-chat-input input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 15px;
+}
+.custom-chat-input button {
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    background: #ff8ad8;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
 </style>
 """, unsafe_allow_html=True)
 
 # =====================
 # 4. SESSION STATE
 # =====================
-for key, val in {"logged_in": False, "mode": "chat", "messages": [], "avatar": None}.items():
+for key, val in {"logged_in": False, "mode": "chat", "messages": [], "avatar": None, "input_text": ""}.items():
     if key not in st.session_state:
         st.session_state[key] = val
 
@@ -429,7 +501,6 @@ def get_sticker(mood):
 # =====================
 # 10. MODE SWITCHER (FLOATING BUTTONS)
 # =====================
-# Tampilkan mode switcher di bagian atas (selalu terlihat)
 current_mode = st.session_state.mode
 
 chat_class = "mode-btn active" if current_mode == "chat" else "mode-btn"
@@ -605,20 +676,40 @@ if st.session_state.mode == "diary":
     st.stop()
 
 # =====================
-# 14. CHAT DISPLAY
+# 14. CHAT DISPLAY & INPUT (DIPERBAIKI)
 # =====================
+# Load chat history
 if not st.session_state.messages:
     st.session_state.messages = load_json(CHAT_FILE)
 
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+# Tampilkan pesan
+chat_container = st.container()
+with chat_container:
+    for idx, msg in enumerate(st.session_state.messages):
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
 
-# =====================
-# 15. CHAT INPUT
-# =====================
-prompt = st.chat_input("Ketik pesan ke Kei...")
+# ===== CHAT INPUT DENGAN FALLBACK =====
+# Gunakan st.chat_input standar
+prompt = st.chat_input("Ketik pesan ke Kei...", key="chat_input_main")
+
+# Fallback: jika st.chat_input tidak muncul di mobile, gunakan form
+if prompt is None:
+    # Tampilkan input manual sebagai fallback
+    with st.container():
+        st.markdown("---")
+        cols = st.columns([5, 1])
+        with cols[0]:
+            user_input = st.text_input("", placeholder="Ketik pesan ke Kei...", key="fallback_input", label_visibility="collapsed")
+        with cols[1]:
+            send_btn = st.button("Kirim", key="send_btn", use_container_width=True)
+        
+        if send_btn and user_input:
+            prompt = user_input
+            st.session_state.input_text = ""
+
 if prompt:
+    # Proses pesan
     st.session_state.messages.append({"role": "user", "content": prompt})
 
     browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
