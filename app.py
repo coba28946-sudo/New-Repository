@@ -353,8 +353,213 @@ small[data-testid="InputInstructions"] {
 """, unsafe_allow_html=True)
 
 # =====================
-# 4. SESSION STATE
+# 3b. CSS DINAMIS (Tema & Warna) — override, tidak mengubah CSS asli di atas
 # =====================
+def render_dynamic_css():
+    accent = st.session_state.get("theme_color", "#ff8ad8")
+    theme  = st.session_state.get("theme", "dark")
+
+    # Hitung versi rgba dari accent buat dipakai di rgba(...) yang ada di CSS asli
+    hex_color = accent.lstrip("#")
+    try:
+        r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+    except Exception:
+        r, g, b = (255, 138, 216)
+
+    if theme == "light":
+        bg_main      = "#f7f5fa"
+        bg_sidebar   = "#ffffff"
+        text_main    = "#1a1a1a"
+        text_dim     = "rgba(0,0,0,0.55)"
+        text_dimmer  = "rgba(0,0,0,0.35)"
+        border_col   = "rgba(0,0,0,0.12)"
+        input_bg     = "rgba(0,0,0,0.04)"
+        chat_input_bg= "#ffffff"
+    else:
+        bg_main      = "#0a0e1a"
+        bg_sidebar   = "#111111"
+        text_main    = "#ffffff"
+        text_dim     = "rgba(255,255,255,0.5)"
+        text_dimmer  = "rgba(255,255,255,0.35)"
+        border_col   = "rgba(255,255,255,0.07)"
+        input_bg     = "rgba(255,255,255,0.04)"
+        chat_input_bg= "#1a1a1a"
+
+    # Catatan desain: setiap aturan di sini punya pasangan simetris dark/light —
+    # hanya bg_main/bg_sidebar/text_main/dst yang berbeda, struktur (border-radius,
+    # padding, margin) selalu sama persis dengan CSS statis di section 3 supaya
+    # tema terang terasa seperti "kebalikan warna" dari tema gelap, bukan layout baru.
+    # Avatar chat (stChatMessageAvatarUser/Assistant) SENGAJA tidak disentuh sama
+    # sekali — biarkan default Streamlit, supaya ikon/emoji-nya tidak rusak.
+    st.markdown(f"""
+    <style>
+    html, body, .stApp,
+    [data-testid="stAppViewContainer"],
+    [data-testid="stMain"],
+    [data-testid="stMainBlockContainer"],
+    [data-testid="stBottomBlockContainer"],
+    [data-testid="stBottom"] {{
+        background: {bg_main} !important;
+        color: {text_main} !important;
+    }}
+
+    .login-title {{ color: {accent} !important; }}
+    .login-sub {{ color: {text_dim} !important; }}
+    .login-footer {{ color: {text_dimmer} !important; }}
+
+    section[data-testid="stSidebar"] {{
+        background: {bg_sidebar} !important;
+        border-right: 1px solid {border_col} !important;
+    }}
+
+    .kei-header h1 {{ color: {accent} !important; }}
+    .kei-header p {{ color: {text_dim} !important; }}
+
+    .kei-input-area {{
+        background: {bg_main} !important;
+        border-top: 1px solid {border_col} !important;
+    }}
+
+    [data-testid="stChatInput"] {{
+        background: {chat_input_bg} !important;
+        border: 1px solid {border_col} !important;
+    }}
+    [data-testid="stChatInput"] textarea {{
+        background: transparent !important;
+        color: {text_main} !important;
+    }}
+    [data-testid="stChatInput"] textarea::placeholder {{ color: {text_dimmer} !important; }}
+    [data-testid="stChatInput"] button {{ background: {accent} !important; }}
+
+    /* Teks isi pesan chat — TIDAK menyentuh avatar sama sekali */
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p,
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li,
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] strong {{
+        color: {text_main} !important;
+    }}
+
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] li,
+    [data-testid="stMarkdownContainer"] strong,
+    [data-testid="stMarkdownContainer"] h1,
+    [data-testid="stMarkdownContainer"] h2,
+    [data-testid="stMarkdownContainer"] h3 {{
+        color: {text_main} !important;
+    }}
+
+    /* ===== Sidebar: tombol ===== */
+    .kei-sidebar-inner .stButton > button {{
+        background: {input_bg} !important;
+        color: {text_main} !important;
+        border: 1px solid {border_col} !important;
+    }}
+    .kei-sidebar-inner .stButton > button p,
+    .kei-sidebar-inner .stButton > button span {{
+        color: {text_main} !important;
+    }}
+    .kei-sidebar-inner .stButton > button:hover {{
+        border-color: rgba({r},{g},{b},0.4) !important;
+        color: {accent} !important;
+        background: rgba({r},{g},{b},0.08) !important;
+    }}
+    .kei-sidebar-inner .stButton > button:hover p,
+    .kei-sidebar-inner .stButton > button:hover span {{
+        color: {accent} !important;
+    }}
+
+    /* ===== Sidebar: text input ===== */
+    .kei-sidebar-inner [data-testid="stTextInput"] > div {{
+        background: {input_bg} !important;
+        border: 1px solid {border_col} !important;
+    }}
+    .kei-sidebar-inner [data-testid="stTextInput"] input {{
+        background: transparent !important;
+        color: {text_main} !important;
+    }}
+    .kei-sidebar-inner [data-testid="stTextInput"] label {{ color: {text_dim} !important; }}
+
+    /* ===== Sidebar: expander (sama struktur dengan CSS statis dark, cuma warnanya dibalik) ===== */
+    .kei-sidebar-inner [data-testid="stExpander"] {{
+        background: {input_bg} !important;
+        border: 1px solid {border_col} !important;
+        border-radius: 10px !important;
+    }}
+    .kei-sidebar-inner [data-testid="stExpander"] summary {{
+        color: {text_main} !important;
+        font-size: 13px !important;
+    }}
+    .kei-sidebar-inner [data-testid="stExpander"] summary span,
+    .kei-sidebar-inner [data-testid="stExpander"] summary p {{
+        color: {text_main} !important;
+    }}
+    .kei-sidebar-inner [data-testid="stExpander"] [data-testid="stMarkdownContainer"] p,
+    .kei-sidebar-inner [data-testid="stExpander"] [data-testid="stMarkdownContainer"] strong {{
+        color: {text_main} !important;
+    }}
+
+    .kei-sidebar-inner label,
+    .kei-sidebar-inner [data-testid="stCaptionContainer"] p,
+    .kei-sidebar-inner [data-testid="stWidgetLabel"] p {{
+        color: {text_dim} !important;
+    }}
+    .kei-sidebar-inner [data-testid="stRadio"] label span,
+    .kei-sidebar-inner [data-testid="stRadio"] label p {{ color: {text_main} !important; }}
+
+    /* ===== Mode switch (Chat / Diary) ===== */
+    .mode-btn:hover {{ border-color: rgba({r},{g},{b},0.4) !important; color: {accent} !important; }}
+    .mode-btn.active {{
+        border-color: {accent} !important;
+        background: rgba({r},{g},{b},0.08) !important;
+        color: {accent} !important;
+    }}
+
+    /* ===== Status box (online / mood / streak) ===== */
+    .status-online {{
+        background: {input_bg} !important;
+        border: 1px solid {border_col} !important;
+        color: {text_dim} !important;
+    }}
+    .status-online span {{ color: {text_dim} !important; }}
+    .status-online b {{ color: {accent} !important; }}
+
+    /* ===== Diary box ===== */
+    .diary-box {{
+        background: rgba({r},{g},{b},0.06) !important;
+        border: 1px solid rgba({r},{g},{b},0.15) !important;
+        color: {text_main} !important;
+    }}
+    .diary-box b {{ color: {accent} !important; }}
+
+    .kei-divider {{ background: {border_col} !important; }}
+
+    .music-result {{
+        background: rgba({r},{g},{b},0.05) !important;
+        border: 1px solid rgba({r},{g},{b},0.15) !important;
+        color: {text_dim} !important;
+    }}
+    .music-result a {{ color: {accent} !important; }}
+
+    /* ===== Statistik (st.metric) ===== */
+    [data-testid="stMetricValue"] {{ color: {accent} !important; }}
+    [data-testid="stMetricLabel"] {{ color: {text_dim} !important; }}
+
+    /* ===== Alert (error/success/warning) teks ikut tema ===== */
+    [data-testid="stAlertContentInfo"],
+    [data-testid="stAlertContentSuccess"],
+    [data-testid="stAlertContentWarning"],
+    [data-testid="stAlertContentError"] {{
+        color: {text_main} !important;
+    }}
+
+    /* ===== Tombol download ===== */
+    .stDownloadButton button {{
+        background: rgba({r},{g},{b},0.12) !important;
+        color: {accent} !important;
+        border: 1px solid rgba({r},{g},{b},0.3) !important;
+    }}
+    </style>
+    """, unsafe_allow_html=True)
+
 for key, val in {
     "logged_in": False,
     "mode": "chat",
@@ -362,9 +567,43 @@ for key, val in {
     "avatar": None,
     "sidebar_open": True,
     "conv_result": None,   # {"bytes": ..., "filename": ..., "mime": ...}
+    "theme": "dark",       # "dark" atau "light"
+    "lang": "id",          # "id" atau "en"
+    "theme_color": "#ff8ad8",  # warna aksen Kei, bisa dikustom
+    "current_mood_index": None,  # index mood manual (None = pakai mood harian otomatis)
 }.items():
     if key not in st.session_state:
         st.session_state[key] = val
+
+# Muat preferensi tema/bahasa/warna yang sudah disimpan sebelumnya (persist antar sesi)
+PREFS_FILE = "kei_prefs.json"
+
+def load_prefs():
+    if os.path.exists(PREFS_FILE):
+        try:
+            with open(PREFS_FILE, "r") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, ValueError):
+            return {}
+    return {}
+
+def save_prefs():
+    prefs = {
+        "theme": st.session_state.theme,
+        "lang": st.session_state.lang,
+        "theme_color": st.session_state.theme_color,
+    }
+    with open(PREFS_FILE, "w") as f:
+        json.dump(prefs, f, ensure_ascii=False)
+
+if "_prefs_loaded" not in st.session_state:
+    _prefs = load_prefs()
+    st.session_state.theme = _prefs.get("theme", st.session_state.theme)
+    st.session_state.lang = _prefs.get("lang", st.session_state.lang)
+    st.session_state.theme_color = _prefs.get("theme_color", st.session_state.theme_color)
+    st.session_state._prefs_loaded = True
+
+render_dynamic_css()
 
 # =====================
 # 5. FILE HELPERS
@@ -384,21 +623,138 @@ def save_json(path, data):
         json.dump(data, f, ensure_ascii=False)
 
 # =====================
+# 5b. BAHASA (i18n)
+# =====================
+TEXTS = {
+    "id": {
+        "app_tagline": "Teman AI Pintar Kamu",
+        "app_companion": "Your AI Companion",
+        "username": "Username",
+        "password": "Password",
+        "login_btn": "Masuk",
+        "login_err_empty": "Username dan password tidak boleh kosong.",
+        "login_err_wrong": "Username atau password salah.",
+        "chat_btn": "💬 Chat",
+        "diary_btn": "💌 Diary",
+        "online_status": "Online",
+        "mood_today": "Mood Kei hari ini",
+        "streak": "Streak ngobrol",
+        "streak_unit": "hari",
+        "mode_label": "Mode",
+        "mode_chat": "💬 Chat",
+        "mode_diary": "💌 Dear Diary",
+        "sticker_expander": "😄 Kirim Stiker",
+        "music_expander": "🎵 Putar Musik",
+        "music_input_label": "Nama lagu / artis",
+        "music_search_btn": "Cari 🔍",
+        "convert_expander": "🔄 Konversi File",
+        "settings_expander": "⚙️ Pengaturan",
+        "theme_label": "🌙 Tampilan",
+        "theme_dark": "Gelap",
+        "theme_light": "Terang",
+        "lang_label": "🌐 Bahasa",
+        "lang_id": "Indonesia",
+        "lang_en": "English",
+        "mood_expander": "🎭 Ubah Mood Kei",
+        "mood_pick_label": "Pilih mood Kei sekarang:",
+        "mood_auto_btn": "🔄 Otomatis (harian)",
+        "mood_auto_active": "Aktif — mood berganti otomatis tiap hari",
+        "mood_auto_inactive": "Nonaktif — kamu pilih mood manual",
+        "stats_expander": "📊 Statistik Chat",
+        "stats_total_msgs": "Total pesan",
+        "stats_user_msgs": "Pesan kamu",
+        "stats_kei_msgs": "Balasan Kei",
+        "stats_active_days": "Hari aktif",
+        "new_chat": "🆕 New Chat",
+        "clear_chat": "🗑️ Clear Chat",
+        "logout": "🚪 Logout",
+        "diary_header_sub": "Ceritain semua ke Kei ya~",
+        "diary_old_entries": "📖 Lihat {n} entri diary lama",
+        "diary_textarea_label": "💌 Cerita ke Kei...",
+        "diary_placeholder": "Hari ini aku ngerasa... / Kei, aku mau curhat nih...",
+        "diary_send": "Kirim ke Kei 💕",
+        "diary_clear": "Hapus Diary",
+        "diary_cleared": "Diary berhasil dihapus!",
+        "diary_you_wrote": "Kamu tulis:",
+        "diary_kei_answers": "Kei menjawab:",
+        "chat_placeholder": "Ketik pesan ke Kei... 💕",
+    },
+    "en": {
+        "app_tagline": "Your Smart AI Companion",
+        "app_companion": "Your AI Companion",
+        "username": "Username",
+        "password": "Password",
+        "login_btn": "Log In",
+        "login_err_empty": "Username and password cannot be empty.",
+        "login_err_wrong": "Wrong username or password.",
+        "chat_btn": "💬 Chat",
+        "diary_btn": "💌 Diary",
+        "online_status": "Online",
+        "mood_today": "Kei's mood today",
+        "streak": "Chat streak",
+        "streak_unit": "days",
+        "mode_label": "Mode",
+        "mode_chat": "💬 Chat",
+        "mode_diary": "💌 Dear Diary",
+        "sticker_expander": "😄 Send Sticker",
+        "music_expander": "🎵 Play Music",
+        "music_input_label": "Song / artist name",
+        "music_search_btn": "Search 🔍",
+        "convert_expander": "🔄 File Converter",
+        "settings_expander": "⚙️ Settings",
+        "theme_label": "🌙 Appearance",
+        "theme_dark": "Dark",
+        "theme_light": "Light",
+        "lang_label": "🌐 Language",
+        "lang_id": "Indonesian",
+        "lang_en": "English",
+        "mood_expander": "🎭 Change Kei's Mood",
+        "mood_pick_label": "Pick Kei's mood now:",
+        "mood_auto_btn": "🔄 Automatic (daily)",
+        "mood_auto_active": "Active — mood changes automatically every day",
+        "mood_auto_inactive": "Inactive — you picked a manual mood",
+        "stats_expander": "📊 Chat Stats",
+        "stats_total_msgs": "Total messages",
+        "stats_user_msgs": "Your messages",
+        "stats_kei_msgs": "Kei's replies",
+        "stats_active_days": "Active days",
+        "new_chat": "🆕 New Chat",
+        "clear_chat": "🗑️ Clear Chat",
+        "logout": "🚪 Logout",
+        "diary_header_sub": "Tell Kei everything~",
+        "diary_old_entries": "📖 View {n} old diary entries",
+        "diary_textarea_label": "💌 Talk to Kei...",
+        "diary_placeholder": "Today I feel... / Kei, I want to talk...",
+        "diary_send": "Send to Kei 💕",
+        "diary_clear": "Clear Diary",
+        "diary_cleared": "Diary cleared!",
+        "diary_you_wrote": "You wrote:",
+        "diary_kei_answers": "Kei answers:",
+        "chat_placeholder": "Type a message to Kei... 💕",
+    },
+}
+
+def t(key):
+    """Ambil teks sesuai bahasa aktif."""
+    lang = st.session_state.get("lang", "id")
+    return TEXTS.get(lang, TEXTS["id"]).get(key, key)
+
+# =====================
 # 6. LOGIN
 # =====================
 if not st.session_state.logged_in:
-    st.markdown("""
+    st.markdown(f"""
     <div style="padding-top:35px; text-align:center; margin-bottom:12px;">
-        <div style="color:#ff8ad8; font-size:50px; font-weight:700; letter-spacing:-1px; margin-bottom:0px; line-height:1.1;">✦ Kei AI</div>
-        <div style="color:rgba(255,255,255,0.5); font-size:17px; margin-top:2px;">Teman AI Pintar Kamu</div>
+        <div style="color:{st.session_state.theme_color}; font-size:50px; font-weight:700; letter-spacing:-1px; margin-bottom:0px; line-height:1.1;">✦ Kei AI</div>
+        <div style="color:rgba(255,255,255,0.5); font-size:17px; margin-top:2px;">{t('app_tagline')}</div>
     </div>
     """, unsafe_allow_html=True)
 
     _, col, _ = st.columns([1, 1.1, 1])
     with col:
-        username = st.text_input("Username", key="login_username")
-        password = st.text_input("Password", type="password", key="login_password")
-        submitted = st.button("Masuk", key="login_btn")
+        username = st.text_input(t("username"), key="login_username")
+        password = st.text_input(t("password"), type="password", key="login_password")
+        submitted = st.button(t("login_btn"), key="login_btn")
 
         st.components.v1.html("""
         <script>
@@ -418,17 +774,17 @@ if not st.session_state.logged_in:
 
         if submitted:
             if not username or not password:
-                st.error("Username dan password tidak boleh kosong.")
+                st.error(t("login_err_empty"))
             elif username == "ryuu" and password == "12345":
                 st.session_state.logged_in = True
                 st.session_state.messages = load_json(CHAT_FILE)
                 st.rerun()
             else:
-                st.error("Username atau password salah.")
+                st.error(t("login_err_wrong"))
 
-    st.markdown("""
+    st.markdown(f"""
     <div style="text-align:center;margin-top:20px;color:rgba(255,255,255,0.18);font-size:12px;">
-        Kei AI — Your AI Companion ✦
+        Kei AI — {t('app_companion')} ✦
     </div>
     """, unsafe_allow_html=True)
 
@@ -557,10 +913,41 @@ KEI_MOODS = [
     ("🌸", "Bahagia"),
 ]
 
+# Label EN sejajar index dengan KEI_MOODS, dipakai kalau lang == "en"
+KEI_MOODS_EN_LABELS = [
+    "Cheerful",
+    "Clingy",
+    "Excited",
+    "Calm",
+    "Curious",
+    "Loving",
+    "A bit sleepy",
+    "Happy",
+]
+
 def get_today_mood():
     seed_val = int(datetime.now().strftime("%Y%m%d"))
     rnd = random.Random(seed_val)
     return rnd.choice(KEI_MOODS)
+
+def get_current_mood():
+    """
+    Mood Kei sekarang. Kalau user sudah pilih mood manual (current_mood_index),
+    pakai itu. Kalau tidak, jatuh balik ke mood harian otomatis berdasarkan tanggal.
+    Label disesuaikan dengan bahasa aktif.
+    """
+    idx = st.session_state.get("current_mood_index")
+    if idx is None:
+        seed_val = int(datetime.now().strftime("%Y%m%d"))
+        rnd = random.Random(seed_val)
+        idx = KEI_MOODS.index(rnd.choice(KEI_MOODS))
+
+    emoji, label_id = KEI_MOODS[idx]
+    if st.session_state.get("lang") == "en":
+        label = KEI_MOODS_EN_LABELS[idx]
+    else:
+        label = label_id
+    return emoji, label
 
 # =====================
 # 9c. STREAK NGOBROL
@@ -593,12 +980,52 @@ def update_and_get_streak():
     return streak
 
 # =====================
+# 9d. STATISTIK CHAT
+# =====================
+ACTIVE_DAYS_FILE = "active_days.json"
+
+def record_active_day_and_get_stats(messages):
+    """
+    Catat tanggal hari ini ke daftar hari aktif (tidak menyentuh streak.json),
+    lalu hitung statistik chat: total pesan, pesan user, balasan Kei, dan total hari aktif.
+    """
+    active_days = []
+    if os.path.exists(ACTIVE_DAYS_FILE):
+        try:
+            with open(ACTIVE_DAYS_FILE, "r") as f:
+                active_days = json.load(f)
+        except (json.JSONDecodeError, ValueError):
+            active_days = []
+
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    if today_str not in active_days:
+        active_days.append(today_str)
+        save_json(ACTIVE_DAYS_FILE, active_days)
+
+    total_msgs = len(messages)
+    user_msgs  = sum(1 for m in messages if m.get("role") == "user")
+    kei_msgs   = sum(1 for m in messages if m.get("role") == "assistant")
+
+    return {
+        "total_msgs": total_msgs,
+        "user_msgs": user_msgs,
+        "kei_msgs": kei_msgs,
+        "active_days": len(active_days),
+    }
+
+# =====================
 # 10. SIDEBAR
 # =====================
 with st.sidebar:
     st.markdown('<div class="kei-sidebar-inner">', unsafe_allow_html=True)
 
     current_mode = st.session_state.mode
+    _accent = st.session_state.get("theme_color", "#ff8ad8")
+    _hex = _accent.lstrip("#")
+    try:
+        _r, _g, _b = tuple(int(_hex[i:i+2], 16) for i in (0, 2, 4))
+    except Exception:
+        _r, _g, _b = (255, 138, 216)
 
     active_index = 1 if current_mode == "chat" else 2
     st.markdown(f"""
@@ -612,13 +1039,13 @@ with st.sidebar:
         text-align: center !important;
     }}
     .st-key-kei_mode_switch [data-testid="stButton"] button:hover {{
-        border-color: rgba(255,138,216,0.4) !important;
-        color: #ff8ad8 !important;
+        border-color: rgba({_r},{_g},{_b},0.4) !important;
+        color: {_accent} !important;
     }}
     .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button {{
-        border-color: #ff8ad8 !important;
-        color: #ff8ad8 !important;
-        background: rgba(255,138,216,0.08) !important;
+        border-color: {_accent} !important;
+        color: {_accent} !important;
+        background: rgba({_r},{_g},{_b},0.08) !important;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -627,12 +1054,12 @@ with st.sidebar:
     with mode_switch:
         mcol1, mcol2 = st.columns(2)
         with mcol1:
-            if st.button("💬 Chat", key="mode_chat_btn", use_container_width=True):
+            if st.button(t("chat_btn"), key="mode_chat_btn", use_container_width=True):
                 if st.session_state.mode != "chat":
                     st.session_state.mode = "chat"
                     st.rerun()
         with mcol2:
-            if st.button("💌 Diary", key="mode_diary_btn", use_container_width=True):
+            if st.button(t("diary_btn"), key="mode_diary_btn", use_container_width=True):
                 if st.session_state.mode != "diary":
                     st.session_state.mode = "diary"
                     st.rerun()
@@ -657,28 +1084,94 @@ with st.sidebar:
                 f.write(uploaded_avatar.getbuffer())
             st.rerun()
 
-    st.markdown("""
+    st.markdown(f"""
     <div class="status-online">
         <div class="dot-online"></div>
-        <span>Online &nbsp;·&nbsp; KEI AI</span>
+        <span>{t('online_status')} &nbsp;·&nbsp; KEI AI</span>
     </div>
     """, unsafe_allow_html=True)
 
-    mood_emoji, mood_label = get_today_mood()
+    mood_emoji, mood_label = get_current_mood()
     streak_count = update_and_get_streak()
 
     st.markdown(f"""
     <div class="status-online">
         <span style="font-size:16px;">{mood_emoji}</span>
-        <span>Mood Kei hari ini: <b style="color:#ff8ad8;">{mood_label}</b></span>
+        <span>{t('mood_today')}: <b style="color:{_accent};">{mood_label}</b></span>
     </div>
     <div class="status-online">
         <span style="font-size:16px;">🔥</span>
-        <span>Streak ngobrol: <b style="color:#ff8ad8;">{streak_count} hari</b></span>
+        <span>{t('streak')}: <b style="color:{_accent};">{streak_count} {t('streak_unit')}</b></span>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown(f"<div style='font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:12px;'>Mode: {'💬 Chat' if st.session_state.mode == 'chat' else '💌 Dear Diary'}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:12px;'>{t('mode_label')}: {t('mode_chat') if st.session_state.mode == 'chat' else t('mode_diary')}</div>", unsafe_allow_html=True)
+
+    st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
+
+    with st.expander(t("mood_expander")):
+        st.caption(t("mood_pick_label"))
+
+        current_idx = st.session_state.get("current_mood_index")
+
+        # CSS: kasih border/warna aksen ke tombol mood yang sedang aktif (dipilih manual)
+        mood_btn_css = "<style>"
+        for i in range(len(KEI_MOODS)):
+            if i == current_idx:
+                mood_btn_css += f"""
+                .st-key-mood_wrap_{i} [data-testid="stButton"] button {{
+                    border: 2px solid {_accent} !important;
+                    background: rgba({_r},{_g},{_b},0.15) !important;
+                    box-shadow: 0 0 0 1px rgba({_r},{_g},{_b},0.3) !important;
+                }}
+                """
+        mood_btn_css += "</style>"
+        st.markdown(mood_btn_css, unsafe_allow_html=True)
+
+        mood_cols = st.columns(4)
+        for i, (m_emoji, m_label_id) in enumerate(KEI_MOODS):
+            m_label = KEI_MOODS_EN_LABELS[i] if st.session_state.get("lang") == "en" else m_label_id
+            with mood_cols[i % 4]:
+                mood_btn_wrap = st.container(key=f"mood_wrap_{i}")
+                with mood_btn_wrap:
+                    if st.button(f"{m_emoji}", key=f"mood_pick_{i}", help=m_label, use_container_width=True):
+                        st.session_state.current_mood_index = i
+                        st.rerun()
+
+        st.markdown('<div style="height:6px;"></div>', unsafe_allow_html=True)
+
+        # Status: otomatis aktif kalau belum ada pilihan manual
+        is_auto_active = current_idx is None
+        if is_auto_active:
+            status_text = t("mood_auto_active")
+            status_color = "#4ade80"
+            status_dot = "●"
+        else:
+            status_text = t("mood_auto_inactive")
+            status_color = "rgba(255,255,255,0.35)"
+            status_dot = "○"
+
+        st.markdown(f"""
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:{status_color};margin-bottom:6px;">
+            <span>{status_dot}</span><span>{status_text}</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        auto_btn_wrap = st.container(key="mood_auto_btn_wrap")
+        with auto_btn_wrap:
+            if is_auto_active:
+                st.markdown(f"""
+                <style>
+                .st-key-mood_auto_btn_wrap [data-testid="stButton"] button {{
+                    border: 2px solid {_accent} !important;
+                    background: rgba({_r},{_g},{_b},0.15) !important;
+                    color: {_accent} !important;
+                }}
+                </style>
+                """, unsafe_allow_html=True)
+            if st.button(t("mood_auto_btn"), key="mood_auto_btn", use_container_width=True):
+                st.session_state.current_mood_index = None
+                st.rerun()
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
@@ -710,19 +1203,19 @@ with st.sidebar:
                         save_json(CHAT_FILE, st.session_state.messages)
                         st.rerun()
 
-    with st.expander("🎵 Putar Musik"):
-        music_query = st.text_input("Nama lagu / artis", key="music_input")
-        if st.button("Cari 🔍", key="music_search"):
+    with st.expander(t("music_expander")):
+        music_query = st.text_input(t("music_input_label"), key="music_input")
+        if st.button(t("music_search_btn"), key="music_search"):
             if music_query:
                 search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
                 st.markdown(f"""
                 <div class="music-result">
                     🎵 <b>{music_query}</b><br>
-                    <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube ↗</a>
+                    <a href="{search_url}" target="_blank" style="color:{_accent};">Buka di YouTube ↗</a>
                 </div>
                 """, unsafe_allow_html=True)
 
-    with st.expander("🔄 Konversi File"):
+    with st.expander(t("convert_expander")):
         conv_type = st.radio(
             "Pilih konversi:",
             ["PDF → Word (.docx)", "Word (.docx) → PDF"],
@@ -802,19 +1295,62 @@ with st.sidebar:
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
-    if st.button("🆕 New Chat", use_container_width=True):
+    with st.expander(t("settings_expander")):
+        st.markdown(f"**{t('theme_label')}**")
+        theme_choice = st.radio(
+            t("theme_label"),
+            options=["dark", "light"],
+            format_func=lambda x: t("theme_dark") if x == "dark" else t("theme_light"),
+            index=0 if st.session_state.theme == "dark" else 1,
+            key="theme_radio",
+            label_visibility="collapsed",
+            horizontal=True,
+        )
+        if theme_choice != st.session_state.theme:
+            st.session_state.theme = theme_choice
+            save_prefs()
+            st.rerun()
+
+        st.markdown(f"**{t('lang_label')}**")
+        lang_choice = st.radio(
+            t("lang_label"),
+            options=["id", "en"],
+            format_func=lambda x: t("lang_id") if x == "id" else t("lang_en"),
+            index=0 if st.session_state.lang == "id" else 1,
+            key="lang_radio",
+            label_visibility="collapsed",
+            horizontal=True,
+        )
+        if lang_choice != st.session_state.lang:
+            st.session_state.lang = lang_choice
+            save_prefs()
+            st.rerun()
+
+    chat_stats = record_active_day_and_get_stats(st.session_state.messages)
+    with st.expander(t("stats_expander")):
+        stat_col1, stat_col2 = st.columns(2)
+        with stat_col1:
+            st.metric(t("stats_total_msgs"), chat_stats["total_msgs"])
+            st.metric(t("stats_user_msgs"), chat_stats["user_msgs"])
+        with stat_col2:
+            st.metric(t("stats_active_days"), chat_stats["active_days"])
+            st.metric(t("stats_kei_msgs"), chat_stats["kei_msgs"])
+
+    st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
+
+    if st.button(t("new_chat"), use_container_width=True):
         st.session_state.messages = []
         save_json(CHAT_FILE, [])
         st.rerun()
 
-    if st.button("🗑️ Clear Chat", use_container_width=True):
+    if st.button(t("clear_chat"), use_container_width=True):
         st.session_state.messages = []
         save_json(CHAT_FILE, [])
         st.rerun()
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
-    if st.button("🚪 Logout", use_container_width=True):
+    if st.button(t("logout"), use_container_width=True):
         st.session_state.logged_in = False
         st.session_state.messages  = []
         st.rerun()
@@ -824,20 +1360,20 @@ with st.sidebar:
 # =====================
 # 11. HEADER
 # =====================
-header_mood_emoji, _header_mood_label = get_today_mood()
+header_mood_emoji, _header_mood_label = get_current_mood()
 
 if st.session_state.mode == "diary":
     st.markdown(f"""
     <div style="text-align:center;padding:4px 0 4px;">
-        <h1 style="color:#ff8ad8;margin:0;font-size:48px;line-height:1.1;">💌 Dear Diary</h1>
-        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">Ceritain semua ke Kei ya~ {header_mood_emoji}</p>
+        <h1 style="color:{st.session_state.theme_color};margin:0;font-size:48px;line-height:1.1;">💌 Dear Diary</h1>
+        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">{t('diary_header_sub')} {header_mood_emoji}</p>
     </div>
     """, unsafe_allow_html=True)
 else:
     st.markdown(f"""
     <div style="text-align:center;padding:4px 0 4px;">
-        <h1 style="color:#ff8ad8;margin:0;font-size:48px;line-height:1.1;">✦ Kei AI</h1>
-        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">Your AI Companion {header_mood_emoji}</p>
+        <h1 style="color:{st.session_state.theme_color};margin:0;font-size:48px;line-height:1.1;">✦ Kei AI</h1>
+        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">{t('app_companion')} {header_mood_emoji}</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -848,29 +1384,29 @@ if st.session_state.mode == "diary":
     diary_entries = load_json(DIARY_FILE)
 
     if diary_entries:
-        with st.expander(f"📖 Lihat {len(diary_entries)} entri diary lama"):
+        with st.expander(t("diary_old_entries").format(n=len(diary_entries))):
             for entry in reversed(diary_entries[-10:]):
                 st.markdown(f"""
                 <div class="diary-box">
-                    <small style="color:#ff8ad8;">📅 {entry['date']}</small><br><br>
+                    <small style="color:{st.session_state.theme_color};">📅 {entry['date']}</small><br><br>
                     <b>Kamu:</b> {entry['user']}<br><br>
                     <b>Kei:</b> {entry['kei']}
                 </div>
                 """, unsafe_allow_html=True)
 
     st.markdown("---")
-    diary_input = st.text_area("💌 Cerita ke Kei...",
-                               placeholder="Hari ini aku ngerasa... / Kei, aku mau curhat nih...",
+    diary_input = st.text_area(t("diary_textarea_label"),
+                               placeholder=t("diary_placeholder"),
                                height=150, key="diary_textarea")
     col1, col2 = st.columns([3, 1])
     with col1:
-        send_diary = st.button("Kirim ke Kei 💕", use_container_width=True)
+        send_diary = st.button(t("diary_send"), use_container_width=True)
     with col2:
-        clear_diary = st.button("Hapus Diary", use_container_width=True)
+        clear_diary = st.button(t("diary_clear"), use_container_width=True)
 
     if clear_diary:
         save_json(DIARY_FILE, [])
-        st.success("Diary berhasil dihapus!")
+        st.success(t("diary_cleared"))
         st.rerun()
 
     if send_diary and diary_input:
@@ -888,8 +1424,8 @@ if st.session_state.mode == "diary":
 
         st.markdown(f"""
         <div class="diary-box">
-            <b style="color:#ff8ad8;">Kamu tulis:</b><br>{diary_input}<br><br>
-            <b style="color:#ff8ad8;">Kei menjawab:</b><br>{kei_reply}
+            <b style="color:{st.session_state.theme_color};">{t('diary_you_wrote')}</b><br>{diary_input}<br><br>
+            <b style="color:{st.session_state.theme_color};">{t('diary_kei_answers')}</b><br>{kei_reply}
         </div>
         """, unsafe_allow_html=True)
 
@@ -924,7 +1460,7 @@ else:
 
     # --- Chat Input: foto, PDF, Word, atau teks biasa ---
     chat_input = st.chat_input(
-        "Ketik pesan ke Kei... 💕",
+        t("chat_placeholder"),
         accept_file=True,
         file_type=["jpg", "jpeg", "png", "webp", "pdf", "docx"],
     )
