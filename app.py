@@ -388,6 +388,62 @@ p, span, label, div { color: inherit; }
     }
 }
 
+/* ===== MOBILE: SIDEBAR JADI OVERLAY DRAWER, BUKAN KOLOM YANG MENGECIL =====
+   Ini perbaikan utama: pada layar sempit, kolom Streamlit (st.columns)
+   TIDAK BISA menyusut rapi sampai 0px — dia hanya jadi sliver beberapa
+   pixel sehingga semua teks di dalamnya (judul "KEI AI", label tombol,
+   dll) jadi terpaksa membungkus satu huruf per baris. Solusinya: jangan
+   andalkan width-shrink, jadikan panel menu sebagai drawer fixed-position
+   yang slide masuk dari kiri DI ATAS konten (overlay), bukan mendorong
+   konten ke samping. */
+@media (max-width: 768px) {
+    /* Matikan layout flex side-by-side bawaan st.columns */
+    div[data-testid="stHorizontalBlock"] {
+        display: block !important;
+        gap: 0 !important;
+    }
+
+    /* Kolom menu (pertama) -> jadi panel fixed full-height di kiri,
+       default-nya di luar layar (translateX -100%) */
+    div[data-testid="stHorizontalBlock"] > div:first-child {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 80vw !important;
+        max-width: 300px !important;
+        height: 100vh !important;
+        z-index: 999998 !important;
+        background: var(--bg-secondary) !important;
+        overflow-y: auto !important;
+        padding: 1rem !important;
+        box-shadow: 4px 0 24px var(--shadow) !important;
+        flex: none !important;
+        transform: translateX(-100%);
+        transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    /* Saat terbuka (kei-menu-open ada di dalam panel), slide masuk */
+    div[data-testid="stHorizontalBlock"]:has(.kei-menu-open) > div:first-child {
+        transform: translateX(0) !important;
+    }
+
+    /* Kolom konten utama (kedua) selalu full width di mobile,
+       tidak lagi mengikuti rasio [1,3] */
+    div[data-testid="stHorizontalBlock"] > div:last-child {
+        width: 100% !important;
+        flex: none !important;
+    }
+
+    /* Backdrop gelap transparan di belakang drawer saat terbuka,
+       supaya jelas drawer ini melayang DI ATAS konten */
+    div[data-testid="stHorizontalBlock"]:has(.kei-menu-open)::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 999997;
+    }
+}
 
 /* Batasi lebar konten utama biar simetris (layout wide tapi konten center) */
 .main .block-container {
@@ -434,7 +490,7 @@ p, span, label, div { color: inherit; }
     padding-top: 3.2rem !important;
 }
 
-/* ===== ANIMASI SLIDE DARI KIRI UNTUK PANEL MENU ===== */
+/* ===== ANIMASI SLIDE DARI KIRI UNTUK PANEL MENU (DESKTOP) ===== */
 .kei-menu-wrapper {
     overflow: hidden;
     transition: max-width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
@@ -459,19 +515,22 @@ p, span, label, div { color: inherit; }
 }
 
 /* Kolom Streamlit pembungkus menu: kecilkan gap saat tertutup supaya
-   tidak menyisakan ruang kosong yang janggal di sebelah konten utama */
-div[data-testid="stHorizontalBlock"] {
-    transition: gap 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-}
-div[data-testid="stHorizontalBlock"]:has(.kei-menu-closed) {
-    gap: 0 !important;
-}
-div[data-testid="stHorizontalBlock"]:has(.kei-menu-closed) > div:first-child {
-    flex: 0 0 0px !important;
-    width: 0px !important;
-    min-width: 0px !important;
-    transition: flex-basis 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                width 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+   tidak menyisakan ruang kosong yang janggal di sebelah konten utama
+   (HANYA berlaku di desktop, di mobile sudah ditangani blok khusus di atas) */
+@media (min-width: 769px) {
+    div[data-testid="stHorizontalBlock"] {
+        transition: gap 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    div[data-testid="stHorizontalBlock"]:has(.kei-menu-closed) {
+        gap: 0 !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.kei-menu-closed) > div:first-child {
+        flex: 0 0 0px !important;
+        width: 0px !important;
+        min-width: 0px !important;
+        transition: flex-basis 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                    width 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 }
 
 /* Mode switcher versi menu (vertikal, full width, dipakai di dalam panel kiri) */
@@ -633,6 +692,8 @@ if "mode" in query_params:
 # tidak pernah punya kesempatan untuk terlihat (elemen lama hilang &
 # elemen baru muncul instan, tanpa ada waktu animasi di antaranya).
 # Animasi slide dikontrol murni lewat class kei-menu-open/kei-menu-closed.
+# Di mobile, kolom pertama ini diubah jadi overlay drawer lewat CSS
+# (lihat blok "MOBILE: SIDEBAR JADI OVERLAY DRAWER" di atas).
 menu_state_class = "kei-menu-open" if st.session_state.sidebar_open else "kei-menu-closed"
 
 menu_col, main_col = st.columns([1, 3], gap="medium")
@@ -647,10 +708,10 @@ with menu_col:
     diary_class = "mode-btn active" if current_mode == "diary" else "mode-btn"
     st.markdown(f"""
     <div class="mode-switcher-menu">
-        <a href="#" onclick="window.location.href='?mode=chat'" class="{chat_class}" style="text-decoration:none;">
+        <a href="?mode=chat" class="{chat_class}" style="text-decoration:none;">
             💬 Chat
         </a>
-        <a href="#" onclick="window.location.href='?mode=diary'" class="{diary_class}" style="text-decoration:none;">
+        <a href="?mode=diary" class="{diary_class}" style="text-decoration:none;">
             💌 Diary
         </a>
     </div>
