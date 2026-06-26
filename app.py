@@ -72,22 +72,28 @@ div[data-testid="stForm"] {
     margin: 0 auto !important;
 }
 
-/* Sembunyikan label tapi JANGAN sembunyikan icon mata (svg di dalam button) */
+/* Sembunyikan label */
 div[data-testid="stTextInput"] label { display: none !important; }
 
-/* Wrapper input */
+/* Wrapper input — SAMA untuk username & password */
 div[data-testid="stTextInput"] > div {
     background: rgba(255,255,255,0.04) !important;
     border: 1px solid rgba(255,255,255,0.08) !important;
     border-radius: 12px !important;
+    min-height: 48px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
     overflow: hidden !important;
+    padding: 0 !important;
 }
 div[data-testid="stTextInput"] > div:focus-within {
     border-color: rgba(255,138,216,0.5) !important;
     background: rgba(255,138,216,0.04) !important;
 }
 
-/* Input field */
+/* Input field — flex:1 supaya sisa ruang sama */
 div[data-testid="stTextInput"] input {
     background: transparent !important;
     color: #fff !important;
@@ -96,20 +102,33 @@ div[data-testid="stTextInput"] input {
     border: none !important;
     box-shadow: none !important;
     padding: 0 8px 0 16px !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+    /* Sembunyikan placeholder bawaan browser yg kadang muncul "Press Enter" */
 }
-div[data-testid="stTextInput"] input::placeholder { color: rgba(255,255,255,0.22) !important; }
+div[data-testid="stTextInput"] input::placeholder {
+    color: rgba(255,255,255,0.28) !important;
+    font-size: 14px !important;
+}
+/* Hilangkan teks placeholder bawaan Streamlit form */
+div[data-testid="stTextInput"] input[aria-label] {
+    /* reset aria placeholder yg Streamlit inject */
+}
 
-/* Tombol mata show/hide password - di ujung kanan */
+/* Tombol mata show/hide password — lebar tetap 38px */
 div[data-testid="stTextInput"] button {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     color: rgba(255,255,255,0.3) !important;
-    padding: 0 10px 0 4px !important;
+    padding: 0 !important;
     margin: 0 !important;
     height: 48px !important;
+    width: 38px !important;
+    flex-shrink: 0 !important;
     display: flex !important;
     align-items: center !important;
+    justify-content: center !important;
 }
 div[data-testid="stTextInput"] button:hover {
     color: rgba(255,138,216,0.8) !important;
@@ -201,7 +220,7 @@ div[data-testid="stAlert"] {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding-left: 52px; /* ruang untuk tombol toggle */
+    padding-left: 52px;
 }
 
 /* ===== HEADER ===== */
@@ -236,14 +255,6 @@ div[data-testid="stAlert"] {
     padding: 12px 24px 16px;
     border-top: 1px solid rgba(255,255,255,0.06);
     background: #0a0a0a;
-}
-
-/* ===== STREAMLIT OVERRIDES DALAM LAYOUT ===== */
-
-/* Sembunyikan padding default streamlit di dalam layout kita */
-.kei-main .block-container,
-.kei-sidebar .block-container {
-    padding: 0 !important;
 }
 
 /* Chat messages */
@@ -432,17 +443,14 @@ def save_json(path, data):
 # 6. LOGIN
 # =====================
 if not st.session_state.logged_in:
-    # Wrapper center via HTML
     st.markdown("""
     <style>
-    /* Hapus padding atas bawaan Streamlit */
     .main .block-container {
         padding-top: 3rem !important;
         padding-bottom: 1rem !important;
         max-width: 420px !important;
         margin: 0 auto !important;
     }
-    /* Form card */
     div[data-testid="stForm"] {
         background: rgba(255,255,255,0.03) !important;
         border: 1px solid rgba(255,255,255,0.08) !important;
@@ -451,28 +459,31 @@ if not st.session_state.logged_in:
         box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
         width: 100% !important;
     }
-    /* Input container sama lebar */
+    /* Paksa SEMUA stTextInput wrapper lebar penuh dan tinggi sama */
     div[data-testid="stTextInput"] {
         width: 100% !important;
         box-sizing: border-box !important;
+        margin-bottom: 10px !important;
     }
-    /* Input wrapper */
     div[data-testid="stTextInput"] > div {
         background: rgba(255,255,255,0.05) !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
         border-radius: 12px !important;
+        height: 48px !important;
         min-height: 48px !important;
+        max-height: 48px !important;
         width: 100% !important;
         box-sizing: border-box !important;
         display: flex !important;
+        flex-direction: row !important;
         align-items: center !important;
         overflow: hidden !important;
+        padding: 0 !important;
     }
     div[data-testid="stTextInput"] > div:focus-within {
         border-color: rgba(255,138,216,0.55) !important;
         background: rgba(255,138,216,0.05) !important;
     }
-    /* Input field flex:1 supaya lebar sama antara username & password */
     div[data-testid="stTextInput"] input {
         background: transparent !important;
         color: #fff !important;
@@ -481,16 +492,16 @@ if not st.session_state.logged_in:
         border: none !important;
         box-shadow: none !important;
         padding: 0 8px 0 16px !important;
-        flex: 1 !important;
+        flex: 1 1 auto !important;
         min-width: 0 !important;
-        width: auto !important;
+        width: 0 !important;          /* flex item — grows via flex:1 */
     }
     div[data-testid="stTextInput"] input::placeholder {
         color: rgba(255,255,255,0.28) !important;
         font-size: 14px !important;
     }
     div[data-testid="stTextInput"] label { display: none !important; }
-    /* Tombol mata lebar tetap supaya tidak geser field */
+    /* Tombol mata — lebar tetap 38px, tidak mempengaruhi lebar input */
     div[data-testid="stTextInput"] button {
         background: transparent !important;
         border: none !important;
@@ -498,8 +509,8 @@ if not st.session_state.logged_in:
         color: rgba(255,255,255,0.3) !important;
         padding: 0 !important;
         height: 48px !important;
-        width: 38px !important;
-        flex-shrink: 0 !important;
+        width: 40px !important;
+        flex: 0 0 40px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -524,17 +535,7 @@ if not st.session_state.logged_in:
         background: #f0f0f0 !important;
         background-color: #f0f0f0 !important;
         color: #111 !important;
-        border: none !important;
     }
-    div[data-testid="stForm"] div[data-testid="stButton"] > button:focus,
-    div[data-testid="stForm"] div[data-testid="stButton"] > button:active {
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-        color: #111111 !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-    /* Error */
     div[data-testid="stAlert"] {
         background: rgba(255,70,70,0.08) !important;
         border: 1px solid rgba(255,70,70,0.2) !important;
@@ -553,8 +554,21 @@ if not st.session_state.logged_in:
     """, unsafe_allow_html=True)
 
     with st.form("login_form", clear_on_submit=False):
-        username = st.text_input("u", placeholder="Username", label_visibility="collapsed")
-        password = st.text_input("p", placeholder="Password", type="password", label_visibility="collapsed")
+        # PERBAIKAN: gunakan key unik + placeholder eksplisit
+        # label_visibility="collapsed" supaya tidak ada label
+        username = st.text_input(
+            "Username",
+            placeholder="Username",
+            key="login_username",
+            label_visibility="collapsed"
+        )
+        password = st.text_input(
+            "Password",
+            placeholder="Password",
+            type="password",
+            key="login_password",
+            label_visibility="collapsed"
+        )
         submitted = st.form_submit_button("Masuk", use_container_width=True)
 
     if submitted:
@@ -645,14 +659,11 @@ def get_sticker(mood):
     return random.choice(STICKERS.get(mood, STICKERS["happy"]))
 
 # =====================
-# 10. SIDEBAR TOGGLE (via st.sidebar bawaan Streamlit)
-# Pakai st.sidebar asli Streamlit — sudah punya toggle buka/tutup
-# bawaan, scroll independen, dan tidak konflik dengan chat area.
+# 10. SIDEBAR
 # =====================
 with st.sidebar:
     st.markdown('<div class="kei-sidebar-inner">', unsafe_allow_html=True)
 
-    # Mode switcher
     current_mode = st.session_state.mode
     chat_active  = "active" if current_mode == "chat"  else ""
     diary_active = "active" if current_mode == "diary" else ""
@@ -664,14 +675,12 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    # Tangkap mode dari query params
     qp = st.query_params
     if "mode" in qp and qp["mode"] in ["chat", "diary"]:
         if qp["mode"] != st.session_state.mode:
             st.session_state.mode = qp["mode"]
             st.rerun()
 
-    # Avatar
     avatar_exists = os.path.exists("kei_avatar.png")
     if avatar_exists:
         st.image("kei_avatar.png", width=200)
@@ -692,7 +701,6 @@ with st.sidebar:
                 f.write(uploaded_avatar.getbuffer())
             st.rerun()
 
-    # Status
     st.markdown("""
     <div class="status-online">
         <div class="dot-online"></div>
@@ -704,7 +712,6 @@ with st.sidebar:
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
-    # Stiker
     with st.expander("😄 Kirim Stiker"):
         cols = st.columns(5)
         moods  = ["happy", "love", "sad", "cool", "shy"]
@@ -718,7 +725,6 @@ with st.sidebar:
                     save_json(CHAT_FILE, st.session_state.messages)
                     st.rerun()
 
-    # Musik
     with st.expander("🎵 Putar Musik"):
         music_query = st.text_input("Nama lagu / artis", key="music_input")
         if st.button("Cari 🔍", key="music_search"):
