@@ -27,14 +27,47 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# 3. CSS
+# 3. CSS with Theme Support & Mobile Fix
 # =====================
 st.markdown("""
 <style>
+/* ===== THEME VARIABLES ===== */
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #111111;
+    --bg-card: #161616;
+    --bg-input: #202020;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255,255,255,0.7);
+    --text-muted: rgba(255,255,255,0.4);
+    --border-color: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,138,216,0.45);
+    --chat-bg: #2b2b2b;
+    --shadow: rgba(0,0,0,0.7);
+}
+
+/* ===== LIGHT THEME ===== */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg-primary: #f5f5f7;
+        --bg-secondary: #ffffff;
+        --bg-card: #ffffff;
+        --bg-input: #f0f0f0;
+        --text-primary: #1a1a1a;
+        --text-secondary: rgba(0,0,0,0.7);
+        --text-muted: rgba(0,0,0,0.4);
+        --border-color: rgba(0,0,0,0.08);
+        --border-hover: rgba(255,138,216,0.6);
+        --chat-bg: #ffffff;
+        --shadow: rgba(0,0,0,0.1);
+    }
+}
+
 /* ===== GLOBAL ===== */
 html, body, .stApp {
-    background-color: #0a0a0a !important;
-    color: white !important;
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Hide streamlit default chrome on login */
@@ -50,13 +83,13 @@ html, body, .stApp {
     margin-bottom: 4px;
 }
 .login-sub {
-    color: rgba(255,255,255,0.4);
+    color: var(--text-muted);
     font-size: 17px;
     text-align: center;
     margin-bottom: 36px;
 }
 .login-footer {
-    color: rgba(255,255,255,0.2);
+    color: var(--text-muted);
     font-size: 13px;
     text-align: center;
     margin-top: 24px;
@@ -65,29 +98,29 @@ html, body, .stApp {
 
 /* Form card */
 div[data-testid="stForm"] {
-    background: #161616 !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: 20px !important;
     padding: 32px 28px 28px !important;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.7) !important;
+    box-shadow: 0 24px 64px var(--shadow) !important;
 }
 
 /* Input wrapper */
 div[data-testid="stTextInput"] > div {
-    background: #202020 !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
+    background: var(--bg-input) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: 12px !important;
     padding: 0 !important;
 }
 div[data-testid="stTextInput"] > div:focus-within {
-    border-color: rgba(255,138,216,0.45) !important;
+    border-color: var(--border-hover) !important;
     box-shadow: 0 0 0 2px rgba(255,138,216,0.08) !important;
 }
 
 /* Input element */
 div[data-testid="stTextInput"] input {
     background: transparent !important;
-    color: white !important;
+    color: var(--text-primary) !important;
     font-size: 15px !important;
     padding: 0 16px !important;
     border: none !important;
@@ -97,7 +130,7 @@ div[data-testid="stTextInput"] input {
     padding-bottom: 10px !important;
 }
 div[data-testid="stTextInput"] input::placeholder {
-    color: rgba(255,255,255,0.28) !important;
+    color: var(--text-muted) !important;
 }
 
 /* Hide label & icon */
@@ -109,16 +142,16 @@ div[data-testid="stTextInput"] button {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    color: rgba(255,255,255,0.35) !important;
+    color: var(--text-muted) !important;
     padding-right: 12px !important;
 }
 
 /* Submit button inside form */
 div[data-testid="stForm"] div[data-testid="stButton"] > button {
     width: 100% !important;
-    background: #1e1e1e !important;
-    color: rgba(255,255,255,0.8) !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    background: var(--bg-input) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: 12px !important;
     font-size: 16px !important;
     font-weight: 600 !important;
@@ -128,8 +161,8 @@ div[data-testid="stForm"] div[data-testid="stButton"] > button {
     cursor: pointer !important;
 }
 div[data-testid="stForm"] div[data-testid="stButton"] > button:hover {
-    background: #262626 !important;
-    border-color: rgba(255,138,216,0.4) !important;
+    background: var(--bg-card) !important;
+    border-color: var(--border-hover) !important;
     color: #ff8ad8 !important;
 }
 
@@ -143,19 +176,23 @@ div[data-testid="stAlert"] {
 }
 
 /* ===== CHAT / APP ===== */
-[data-testid="stSidebar"] { background: #111111 !important; }
+[data-testid="stSidebar"] { 
+    background: var(--bg-secondary) !important;
+    transition: background-color 0.3s ease;
+}
 [data-testid="stChatMessage"] { background: transparent !important; }
+
 /* ===== CHAT INPUT ===== */
 [data-testid="stChatInput"] {
-    background: #2b2b2b !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    background: var(--chat-bg) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: 16px !important;
     padding: 4px 8px !important;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+    box-shadow: 0 2px 12px var(--shadow) !important;
 }
 [data-testid="stChatInput"] textarea {
     background: transparent !important;
-    color: white !important;
+    color: var(--text-primary) !important;
     border: none !important;
     border-radius: 16px !important;
     font-size: 15px !important;
@@ -164,7 +201,7 @@ div[data-testid="stAlert"] {
     resize: none !important;
 }
 [data-testid="stChatInput"] textarea::placeholder {
-    color: rgba(255,255,255,0.3) !important;
+    color: var(--text-muted) !important;
 }
 [data-testid="stChatInput"] button {
     background: #ffffff !important;
@@ -183,6 +220,90 @@ div[data-testid="stAlert"] {
     color: black !important;
 }
 h1 { color: #ff8ad8 !important; }
+
+/* ===== MODE BUTTONS (FLOATING AT TOP) ===== */
+.mode-switcher {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 10px 0 20px 0;
+    flex-wrap: wrap;
+}
+
+.mode-btn {
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 10px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.mode-btn:hover {
+    border-color: var(--border-hover);
+    color: #ff8ad8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(255,138,216,0.15);
+}
+
+.mode-btn.active {
+    border-color: #ff8ad8;
+    color: #ff8ad8;
+    background: rgba(255,138,216,0.08);
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+    /* Sidebar lebih tipis di mobile */
+    [data-testid="stSidebar"] {
+        min-width: 200px !important;
+        max-width: 280px !important;
+    }
+    
+    /* Mode buttons tetap terlihat */
+    [data-testid="stSidebar"] .stButton button {
+        font-size: 14px !important;
+        padding: 8px 12px !important;
+        width: 100% !important;
+    }
+    
+    /* Login form lebih compact */
+    .login-title {
+        font-size: 32px !important;
+    }
+    div[data-testid="stForm"] {
+        padding: 20px 16px !important;
+    }
+    
+    /* Mode switcher di mobile */
+    .mode-switcher {
+        gap: 8px;
+        margin: 8px 0 16px 0;
+    }
+    .mode-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 12px;
+        flex: 1;
+        justify-content: center;
+        min-width: 80px;
+    }
+}
+
+/* Tablet */
+@media (max-width: 1024px) and (min-width: 769px) {
+    [data-testid="stSidebar"] {
+        min-width: 240px !important;
+        max-width: 300px !important;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -306,7 +427,35 @@ def get_sticker(mood):
     return random.choice(STICKERS.get(mood, STICKERS["happy"]))
 
 # =====================
-# 10. SIDEBAR
+# 10. MODE SWITCHER (FLOATING BUTTONS)
+# =====================
+# Tampilkan mode switcher di bagian atas (selalu terlihat)
+current_mode = st.session_state.mode
+
+chat_class = "mode-btn active" if current_mode == "chat" else "mode-btn"
+diary_class = "mode-btn active" if current_mode == "diary" else "mode-btn"
+
+st.markdown(f"""
+<div class="mode-switcher">
+    <a href="#" onclick="window.location.href='?mode=chat'" class="{chat_class}" style="text-decoration:none;">
+        💬 Chat
+    </a>
+    <a href="#" onclick="window.location.href='?mode=diary'" class="{diary_class}" style="text-decoration:none;">
+        💌 Diary
+    </a>
+</div>
+""", unsafe_allow_html=True)
+
+# Handle mode switching via query params
+query_params = st.query_params
+if "mode" in query_params:
+    new_mode = query_params["mode"]
+    if new_mode in ["chat", "diary"] and new_mode != st.session_state.mode:
+        st.session_state.mode = new_mode
+        st.rerun()
+
+# =====================
+# 11. SIDEBAR
 # =====================
 with st.sidebar:
     avatar_exists = os.path.exists("kei_avatar.png")
@@ -332,21 +481,10 @@ with st.sidebar:
 
     st.markdown("""
     <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
-    border-radius:12px;padding:15px;margin:10px 0 20px;color:rgba(255,255,255,0.7);">
+    border-radius:12px;padding:15px;margin:10px 0 20px;color:var(--text-secondary);">
         🟢 Online &nbsp; KEI AI
     </div>
     """, unsafe_allow_html=True)
-
-    st.markdown("**Mode:**")
-    col_a, col_b = st.columns(2)
-    with col_a:
-        if st.button("💬 Chat", key="mode_chat"):
-            st.session_state.mode = "chat"
-            st.rerun()
-    with col_b:
-        if st.button("💌 Diary", key="mode_diary"):
-            st.session_state.mode = "diary"
-            st.rerun()
 
     st.markdown(f"*Mode aktif: {'💬 Chat' if st.session_state.mode == 'chat' else '💌 Dear Diary'}*")
     st.markdown("---")
@@ -371,48 +509,48 @@ with st.sidebar:
                 search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
                 st.markdown(f"""
                 <div style="background:rgba(255,138,216,0.04);border:1px solid rgba(255,138,216,0.08);
-                border-radius:12px;padding:12px;font-size:13px;color:rgba(255,255,255,0.7);">
+                border-radius:12px;padding:12px;font-size:13px;color:var(--text-secondary);">
                     🎵 <b>{music_query}</b><br>
                     <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube</a>
                 </div>
                 """, unsafe_allow_html=True)
 
-    if st.button("🆕 New Chat"):
+    if st.button("🆕 New Chat", use_container_width=True):
         st.session_state.messages = []
         save_json(CHAT_FILE, [])
         st.rerun()
 
-    if st.button("🗑️ Clear Chat"):
+    if st.button("🗑️ Clear Chat", use_container_width=True):
         st.session_state.messages = []
         save_json(CHAT_FILE, [])
         st.rerun()
 
     st.markdown("---")
-    if st.button("🚪 Logout"):
+    if st.button("🚪 Logout", use_container_width=True):
         st.session_state.logged_in = False
         st.session_state.messages  = []
         st.rerun()
 
 # =====================
-# 11. HEADER
+# 12. HEADER
 # =====================
 if st.session_state.mode == "diary":
     st.markdown("""
-    <div style="text-align:center;">
+    <div style="text-align:center;margin-top:-10px;">
         <h1 style="color:#ff8ad8;margin-bottom:0;">💌 Dear Diary</h1>
-        <p style="color:#bdbdbd;font-size:18px;margin-top:0;">Ceritain semua ke Kei ya~ 🥺</p>
+        <p style="color:var(--text-secondary);font-size:18px;margin-top:0;">Ceritain semua ke Kei ya~ 🥺</p>
     </div>
     """, unsafe_allow_html=True)
 else:
     st.markdown("""
-    <div style="text-align:center;">
+    <div style="text-align:center;margin-top:-10px;">
         <h1 style="color:#ff8ad8;margin-bottom:0;">✦ Kei AI</h1>
-        <p style="color:#bdbdbd;font-size:18px;margin-top:0;">Your AI Companion</p>
+        <p style="color:var(--text-secondary);font-size:18px;margin-top:0;">Your AI Companion</p>
     </div>
     """, unsafe_allow_html=True)
 
 # =====================
-# 12. DEAR DIARY MODE
+# 13. DEAR DIARY MODE
 # =====================
 if st.session_state.mode == "diary":
     diary_entries = load_json(DIARY_FILE)
@@ -467,7 +605,7 @@ if st.session_state.mode == "diary":
     st.stop()
 
 # =====================
-# 13. CHAT DISPLAY
+# 14. CHAT DISPLAY
 # =====================
 if not st.session_state.messages:
     st.session_state.messages = load_json(CHAT_FILE)
@@ -477,7 +615,7 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # =====================
-# 14. CHAT INPUT
+# 15. CHAT INPUT
 # =====================
 prompt = st.chat_input("Ketik pesan ke Kei...")
 if prompt:
