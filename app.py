@@ -545,6 +545,10 @@ if not st.session_state.logged_in:
         margin-top: 8px !important;
     }
 
+    /* Hapus gap antar kolom dan padding kolom */
+    [data-testid="column"] { padding: 0 !important; }
+    [data-testid="stHorizontalBlock"] { gap: 0 !important; }
+
     /* Card via column styling */
     [data-testid="column"]:nth-child(2) > div:first-child {
         background: rgba(255,255,255,0.03) !important;
