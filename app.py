@@ -359,9 +359,9 @@ def save_json(path, data):
 if not st.session_state.logged_in:
     # Header di luar columns (full width, centered)
     st.markdown("""
-    <div style="padding-top:60px; text-align:center; margin-bottom:28px;">
-        <div style="color:#ff8ad8; font-size:42px; font-weight:700; letter-spacing:-1px; margin-bottom:8px;">✦ Kei AI</div>
-        <div style="color:rgba(255,255,255,0.5); font-size:16px;">Teman AI Pintar Kamu</div>
+    <div style="padding-top:50px; text-align:center; margin-bottom:16px;">
+        <div style="color:#ff8ad8; font-size:64px; font-weight:700; letter-spacing:-1px; margin-bottom:10px;">✦ Kei AI</div>
+        <div style="color:rgba(255,255,255,0.5); font-size:20px;">Teman AI Pintar Kamu</div>
     </div>
     """, unsafe_allow_html=True)
 
