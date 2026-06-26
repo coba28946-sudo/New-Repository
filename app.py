@@ -714,6 +714,84 @@ with st.sidebar:
                 </div>
                 """, unsafe_allow_html=True)
 
+    with st.expander("🔄 Konversi File"):
+        conv_type = st.radio(
+            "Pilih konversi:",
+            ["PDF → Word (.docx)", "Word (.docx) → PDF"],
+            key="conv_type",
+        )
+        if conv_type == "PDF → Word (.docx)":
+            conv_file = st.file_uploader("Upload file PDF", type=["pdf"], key="conv_pdf_upload")
+            if st.button("Konversi ✨", key="conv_pdf_btn"):
+                if conv_file:
+                    with st.spinner("Kei lagi konversi filenya... 🥺"):
+                        try:
+                            import tempfile
+                            from pdf2docx import Converter
+                            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
+                                tmp_pdf.write(conv_file.read())
+                                tmp_pdf_path = tmp_pdf.name
+                            out_path = tmp_pdf_path.replace(".pdf", ".docx")
+                            cv = Converter(tmp_pdf_path)
+                            cv.convert(out_path, start=0, end=None)
+                            cv.close()
+                            with open(out_path, "rb") as f:
+                                docx_bytes = f.read()
+                            os.remove(tmp_pdf_path)
+                            os.remove(out_path)
+                            st.success("Berhasil dikonversi! ✨")
+                            st.download_button(
+                                "⬇️ Download .docx",
+                                data=docx_bytes,
+                                file_name=conv_file.name.replace(".pdf", ".docx"),
+                                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                key="dl_docx",
+                            )
+                        except Exception as e:
+                            st.error(f"Gagal konversi: {e}")
+                else:
+                    st.warning("Upload file PDF dulu ya Kak! 🥺")
+
+        else:  # Word → PDF
+            conv_file = st.file_uploader("Upload file Word (.docx)", type=["docx"], key="conv_docx_upload")
+            if st.button("Konversi ✨", key="conv_docx_btn"):
+                if conv_file:
+                    with st.spinner("Kei lagi konversi filenya... 🥺"):
+                        try:
+                            import tempfile, subprocess
+                            with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp_docx:
+                                tmp_docx.write(conv_file.read())
+                                tmp_docx_path = tmp_docx.name
+                            out_dir = tempfile.mkdtemp()
+                            result = subprocess.run(
+                                ["libreoffice", "--headless", "--convert-to", "pdf",
+                                 "--outdir", out_dir, tmp_docx_path],
+                                capture_output=True, text=True, timeout=60
+                            )
+                            base_name = os.path.splitext(os.path.basename(tmp_docx_path))[0]
+                            out_pdf = os.path.join(out_dir, base_name + ".pdf")
+                            if os.path.exists(out_pdf):
+                                with open(out_pdf, "rb") as f:
+                                    pdf_bytes = f.read()
+                                os.remove(tmp_docx_path)
+                                os.remove(out_pdf)
+                                st.success("Berhasil dikonversi! ✨")
+                                st.download_button(
+                                    "⬇️ Download .pdf",
+                                    data=pdf_bytes,
+                                    file_name=conv_file.name.replace(".docx", ".pdf"),
+                                    mime="application/pdf",
+                                    key="dl_pdf",
+                                )
+                            else:
+                                st.error(f"LibreOffice gagal: {result.stderr}")
+                        except FileNotFoundError:
+                            st.error("LibreOffice tidak terinstall. Tambahkan 'libreoffice' ke packages.txt ya Kak!")
+                        except Exception as e:
+                            st.error(f"Gagal konversi: {e}")
+                else:
+                    st.warning("Upload file .docx dulu ya Kak! 🥺")
+
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
     if st.button("🆕 New Chat", use_container_width=True):
