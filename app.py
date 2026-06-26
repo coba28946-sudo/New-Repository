@@ -451,6 +451,11 @@ if not st.session_state.logged_in:
         box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
         width: 100% !important;
     }
+    /* Input container sama lebar */
+    div[data-testid="stTextInput"] {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
     /* Input wrapper */
     div[data-testid="stTextInput"] > div {
         background: rgba(255,255,255,0.05) !important;
@@ -458,12 +463,16 @@ if not st.session_state.logged_in:
         border-radius: 12px !important;
         min-height: 48px !important;
         width: 100% !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        overflow: hidden !important;
     }
     div[data-testid="stTextInput"] > div:focus-within {
         border-color: rgba(255,138,216,0.55) !important;
         background: rgba(255,138,216,0.05) !important;
     }
-    /* Input field */
+    /* Input field flex:1 supaya lebar sama antara username & password */
     div[data-testid="stTextInput"] input {
         background: transparent !important;
         color: #fff !important;
@@ -472,23 +481,28 @@ if not st.session_state.logged_in:
         border: none !important;
         box-shadow: none !important;
         padding: 0 8px 0 16px !important;
-        width: 100% !important;
+        flex: 1 !important;
+        min-width: 0 !important;
+        width: auto !important;
     }
     div[data-testid="stTextInput"] input::placeholder {
         color: rgba(255,255,255,0.28) !important;
         font-size: 14px !important;
     }
     div[data-testid="stTextInput"] label { display: none !important; }
-    /* Tombol mata */
+    /* Tombol mata lebar tetap supaya tidak geser field */
     div[data-testid="stTextInput"] button {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
         color: rgba(255,255,255,0.3) !important;
-        padding: 0 12px 0 4px !important;
+        padding: 0 !important;
         height: 48px !important;
+        width: 38px !important;
+        flex-shrink: 0 !important;
         display: flex !important;
         align-items: center !important;
+        justify-content: center !important;
     }
     div[data-testid="stTextInput"] button svg { width: 14px !important; height: 14px !important; }
     div[data-testid="stTextInput"] button:hover { color: #ff8ad8 !important; }
