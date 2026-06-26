@@ -822,21 +822,24 @@ else:
                 st.image(img_bytes, width=300)
             st.markdown(msg["content"])
 
-    # --- Upload Foto ---
-    with st.expander("📷 Kirim Foto ke Kei"):
-        uploaded_photo = st.file_uploader(
-            "Pilih foto", type=["jpg", "jpeg", "png", "webp"], key="chat_photo_upload"
-        )
-        photo_caption = st.text_input("Keterangan foto (opsional)", key="chat_photo_caption")
-        send_photo_btn = st.button("Kirim Foto 📸", key="send_photo_btn")
+    # --- Chat Input dengan tombol + untuk foto ---
+    chat_input = st.chat_input(
+        "Ketik pesan ke Kei...",
+        accept_file=True,
+        file_type=["jpg", "jpeg", "png", "webp"],
+    )
 
-        if send_photo_btn and uploaded_photo:
-            image_bytes = uploaded_photo.read()
-            mime_type   = uploaded_photo.type  # e.g. "image/jpeg"
+    if chat_input:
+        prompt        = chat_input.text or ""
+        uploaded_file = chat_input["files"][0] if chat_input["files"] else None
+
+        if uploaded_file:
+            # Ada foto (dengan atau tanpa teks)
+            image_bytes = uploaded_file.read()
+            mime_type   = uploaded_file.type
             img_b64     = base64.b64encode(image_bytes).decode("utf-8")
 
-            # Simpan pesan user (dengan foto)
-            user_msg_content = f"[Foto dikirim] {photo_caption}" if photo_caption else "[Foto dikirim]"
+            user_msg_content = f"[Foto dikirim] {prompt}" if prompt else "[Foto dikirim]"
             st.session_state.messages.append({
                 "role":      "user",
                 "content":   user_msg_content,
@@ -844,35 +847,33 @@ else:
             })
 
             with st.spinner("Kei lagi lihat fotonya... 👀✨"):
-                reply = analyze_image_with_kei(image_bytes, mime_type, photo_caption)
+                reply = analyze_image_with_kei(image_bytes, mime_type, prompt)
 
             st.session_state.messages.append({"role": "assistant", "content": reply})
             save_json(CHAT_FILE, st.session_state.messages)
             st.rerun()
 
-    # --- Chat Biasa ---
-    prompt = st.chat_input("Ketik pesan ke Kei...")
+        elif prompt:
+            # Teks biasa tanpa foto
+            st.session_state.messages.append({"role": "user", "content": prompt})
 
-    if prompt:
-        st.session_state.messages.append({"role": "user", "content": prompt})
+            browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
+            if any(kw in prompt.lower() for kw in browsing_keywords):
+                search_url  = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
+                search_note = f"\n\n🌐 *Kei juga nyariin buat Kak di sini ya:* [Klik untuk lihat hasil pencarian]({search_url})"
+            else:
+                search_note = ""
 
-        browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
-        if any(kw in prompt.lower() for kw in browsing_keywords):
-            search_url  = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
-            search_note = f"\n\n🌐 *Kei juga nyariin buat Kak di sini ya:* [Klik untuk lihat hasil pencarian]({search_url})"
-        else:
-            search_note = ""
+            history_text = ""
+            for m in st.session_state.messages[-10:]:
+                role = "User" if m["role"] == "user" else "Kei"
+                history_text += f"{role}: {m['content']}\n"
 
-        history_text = ""
-        for m in st.session_state.messages[-10:]:
-            role = "User" if m["role"] == "user" else "Kei"
-            history_text += f"{role}: {m['content']}\n"
+            full_prompt = f"{KEI_PERSONA}\n\nRiwayat percakapan:\n{history_text}\nKei:"
 
-        full_prompt = f"{KEI_PERSONA}\n\nRiwayat percakapan:\n{history_text}\nKei:"
+            with st.spinner("Kei sedang mengetik... ✨"):
+                reply = generate_content_with_retry(full_prompt) + search_note
 
-        with st.spinner("Kei sedang mengetik... ✨"):
-            reply = generate_content_with_retry(full_prompt) + search_note
-
-        st.session_state.messages.append({"role": "assistant", "content": reply})
-        save_json(CHAT_FILE, st.session_state.messages)
-        st.rerun()
+            st.session_state.messages.append({"role": "assistant", "content": reply})
+            save_json(CHAT_FILE, st.session_state.messages)
+            st.rerun()
