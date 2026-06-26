@@ -84,36 +84,38 @@ html, body, .stApp {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Sembunyikan chrome bawaan Streamlit, TANPA menghilangkan tombol toggle sidebar */
+/* Sembunyikan chrome bawaan Streamlit */
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
-
 header[data-testid="stHeader"] {
     background: transparent !important;
     box-shadow: none !important;
-    height: 3rem !important;
-    z-index: 999991 !important;
 }
 header[data-testid="stHeader"] [data-testid="stToolbar"] {
     display: none !important;
 }
-[data-testid="collapsedControl"] {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    z-index: 999999 !important;
-    position: fixed !important;
-    top: 0.5rem !important;
-    left: 0.5rem !important;
+
+/* Tombol toggle sidebar custom (gak gantung ke elemen internal Streamlit) */
+#kei-sidebar-toggle {
+    position: fixed;
+    top: 0.6rem;
+    left: 0.6rem;
+    z-index: 999999;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px var(--shadow);
 }
-[data-testid="collapsedControl"] button {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: 8px !important;
-}
-[data-testid="collapsedControl"] svg {
-    color: var(--text-primary) !important;
-    fill: var(--text-primary) !important;
+#kei-sidebar-toggle svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--text-primary);
 }
 
 /* ===== LOGIN PAGE ===== */
@@ -438,8 +440,52 @@ p, span, label, div { color: inherit; }
 """, unsafe_allow_html=True)
 
 # =====================
-# 4. SESSION STATE
+# 3b. TOMBOL TOGGLE SIDEBAR CUSTOM
 # =====================
+st.markdown("""
+<div id="kei-sidebar-toggle" title="Buka/Tutup menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+</div>
+<script>
+(function() {
+    function findToggle() {
+        // Coba beberapa kemungkinan selector tombol toggle asli Streamlit
+        const doc = window.parent.document;
+        return doc.querySelector('[data-testid="collapsedControl"] button')
+            || doc.querySelector('[data-testid="collapsedControl"]')
+            || doc.querySelector('button[kind="header"]')
+            || doc.querySelector('[data-testid="stSidebarCollapseButton"] button');
+    }
+
+    function attach() {
+        const myBtn = document.getElementById('kei-sidebar-toggle');
+        if (!myBtn) return;
+        myBtn.onclick = function() {
+            const target = findToggle();
+            if (target) {
+                target.click();
+            } else {
+                // Fallback: toggle manual lewat manipulasi style sidebar
+                const doc = window.parent.document;
+                const sidebar = doc.querySelector('[data-testid="stSidebar"]');
+                if (sidebar) {
+                    const isHidden = sidebar.getAttribute('aria-expanded') === 'false';
+                    sidebar.style.display = isHidden ? '' : 'none';
+                }
+            }
+        };
+    }
+    attach();
+    setTimeout(attach, 500);
+})();
+</script>
+""", unsafe_allow_html=True)
+
+
 for key, val in {"logged_in": False, "mode": "chat", "messages": [], "avatar": None, "input_text": ""}.items():
     if key not in st.session_state:
         st.session_state[key] = val
