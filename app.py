@@ -27,11 +27,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================
-# 3. CSS with Theme Support & Mobile Fix
+# 3. CSS — Tema Gelap/Terang Otomatis + Mobile Fix
 # =====================
 st.markdown("""
 <style>
-/* ===== THEME VARIABLES ===== */
+/* ===== TEMA GELAP (DEFAULT) ===== */
 :root {
     --bg-primary: #0a0a0a;
     --bg-secondary: #111111;
@@ -46,9 +46,14 @@ st.markdown("""
     --shadow: rgba(0,0,0,0.7);
     --msg-user: rgba(255,138,216,0.15);
     --msg-assistant: rgba(255,255,255,0.05);
+    --diary-bg: rgba(255,182,230,0.05);
+    --diary-border: rgba(255,138,216,0.1);
+    --diary-text: #f0c4e8;
+    --music-bg: rgba(255,138,216,0.04);
+    --music-border: rgba(255,138,216,0.08);
 }
 
-/* ===== LIGHT THEME ===== */
+/* ===== TEMA TERANG (otomatis ikut setting perangkat) ===== */
 @media (prefers-color-scheme: light) {
     :root {
         --bg-primary: #f5f5f7;
@@ -57,13 +62,18 @@ st.markdown("""
         --bg-input: #f0f0f0;
         --text-primary: #1a1a1a;
         --text-secondary: rgba(0,0,0,0.7);
-        --text-muted: rgba(0,0,0,0.4);
-        --border-color: rgba(0,0,0,0.08);
+        --text-muted: rgba(0,0,0,0.45);
+        --border-color: rgba(0,0,0,0.1);
         --border-hover: rgba(255,138,216,0.6);
         --chat-bg: #ffffff;
         --shadow: rgba(0,0,0,0.1);
-        --msg-user: rgba(255,138,216,0.12);
-        --msg-assistant: rgba(0,0,0,0.04);
+        --msg-user: rgba(255,138,216,0.14);
+        --msg-assistant: rgba(0,0,0,0.045);
+        --diary-bg: rgba(255,138,216,0.07);
+        --diary-border: rgba(255,138,216,0.18);
+        --diary-text: #7a3d63;
+        --music-bg: rgba(255,138,216,0.07);
+        --music-border: rgba(255,138,216,0.15);
     }
 }
 
@@ -74,8 +84,21 @@ html, body, .stApp {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Hide streamlit default chrome */
-#MainMenu, footer, header { visibility: hidden; }
+/* Sembunyikan chrome bawaan Streamlit, TANPA menghilangkan tombol toggle sidebar */
+#MainMenu, footer { visibility: hidden; }
+header {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+header [data-testid="stToolbar"] { visibility: hidden; }
+header [data-testid="collapsedControl"] {
+    visibility: visible !important;
+    display: block !important;
+}
+header [data-testid="collapsedControl"] svg {
+    color: var(--text-primary) !important;
+    fill: var(--text-primary) !important;
+}
 
 /* ===== LOGIN PAGE ===== */
 .login-title {
@@ -137,11 +160,11 @@ div[data-testid="stTextInput"] input::placeholder {
     color: var(--text-muted) !important;
 }
 
-/* Hide label & icon */
+/* Sembunyikan label & ikon default */
 div[data-testid="stTextInput"] label,
 div[data-testid="stTextInput"] svg { display: none !important; }
 
-/* Password toggle eye */
+/* Tombol mata show/hide password */
 div[data-testid="stTextInput"] button {
     background: transparent !important;
     border: none !important;
@@ -150,7 +173,7 @@ div[data-testid="stTextInput"] button {
     padding-right: 12px !important;
 }
 
-/* Submit button inside form */
+/* Tombol submit form login */
 div[data-testid="stForm"] div[data-testid="stButton"] > button {
     width: 100% !important;
     background: var(--bg-input) !important;
@@ -170,7 +193,7 @@ div[data-testid="stForm"] div[data-testid="stButton"] > button:hover {
     color: #ff8ad8 !important;
 }
 
-/* Error box */
+/* Kotak error */
 div[data-testid="stAlert"] {
     background: rgba(255,70,70,0.08) !important;
     border: 1px solid rgba(255,70,70,0.2) !important;
@@ -179,23 +202,43 @@ div[data-testid="stAlert"] {
     font-size: 14px !important;
 }
 
-/* ===== CHAT / APP ===== */
-[data-testid="stSidebar"] { 
+/* ===== SIDEBAR ===== */
+[data-testid="stSidebar"] {
     background: var(--bg-secondary) !important;
+    border-right: 1px solid var(--border-color) !important;
     transition: background-color 0.3s ease;
+}
+[data-testid="stSidebar"] * {
+    color: var(--text-primary) !important;
+}
+[data-testid="stSidebar"] .stButton button {
+    background: var(--bg-input) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 10px !important;
+}
+[data-testid="stSidebar"] .stButton button:hover {
+    border-color: var(--border-hover) !important;
+    color: #ff8ad8 !important;
+}
+[data-testid="stSidebar"] [data-testid="stExpander"] {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
 }
 
 /* ===== CHAT MESSAGES ===== */
-[data-testid="stChatMessage"] { 
+[data-testid="stChatMessage"] {
     background: transparent !important;
 }
 [data-testid="stChatMessage"] div[data-testid="stMarkdownContainer"] {
     background: var(--msg-assistant) !important;
+    color: var(--text-primary) !important;
     padding: 12px 16px !important;
     border-radius: 12px !important;
 }
 
-/* User messages */
+/* Pesan user */
 [data-testid="stChatMessage"][data-testid*="user"] div[data-testid="stMarkdownContainer"] {
     background: var(--msg-user) !important;
 }
@@ -224,25 +267,26 @@ div[data-testid="stAlert"] {
     color: var(--text-muted) !important;
 }
 [data-testid="stChatInput"] button {
-    background: #ffffff !important;
+    background: #ff8ad8 !important;
     border-radius: 10px !important;
     border: none !important;
     width: 34px !important;
     height: 34px !important;
-    color: black !important;
+    color: white !important;
     margin: 4px !important;
 }
 [data-testid="stChatInput"] button:hover {
-    background: #e0e0e0 !important;
+    background: #ff6cc8 !important;
 }
 [data-testid="stChatInput"] button svg {
-    fill: black !important;
-    color: black !important;
+    fill: white !important;
+    color: white !important;
 }
 
 h1 { color: #ff8ad8 !important; }
+p, span, label, div { color: inherit; }
 
-/* ===== MODE BUTTONS (FLOATING AT TOP) ===== */
+/* ===== TOMBOL GANTI MODE (CHAT / DIARY) ===== */
 .mode-switcher {
     display: flex;
     gap: 12px;
@@ -280,26 +324,52 @@ h1 { color: #ff8ad8 !important; }
     background: rgba(255,138,216,0.08);
 }
 
-/* ===== MOBILE RESPONSIVE ===== */
+/* ===== KOTAK DIARY & MUSIK (pakai variabel tema) ===== */
+.diary-box {
+    background: var(--diary-bg) !important;
+    border: 1px solid var(--diary-border) !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+    margin: 8px 0 !important;
+    color: var(--diary-text) !important;
+}
+.music-box {
+    background: var(--music-bg) !important;
+    border: 1px solid var(--music-border) !important;
+    border-radius: 12px !important;
+    padding: 12px !important;
+    font-size: 13px !important;
+    color: var(--text-secondary) !important;
+}
+.status-box {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 15px !important;
+    margin: 10px 0 20px !important;
+    color: var(--text-secondary) !important;
+}
+
+/* ===== RESPONSIVE MOBILE ===== */
 @media (max-width: 768px) {
     [data-testid="stSidebar"] {
         min-width: 200px !important;
         max-width: 280px !important;
     }
-    
+
     [data-testid="stSidebar"] .stButton button {
         font-size: 14px !important;
         padding: 8px 12px !important;
         width: 100% !important;
     }
-    
+
     .login-title {
         font-size: 32px !important;
     }
     div[data-testid="stForm"] {
         padding: 20px 16px !important;
     }
-    
+
     .mode-switcher {
         gap: 8px;
         margin: 8px 0 16px 0;
@@ -312,8 +382,7 @@ h1 { color: #ff8ad8 !important; }
         justify-content: center;
         min-width: 80px;
     }
-    
-    /* Pastikan chat input terlihat di mobile */
+
     [data-testid="stChatInput"] {
         position: sticky !important;
         bottom: 0 !important;
@@ -329,8 +398,7 @@ h1 { color: #ff8ad8 !important; }
         min-height: 44px !important;
         padding: 8px 12px !important;
     }
-    
-    /* Chat messages container */
+
     .main > div {
         padding-bottom: 80px !important;
     }
@@ -342,39 +410,6 @@ h1 { color: #ff8ad8 !important; }
         min-width: 240px !important;
         max-width: 300px !important;
     }
-}
-
-/* ===== CUSTOM CHAT INPUT FALLBACK ===== */
-.custom-chat-input {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 12px 16px;
-    background: var(--bg-primary);
-    border-top: 1px solid var(--border-color);
-    z-index: 1000;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-.custom-chat-input input {
-    flex: 1;
-    padding: 12px 16px;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-input);
-    color: var(--text-primary);
-    font-size: 15px;
-}
-.custom-chat-input button {
-    padding: 12px 24px;
-    border-radius: 12px;
-    border: none;
-    background: #ff8ad8;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -551,8 +586,7 @@ with st.sidebar:
             st.rerun()
 
     st.markdown("""
-    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
-    border-radius:12px;padding:15px;margin:10px 0 20px;color:var(--text-secondary);">
+    <div class="status-box">
         🟢 Online &nbsp; KEI AI
     </div>
     """, unsafe_allow_html=True)
@@ -579,8 +613,7 @@ with st.sidebar:
             if music_query:
                 search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
                 st.markdown(f"""
-                <div style="background:rgba(255,138,216,0.04);border:1px solid rgba(255,138,216,0.08);
-                border-radius:12px;padding:12px;font-size:13px;color:var(--text-secondary);">
+                <div class="music-box">
                     🎵 <b>{music_query}</b><br>
                     <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube</a>
                 </div>
@@ -630,8 +663,7 @@ if st.session_state.mode == "diary":
         with st.expander(f"📖 Lihat {len(diary_entries)} entri diary lama"):
             for entry in reversed(diary_entries[-10:]):
                 st.markdown(f"""
-                <div style="background:rgba(255,182,230,0.05);border:1px solid rgba(255,138,216,0.1);
-                border-radius:12px;padding:16px;margin:8px 0;color:#f0c4e8;">
+                <div class="diary-box">
                     <small style="color:#ff8ad8;">📅 {entry['date']}</small><br><br>
                     <b>Kamu:</b> {entry['user']}<br><br>
                     <b>Kei:</b> {entry['kei']}
@@ -666,8 +698,7 @@ if st.session_state.mode == "diary":
         save_json(DIARY_FILE, diary_entries)
 
         st.markdown(f"""
-        <div style="background:rgba(255,182,230,0.05);border:1px solid rgba(255,138,216,0.1);
-        border-radius:12px;padding:16px;margin:8px 0;color:#f0c4e8;">
+        <div class="diary-box">
             <b style="color:#ff8ad8;">Kamu tulis:</b><br>{diary_input}<br><br>
             <b style="color:#ff8ad8;">Kei menjawab:</b><br>{kei_reply}
         </div>
@@ -703,7 +734,7 @@ if prompt is None:
             user_input = st.text_input("", placeholder="Ketik pesan ke Kei...", key="fallback_input", label_visibility="collapsed")
         with cols[1]:
             send_btn = st.button("Kirim", key="send_btn", use_container_width=True)
-        
+
         if send_btn and user_input:
             prompt = user_input
             st.session_state.input_text = ""
