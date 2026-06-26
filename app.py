@@ -430,6 +430,18 @@ p, span, label, div { color: inherit; }
     }
 }
 
+/* Iframe dari components.html (tombol toggle) jangan sampai keblok ukurannya */
+iframe.kei-toggle-frame {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 60px !important;
+    height: 60px !important;
+    z-index: 999999 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
 /* Batasi lebar konten utama biar simetris (layout wide tapi konten center) */
 .main .block-container {
     max-width: 800px !important;
@@ -442,7 +454,33 @@ p, span, label, div { color: inherit; }
 # =====================
 # 3b. TOMBOL TOGGLE SIDEBAR CUSTOM
 # =====================
-st.markdown("""
+import streamlit.components.v1 as components
+
+components.html("""
+<style>
+  html, body { margin:0; padding:0; background: transparent; }
+  #kei-sidebar-toggle {
+      position: fixed;
+      top: 0.6rem;
+      left: 0.6rem;
+      z-index: 999999;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #161616;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+  #kei-sidebar-toggle svg {
+      width: 18px;
+      height: 18px;
+      stroke: #ffffff;
+  }
+</style>
 <div id="kei-sidebar-toggle" title="Buka/Tutup menu">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -451,39 +489,39 @@ st.markdown("""
     </svg>
 </div>
 <script>
-(function() {
-    function findToggle() {
-        // Coba beberapa kemungkinan selector tombol toggle asli Streamlit
-        const doc = window.parent.document;
-        return doc.querySelector('[data-testid="collapsedControl"] button')
-            || doc.querySelector('[data-testid="collapsedControl"]')
-            || doc.querySelector('button[kind="header"]')
-            || doc.querySelector('[data-testid="stSidebarCollapseButton"] button');
-    }
+function findToggle() {
+    const doc = window.parent.document;
+    return doc.querySelector('[data-testid="collapsedControl"] button')
+        || doc.querySelector('[data-testid="collapsedControl"]')
+        || doc.querySelector('button[kind="header"]')
+        || doc.querySelector('[data-testid="stSidebarCollapseButton"] button');
+}
 
-    function attach() {
-        const myBtn = document.getElementById('kei-sidebar-toggle');
-        if (!myBtn) return;
-        myBtn.onclick = function() {
-            const target = findToggle();
-            if (target) {
-                target.click();
-            } else {
-                // Fallback: toggle manual lewat manipulasi style sidebar
-                const doc = window.parent.document;
-                const sidebar = doc.querySelector('[data-testid="stSidebar"]');
-                if (sidebar) {
-                    const isHidden = sidebar.getAttribute('aria-expanded') === 'false';
-                    sidebar.style.display = isHidden ? '' : 'none';
-                }
-            }
-        };
+const myBtn = document.getElementById('kei-sidebar-toggle');
+myBtn.addEventListener('click', function() {
+    const target = findToggle();
+    if (target) {
+        target.click();
+    } else {
+        const doc = window.parent.document;
+        const sidebar = doc.querySelector('[data-testid="stSidebar"]');
+        if (sidebar) {
+            sidebar.style.display = (sidebar.style.display === 'none') ? '' : 'none';
+        }
     }
-    attach();
-    setTimeout(attach, 500);
+});
+
+// Tandai iframe pembungkus widget ini sendiri agar bisa ditarget CSS global
+(function markFrame() {
+    try {
+        const myFrame = window.frameElement;
+        if (myFrame) {
+            myFrame.classList.add('kei-toggle-frame');
+        }
+    } catch (e) {}
 })();
 </script>
-""", unsafe_allow_html=True)
+""", height=0, width=0)
 
 
 for key, val in {"logged_in": False, "mode": "chat", "messages": [], "avatar": None, "input_text": ""}.items():
