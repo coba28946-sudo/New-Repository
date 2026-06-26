@@ -370,10 +370,10 @@ def render_dynamic_css():
         bg_main      = "#f7f5fa"
         bg_sidebar   = "#ffffff"
         text_main    = "#1a1a1a"
-        text_dim     = "rgba(0,0,0,0.55)"
-        text_dimmer  = "rgba(0,0,0,0.35)"
-        border_col   = "rgba(0,0,0,0.08)"
-        input_bg     = "rgba(0,0,0,0.04)"
+        text_dim     = "rgba(0,0,0,0.6)"
+        text_dimmer  = "rgba(0,0,0,0.4)"
+        border_col   = "rgba(0,0,0,0.15)"
+        input_bg     = "rgba(0,0,0,0.035)"
         chat_input_bg= "#ffffff"
     else:
         bg_main      = "#0a0e1a"
@@ -467,8 +467,13 @@ def render_dynamic_css():
     .kei-sidebar-inner [data-testid="stExpander"],
     .kei-sidebar-inner details {{
         background: {input_bg} !important;
-        border: 1px solid {border_col} !important;
+        border-width: 1px !important;
+        border-style: solid !important;
+        border-color: {border_col} !important;
         border-radius: 10px !important;
+        box-shadow: 0 0 0 1px {border_col} !important;
+        margin-bottom: 8px !important;
+        overflow: hidden !important;
     }}
     .kei-sidebar-inner [data-testid="stExpander"] summary,
     .kei-sidebar-inner [data-testid="stExpanderHeader"],
@@ -476,6 +481,7 @@ def render_dynamic_css():
         background: transparent !important;
         color: {text_main} !important;
         font-size: 13px !important;
+        border: none !important;
     }}
     .kei-sidebar-inner [data-testid="stExpander"] summary *,
     .kei-sidebar-inner [data-testid="stExpanderHeader"] *,
@@ -486,6 +492,7 @@ def render_dynamic_css():
     .kei-sidebar-inner [data-testid="stExpanderDetails"],
     .kei-sidebar-inner [data-testid="stExpander"] > div:not(summary) {{
         background: transparent !important;
+        border: none !important;
     }}
 
     .kei-sidebar-inner label,
