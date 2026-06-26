@@ -458,6 +458,16 @@ if not st.session_state.logged_in:
         outline: none !important;
         box-shadow: none !important;
     }
+    /* Kill border pink Streamlit di semua kondisi */
+    [data-testid="stTextInput"] > div,
+    [data-testid="stTextInput"] > div:hover,
+    [data-testid="stTextInput"] > div:focus,
+    [data-testid="stTextInput"] > div:focus-within,
+    [data-testid="stTextInput"] > div:active {
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
 
     /* Sembunyikan label */
     [data-testid="stTextInput"] label { display: none !important; }
@@ -593,43 +603,32 @@ if not st.session_state.logged_in:
     </style>
     <script>
     (function() {
-        var SELECTORS = [
-            'input',
-            '[data-baseweb="input"]',
-            '[data-baseweb="base-input"]',
-            '[data-testid="stTextInput"] > div',
-            '[data-testid="stTextInput"] > div > div'
-        ].join(',');
+        // Inject style tag langsung ke head — lebih kuat dari inline style
+        var style = document.createElement('style');
+        style.innerHTML = [
+            '* { outline: none !important; }',
+            'input, input:focus, input:active, input:focus-visible { box-shadow: none !important; outline: none !important; border: none !important; }',
+            '[data-baseweb="base-input"] { border: none !important; box-shadow: none !important; }',
+            '[data-baseweb="base-input"]:focus-within { border: none !important; box-shadow: none !important; }',
+            '[data-testid="stTextInput"] > div { border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: none !important; }',
+            '[data-testid="stTextInput"] > div:focus-within { border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: none !important; }'
+        ].join('\n');
+        document.head.appendChild(style);
 
         function kill(el) {
-            el.style.setProperty('box-shadow', 'none', 'important');
-            el.style.setProperty('outline', 'none', 'important');
-            el.style.setProperty('border-color', 'rgba(255,255,255,0.1)', 'important');
+            el.style.cssText += ';box-shadow:none!important;outline:none!important;border-color:rgba(255,255,255,0.1)!important;';
         }
 
         function killAll() {
-            document.querySelectorAll(SELECTORS).forEach(function(el) {
+            document.querySelectorAll('input, [data-baseweb="base-input"], [data-testid="stTextInput"] > div, [data-testid="stTextInput"] > div > div').forEach(function(el) {
                 kill(el);
-                ['focus','focusin','mousedown','click','keydown'].forEach(function(ev) {
-                    el.addEventListener(ev, function() {
-                        kill(this);
-                        setTimeout(() => kill(this), 0);
-                        setTimeout(() => kill(this), 50);
-                        setTimeout(() => kill(this), 150);
-                    }, true);
-                });
+                el.onfocus = function() { kill(this); setTimeout(()=>kill(this),0); setTimeout(()=>kill(this),100); };
+                el.onmousedown = function() { setTimeout(()=>kill(this),0); };
             });
         }
 
         killAll();
-        new MutationObserver(function(mutations) {
-            killAll();
-            mutations.forEach(function(m) {
-                m.addedNodes.forEach(function(n) {
-                    if (n.querySelectorAll) n.querySelectorAll(SELECTORS).forEach(kill);
-                });
-            });
-        }).observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['style','class']});
+        new MutationObserver(killAll).observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['style','class']});
     })();
     </script>
     """, unsafe_allow_html=True)
