@@ -52,13 +52,24 @@ textarea, textarea:focus, textarea:focus-visible, textarea:active {
     box-shadow: none !important;
     outline: none !important;
 }
+/* Elemen BaseWeb (pembungkus internal di balik st.text_input) — ini
+   yang jadi sumber garis kanan "nongol" khusus di field tanpa tombol
+   mata (Username), karena strukturnya beda dari field Password (yang
+   punya tombol). Sebelumnya elemen ini cuma ganti border-color tapi
+   border-nya sendiri masih ada tanpa radius — sekarang dimatikan total
+   dan dipaksa transparent + full size supaya tidak ada elemen ber-garis
+   terpisah di dalam wrapper. */
 [data-baseweb="input"],
 [data-baseweb="input"]:focus-within,
 [data-baseweb="base-input"],
 [data-baseweb="base-input"]:focus-within {
+    border: none !important;
     box-shadow: none !important;
     outline: none !important;
-    border-color: rgba(255,255,255,0.1) !important;
+    background: transparent !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 [data-testid="stTextInput"] > div,
 [data-testid="stTextInput"] > div:hover,
@@ -149,6 +160,9 @@ div[data-testid="stTextInput"] > div > div {
     outline: none !important;
     box-shadow: none !important;
     background: transparent !important;
+    width: 100% !important;
+    flex: 1 !important;
+    min-width: 0 !important;
 }
 div[data-testid="stTextInput"] > div > div:focus-within {
     border-radius: 12px !important;
