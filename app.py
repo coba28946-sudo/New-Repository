@@ -297,6 +297,24 @@ datalist {
     margin-top: 8px;
 }
 
+/* Baris tombol stiker (5 emoji) — dipusatkan & dibuat kompak/persegi,
+   di-scope ke kei_sticker_row saja supaya tidak menyentuh tombol lain */
+.st-key-kei_sticker_row div[data-testid="stHorizontalBlock"] {
+    justify-content: center !important;
+    flex-wrap: nowrap !important;
+}
+.st-key-kei_sticker_row div[data-testid^="column"] {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+.st-key-kei_sticker_row [data-testid="stButton"] button {
+    padding: 6px 10px !important;
+    min-width: 0 !important;
+}
+
 /* Label "Cerita ke Kei..." di mode diary — dibuat sedikit lebih besar
    dari default Streamlit (yang terlalu kecil), tapi tidak berlebihan */
 div[data-testid="stTextArea"] label p {
@@ -609,17 +627,19 @@ with st.sidebar:
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
     with st.expander("😄 Kirim Stiker"):
-        cols = st.columns(5)
-        moods  = ["happy", "love", "sad", "cool", "shy"]
-        emojis = ["😄", "💕", "😢", "😎", "🌸"]
-        for i, (mood, emoji) in enumerate(zip(moods, emojis)):
-            with cols[i]:
-                if st.button(emoji, key=f"sticker_{mood}"):
-                    sticker = get_sticker(mood)
-                    st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
-                    st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
-                    save_json(CHAT_FILE, st.session_state.messages)
-                    st.rerun()
+        sticker_row = st.container(key="kei_sticker_row")
+        with sticker_row:
+            cols = st.columns(5)
+            moods  = ["happy", "love", "sad", "cool", "shy"]
+            emojis = ["😄", "💕", "😢", "😎", "🌸"]
+            for i, (mood, emoji) in enumerate(zip(moods, emojis)):
+                with cols[i]:
+                    if st.button(emoji, key=f"sticker_{mood}"):
+                        sticker = get_sticker(mood)
+                        st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
+                        st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
+                        save_json(CHAT_FILE, st.session_state.messages)
+                        st.rerun()
 
     with st.expander("🎵 Putar Musik"):
         music_query = st.text_input("Nama lagu / artis", key="music_input")
@@ -657,18 +677,20 @@ with st.sidebar:
 # =====================
 # 11. HEADER
 # =====================
+header_mood_emoji, _header_mood_label = get_today_mood()
+
 if st.session_state.mode == "diary":
-    st.markdown("""
+    st.markdown(f"""
     <div style="text-align:center;padding:4px 0 4px;">
         <h1 style="color:#ff8ad8;margin:0;font-size:48px;line-height:1.1;">💌 Dear Diary</h1>
-        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">Ceritain semua ke Kei ya~ 🥺</p>
+        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">Ceritain semua ke Kei ya~ {header_mood_emoji}</p>
     </div>
     """, unsafe_allow_html=True)
 else:
-    st.markdown("""
+    st.markdown(f"""
     <div style="text-align:center;padding:4px 0 4px;">
         <h1 style="color:#ff8ad8;margin:0;font-size:48px;line-height:1.1;">✦ Kei AI</h1>
-        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">Your AI Companion</p>
+        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">Your AI Companion {header_mood_emoji}</p>
     </div>
     """, unsafe_allow_html=True)
 
