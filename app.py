@@ -400,6 +400,16 @@ def render_dynamic_css():
     # custom (misal pink di judul) akan tertimpa balik jadi warna teks biasa.
     st.markdown(f"""
     <style>
+    /* Paksa browser pakai tema yang dipilih lewat toggle, bukan ikut preferensi
+       sistem/OS/browser (prefers-color-scheme). Ini juga mempengaruhi rendering
+       form control bawaan browser seperti scrollbar dan checkbox. */
+    :root {{
+        color-scheme: {theme} !important;
+    }}
+    html {{
+        color-scheme: {theme} !important;
+    }}
+
     html, body, .stApp,
     [data-testid="stAppViewContainer"],
     [data-testid="stMain"],
