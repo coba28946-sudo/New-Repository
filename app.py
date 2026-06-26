@@ -388,47 +388,42 @@ p, span, label, div { color: inherit; }
     }
 }
 
-/* ===== MOBILE: SIDEBAR JADI OVERLAY DRAWER =====
-   Aturan dasar (selalu sama, tidak peduli open/closed) ditaruh di sini.
-   Status BUKA/TUTUP yang sebenarnya TIDAK dikontrol lewat CSS class
-   (:has() ternyata tidak reliable lintas browser/versi Streamlit), tapi
-   langsung lewat Python: blok <style> kondisional yang di-inject di
-   bagian "TOGGLE MENU" akan menambahkan display:none atau transform
-   yang sesuai berdasarkan st.session_state.sidebar_open saat render.
-   Jadi tidak ada lagi sliver tipis: status closed = benar-benar
-   display:none, tidak bisa "setengah jalan" seperti st.columns shrink. */
+/* ===== SIDEBAR PERMANEN (gaya Claude) =====
+   Tidak ada lagi toggle buka/tutup. Panel menu selalu tampil di kiri
+   dengan lebar tetap, baik di desktop maupun mobile -- sama seperti
+   sidebar Claude yang selalu ada di sana. Ini menghilangkan semua
+   masalah sliver/teks terpotong dari versi drawer sebelumnya, karena
+   tidak ada lagi state "tertutup" yang harus disusutkan ke 0. */
+div[data-testid="stHorizontalBlock"].st-key-kei_outer_layout {
+    align-items: stretch !important;
+}
+div[data-testid="stHorizontalBlock"].st-key-kei_outer_layout > div:first-child {
+    flex: 0 0 260px !important;
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+}
+div[data-testid="stHorizontalBlock"].st-key-kei_outer_layout > div:last-child {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
 @media (max-width: 768px) {
-    div[data-testid="stHorizontalBlock"] {
-        display: block !important;
-        gap: 0 !important;
-        position: relative !important;
+    div[data-testid="stHorizontalBlock"].st-key-kei_outer_layout > div:first-child {
+        flex: 0 0 220px !important;
+        width: 220px !important;
+        min-width: 220px !important;
+        max-width: 220px !important;
+        padding: 0.4rem !important;
     }
-
-    div[data-testid="stHorizontalBlock"] > div:first-child {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 80vw !important;
-        max-width: 300px !important;
-        height: 100vh !important;
-        z-index: 999998 !important;
-        background: var(--bg-secondary) !important;
-        overflow-y: auto !important;
-        padding: 1rem !important;
-        box-shadow: 4px 0 24px var(--shadow) !important;
-        flex: none !important;
-        transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    }
-
-    div[data-testid="stHorizontalBlock"] > div:last-child {
-        width: 100% !important;
-        flex: none !important;
+    div[data-testid="stHorizontalBlock"].st-key-kei_outer_layout {
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
     }
 }
 
 /* Batasi lebar konten utama biar simetris (layout wide tapi konten center) */
 .main .block-container {
-    max-width: 800px !important;
+    max-width: 1100px !important;
     margin: 0 auto !important;
     padding-top: 1rem !important;
 }
@@ -440,78 +435,8 @@ p, span, label, div { color: inherit; }
     border-radius: 16px !important;
     padding: 16px !important;
     height: 100%;
-}
-
-/* Tombol toggle - FIXED, selalu nempel di pojok kiri atas viewport,
-   gak ikut scroll meskipun chat sudah panjang */
-.kei-toggle-btn {
-    position: fixed !important;
-    top: 0.7rem !important;
-    left: 0.7rem !important;
-    z-index: 999999 !important;
-}
-.kei-toggle-btn button {
-    width: 42px !important;
-    height: 42px !important;
-    border-radius: 10px !important;
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border-color) !important;
-    color: var(--text-primary) !important;
-    font-size: 18px !important;
-    padding: 0 !important;
-    box-shadow: 0 2px 10px var(--shadow) !important;
-}
-.kei-toggle-btn button:hover {
-    border-color: var(--border-hover) !important;
-    color: #ff8ad8 !important;
-}
-
-/* Beri ruang di bagian atas konten supaya tombol fixed gak menutupi apa pun */
-.main .block-container {
-    padding-top: 3.2rem !important;
-}
-
-/* ===== ANIMASI SLIDE DARI KIRI UNTUK PANEL MENU (DESKTOP) ===== */
-.kei-menu-wrapper {
-    overflow: hidden;
-    transition: max-width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.28s ease;
-}
-.kei-menu-wrapper.kei-menu-closed {
-    max-width: 0 !important;
-    opacity: 0;
-}
-.kei-menu-wrapper.kei-menu-open {
-    max-width: 100% !important;
-    opacity: 1;
-}
-.kei-menu-inner {
-    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.kei-menu-closed .kei-menu-inner {
-    transform: translateX(-100%);
-}
-.kei-menu-open .kei-menu-inner {
-    transform: translateX(0);
-}
-
-/* Kolom Streamlit pembungkus menu: kecilkan gap saat tertutup supaya
-   tidak menyisakan ruang kosong yang janggal di sebelah konten utama
-   (HANYA berlaku di desktop, di mobile sudah ditangani blok khusus di atas) */
-@media (min-width: 769px) {
-    div[data-testid="stHorizontalBlock"] {
-        transition: gap 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    div[data-testid="stHorizontalBlock"]:has(.kei-menu-closed) {
-        gap: 0 !important;
-    }
-    div[data-testid="stHorizontalBlock"]:has(.kei-menu-closed) > div:first-child {
-        flex: 0 0 0px !important;
-        width: 0px !important;
-        min-width: 0px !important;
-        transition: flex-basis 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                    width 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    position: sticky !important;
+    top: 1rem !important;
 }
 
 /* Mode switcher versi menu (vertikal, full width, dipakai di dalam panel kiri) */
@@ -527,11 +452,22 @@ p, span, label, div { color: inherit; }
     border-radius: 12px;
     padding: 10px 16px;
 }
+@media (max-width: 768px) {
+    .mode-switcher-menu .mode-btn {
+        justify-content: center;
+        padding: 10px 4px;
+        font-size: 12px;
+        gap: 2px;
+    }
+    .kei-custom-sidebar {
+        padding: 8px !important;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
 
-for key, val in {"logged_in": False, "mode": "chat", "messages": [], "avatar": None, "input_text": "", "sidebar_open": False}.items():
+for key, val in {"logged_in": False, "mode": "chat", "messages": [], "avatar": None, "input_text": ""}.items():
     if key not in st.session_state:
         st.session_state[key] = val
 
@@ -648,50 +584,11 @@ def get_sticker(mood):
     return random.choice(STICKERS.get(mood, STICKERS["happy"]))
 
 # =====================
-# 10. TOMBOL TOGGLE MENU (di luar, pojok kiri atas)
+# 10. (dihapus) TOMBOL TOGGLE MENU
+# Sidebar sekarang permanen seperti Claude — selalu tampil, tidak perlu
+# tombol buka/tutup lagi. Logika toggle & CSS drawer kondisional yang
+# sebelumnya ada di sini sudah tidak diperlukan.
 # =====================
-st.markdown('<div class="kei-toggle-btn">', unsafe_allow_html=True)
-if st.button("☰", key="kei_toggle_menu", help="Buka/Tutup menu"):
-    st.session_state.sidebar_open = not st.session_state.sidebar_open
-    st.rerun()
-st.markdown('</div>', unsafe_allow_html=True)
-
-# ---------------------------------------------------------------
-# PENTING: status drawer (terbuka/tertutup) di mobile dikontrol
-# LANGSUNG dari Python di sini, bukan lewat CSS class (:has()),
-# karena selector :has() di atas terbukti tidak reliable di semua
-# browser/versi Streamlit -> kemarin status "closed" gagal terdeteksi
-# sehingga drawer cuma menyusut jadi sliver tipis, tidak benar-benar
-# hilang. Sekarang Python sudah tahu pasti sidebar_open True/False
-# saat render ini, jadi tinggal kirim CSS yang sesuai, tidak ada lagi
-# tebak-tebakan di sisi CSS.
-if st.session_state.sidebar_open:
-    st.markdown("""
-    <style>
-    @media (max-width: 768px) {
-        div[data-testid="stHorizontalBlock"] > div:first-child {
-            transform: translateX(0) !important;
-        }
-        div[data-testid="stHorizontalBlock"]::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 999997;
-        }
-    }
-    </style>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-    <style>
-    @media (max-width: 768px) {
-        div[data-testid="stHorizontalBlock"] > div:first-child {
-            display: none !important;
-        }
-    }
-    </style>
-    """, unsafe_allow_html=True)
 
 # Handle mode switching via query params
 query_params = st.query_params
@@ -702,22 +599,11 @@ if "mode" in query_params:
         st.rerun()
 
 # =====================
-# 11. LAYOUT: PANEL MENU KIRI + KONTEN UTAMA
+# 11. LAYOUT: PANEL MENU KIRI (PERMANEN) + KONTEN UTAMA
 # =====================
-# PENTING: kolom menu SELALU dirender (tidak pakai if/else berdasarkan
-# sidebar_open). Kalau kolomnya dibuat/dihancurkan secara kondisional,
-# Streamlit re-render DOM dari nol setiap toggle, sehingga CSS transition
-# tidak pernah punya kesempatan untuk terlihat (elemen lama hilang &
-# elemen baru muncul instan, tanpa ada waktu animasi di antaranya).
-# Animasi slide dikontrol murni lewat class kei-menu-open/kei-menu-closed.
-# Di mobile, kolom pertama ini diubah jadi overlay drawer lewat CSS
-# (lihat blok "MOBILE: SIDEBAR JADI OVERLAY DRAWER" di atas).
-menu_state_class = "kei-menu-open" if st.session_state.sidebar_open else "kei-menu-closed"
-
-menu_col, main_col = st.columns([1, 3], gap="medium")
+menu_col, main_col = st.columns([1, 3], gap="medium", key="kei_outer_layout")
 
 with menu_col:
-    st.markdown(f'<div class="kei-menu-wrapper {menu_state_class}"><div class="kei-menu-inner">', unsafe_allow_html=True)
     st.markdown('<div class="kei-custom-sidebar">', unsafe_allow_html=True)
 
     # ---- Chat / Diary switcher (sekarang di dalam menu) ----
@@ -807,7 +693,7 @@ with menu_col:
         st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div></div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # =====================
