@@ -332,9 +332,9 @@ def save_json(path, data):
 # =====================
 if not st.session_state.logged_in:
     st.markdown("""
-    <div style="padding-top:50px; text-align:center; margin-bottom:20px;">
-        <div style="color:#ff8ad8; font-size:50px; font-weight:700; letter-spacing:-1px; margin-bottom:8px;">✦ Kei AI</div>
-        <div style="color:rgba(255,255,255,0.5); font-size:17px;">Teman AI Pintar Kamu</div>
+    <div style="padding-top:35px; text-align:center; margin-bottom:12px;">
+        <div style="color:#ff8ad8; font-size:50px; font-weight:700; letter-spacing:-1px; margin-bottom:0px; line-height:1.1;">✦ Kei AI</div>
+        <div style="color:rgba(255,255,255,0.5); font-size:17px; margin-top:2px;">Teman AI Pintar Kamu</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -454,21 +454,46 @@ with st.sidebar:
     st.markdown('<div class="kei-sidebar-inner">', unsafe_allow_html=True)
 
     current_mode = st.session_state.mode
-    chat_active  = "active" if current_mode == "chat"  else ""
-    diary_active = "active" if current_mode == "diary" else ""
 
+    # Highlight tombol yang sedang aktif lewat CSS yang di-inject sesuai
+    # mode saat ini. Di-scope ke key="kei_mode_switch" supaya tidak
+    # menyentuh tombol lain di sidebar (New Chat, Logout, dll).
+    active_index = 1 if current_mode == "chat" else 2
     st.markdown(f"""
-    <div class="mode-btn-wrap">
-        <span class="mode-btn {chat_active}"  onclick="window.location.href='?mode=chat'"  style="cursor:pointer;">💬 Chat</span>
-        <span class="mode-btn {diary_active}" onclick="window.location.href='?mode=diary'" style="cursor:pointer;">💌 Diary</span>
-    </div>
+    <style>
+    .st-key-kei_mode_switch [data-testid="stButton"] button {{
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+        background: rgba(255,255,255,0.03) !important;
+        color: rgba(255,255,255,0.5) !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        text-align: center !important;
+    }}
+    .st-key-kei_mode_switch [data-testid="stButton"] button:hover {{
+        border-color: rgba(255,138,216,0.4) !important;
+        color: #ff8ad8 !important;
+    }}
+    .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button {{
+        border-color: #ff8ad8 !important;
+        color: #ff8ad8 !important;
+        background: rgba(255,138,216,0.08) !important;
+    }}
+    </style>
     """, unsafe_allow_html=True)
 
-    qp = st.query_params
-    if "mode" in qp and qp["mode"] in ["chat", "diary"]:
-        if qp["mode"] != st.session_state.mode:
-            st.session_state.mode = qp["mode"]
-            st.rerun()
+    mode_switch = st.container(key="kei_mode_switch")
+    with mode_switch:
+        mcol1, mcol2 = st.columns(2)
+        with mcol1:
+            if st.button("💬 Chat", key="mode_chat_btn", use_container_width=True):
+                if st.session_state.mode != "chat":
+                    st.session_state.mode = "chat"
+                    st.rerun()
+        with mcol2:
+            if st.button("💌 Diary", key="mode_diary_btn", use_container_width=True):
+                if st.session_state.mode != "diary":
+                    st.session_state.mode = "diary"
+                    st.rerun()
 
     avatar_exists = os.path.exists("kei_avatar.png")
     if avatar_exists:
