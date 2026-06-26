@@ -85,6 +85,13 @@ datalist {
     position: relative;
 }
 
+/* Kurangi jarak kosong bawaan Streamlit di bagian atas sidebar, supaya
+   tombol Chat/Diary tidak terlalu jauh dari toolbar atas */
+section[data-testid="stSidebar"] div[data-testid="stSidebarUserContent"],
+section[data-testid="stSidebar"] > div:first-child {
+    padding-top: 0.5rem !important;
+}
+
 .kei-sidebar {
     width: 260px;
     min-width: 260px;
