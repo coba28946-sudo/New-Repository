@@ -288,6 +288,12 @@ datalist {
     margin-top: 8px;
 }
 
+/* Label "Cerita ke Kei..." di mode diary — dibuat sedikit lebih besar
+   dari default Streamlit (yang terlalu kecil), tapi tidak berlebihan */
+div[data-testid="stTextArea"] label p {
+    font-size: 16px !important;
+}
+
 @media (max-width: 768px) {
     .kei-sidebar { width: 220px; min-width: 220px; }
     .kei-main { padding-left: 46px; }
@@ -610,7 +616,7 @@ if st.session_state.mode == "diary":
     st.markdown("---")
     diary_input = st.text_area("💌 Cerita ke Kei...",
                                placeholder="Hari ini aku ngerasa... / Kei, aku mau curhat nih...",
-                               height=150)
+                               height=150, key="diary_textarea")
     col1, col2 = st.columns([3, 1])
     with col1:
         send_diary = st.button("Kirim ke Kei 💕", use_container_width=True)
