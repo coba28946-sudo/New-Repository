@@ -500,6 +500,11 @@ if not st.session_state.logged_in:
         color: rgba(255,255,255,0.28) !important;
         font-size: 14px !important;
     }
+    /* Sembunyikan tooltip "Press Enter to submit form" bawaan browser */
+    div[data-testid="stTextInput"] input[title] {
+        pointer-events: auto !important;
+    }
+    div[data-testid="stTextInput"] input::-webkit-input-placeholder { color: rgba(255,255,255,0.28) !important; }
     div[data-testid="stTextInput"] label { display: none !important; }
     /* Tombol mata — lebar tetap 38px, tidak mempengaruhi lebar input */
     div[data-testid="stTextInput"] button {
@@ -553,23 +558,42 @@ if not st.session_state.logged_in:
     </div>
     """, unsafe_allow_html=True)
 
-    with st.form("login_form", clear_on_submit=False):
-        # PERBAIKAN: gunakan key unik + placeholder eksplisit
-        # label_visibility="collapsed" supaya tidak ada label
-        username = st.text_input(
-            "Username",
-            placeholder="Username",
-            key="login_username",
-            label_visibility="collapsed"
-        )
-        password = st.text_input(
-            "Password",
-            placeholder="Password",
-            type="password",
-            key="login_password",
-            label_visibility="collapsed"
-        )
-        submitted = st.form_submit_button("Masuk", use_container_width=True)
+    # SOLUSI PERMANEN: tanpa st.form, pakai st.text_input + st.button biasa
+    # Browser tidak akan pernah inject "Press Enter to submit form" karena tidak ada <form> HTML
+    username = st.text_input(
+        "Username",
+        placeholder="Username",
+        key="login_username",
+        label_visibility="collapsed"
+    )
+    password = st.text_input(
+        "Password",
+        placeholder="Password",
+        type="password",
+        key="login_password",
+        label_visibility="collapsed"
+    )
+    # Styling tombol Masuk agar sama seperti sebelumnya
+    st.markdown("""
+    <style>
+    div[data-testid="stButton"] > button {
+        background: #ffffff !important;
+        color: #111111 !important;
+        border: none !important;
+        border-radius: 12px !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        height: 48px !important;
+        width: 100% !important;
+        margin-top: 8px !important;
+    }
+    div[data-testid="stButton"] > button:hover {
+        background: #f0f0f0 !important;
+        color: #111 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    submitted = st.button("Masuk", use_container_width=True, key="login_btn")
 
     if submitted:
         if not username or not password:
