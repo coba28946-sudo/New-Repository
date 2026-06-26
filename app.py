@@ -64,10 +64,20 @@ textarea, textarea:focus, textarea:focus-visible, textarea:active {
 [data-testid="stTextInput"] > div:hover,
 [data-testid="stTextInput"] > div:focus,
 [data-testid="stTextInput"] > div:focus-within,
-[data-testid="stTextInput"] > div:active,
+[data-testid="stTextInput"] > div:active {
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+/* Elemen anak: JANGAN beri border sendiri (cukup wrapper di atas yang
+   punya garis) — sebelumnya baris ini ikut menggambar border 1px lagi
+   di level lebih dalam, dengan radius default (bukan 12px), sehingga
+   menghasilkan 2 lapis garis yang tidak align di pojokan. */
 [data-testid="stTextInput"] > div > div,
 [data-testid="stTextInput"] > div > div:focus-within {
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: none !important;
+    border-radius: 12px !important;
     box-shadow: none !important;
     outline: none !important;
 }
@@ -124,6 +134,27 @@ div[data-testid="stTextInput"] > div {
 div[data-testid="stTextInput"] > div:focus-within {
     border-color: rgba(255,138,216,0.5) !important;
     background: rgba(255,138,216,0.04) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+/* Elemen anak (dibuat oleh BaseWeb di balik st.text_input) — samakan
+   radius & matikan border/outline-nya sendiri, supaya cuma wrapper di
+   atas yang punya garis. Ini yang sebelumnya bikin border pink & border
+   gelap kelihatan "nongol" tidak pas di pojok, karena elemen ini punya
+   radius/border sendiri yang berbeda dari wrapper terluar. */
+div[data-testid="stTextInput"] > div > div {
+    border-radius: 12px !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+div[data-testid="stTextInput"] > div > div:focus-within {
+    border-radius: 12px !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 /* Input field — flex:1 supaya sisa ruang sama */
