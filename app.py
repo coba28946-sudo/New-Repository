@@ -60,24 +60,34 @@ header[data-testid="stHeader"] { background: transparent !important; box-shadow:
     text-align: center;
     margin-top: 20px;
 }
+
+/* Card form login */
 div[data-testid="stForm"] {
     background: rgba(255,255,255,0.03) !important;
     border: 1px solid rgba(255,255,255,0.07) !important;
     border-radius: 20px !important;
     padding: 28px 24px !important;
     box-shadow: 0 24px 64px rgba(0,0,0,0.6) !important;
+    max-width: 340px !important;
+    margin: 0 auto !important;
 }
-div[data-testid="stTextInput"] label,
-div[data-testid="stTextInput"] svg { display: none !important; }
+
+/* Sembunyikan label tapi JANGAN sembunyikan icon mata (svg di dalam button) */
+div[data-testid="stTextInput"] label { display: none !important; }
+
+/* Wrapper input */
 div[data-testid="stTextInput"] > div {
     background: rgba(255,255,255,0.04) !important;
     border: 1px solid rgba(255,255,255,0.08) !important;
     border-radius: 12px !important;
+    overflow: hidden !important;
 }
 div[data-testid="stTextInput"] > div:focus-within {
     border-color: rgba(255,138,216,0.5) !important;
     background: rgba(255,138,216,0.04) !important;
 }
+
+/* Input field */
 div[data-testid="stTextInput"] input {
     background: transparent !important;
     color: #fff !important;
@@ -85,15 +95,31 @@ div[data-testid="stTextInput"] input {
     height: 48px !important;
     border: none !important;
     box-shadow: none !important;
-    padding: 0 16px !important;
+    padding: 0 8px 0 16px !important;
 }
 div[data-testid="stTextInput"] input::placeholder { color: rgba(255,255,255,0.22) !important; }
+
+/* Tombol mata show/hide password - di ujung kanan */
 div[data-testid="stTextInput"] button {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     color: rgba(255,255,255,0.3) !important;
+    padding: 0 10px 0 4px !important;
+    margin: 0 !important;
+    height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
 }
+div[data-testid="stTextInput"] button:hover {
+    color: rgba(255,138,216,0.8) !important;
+}
+div[data-testid="stTextInput"] button svg {
+    width: 14px !important;
+    height: 14px !important;
+}
+
+/* Tombol Masuk - putih */
 div[data-testid="stForm"] div[data-testid="stButton"] > button {
     width: 100% !important;
     background: white !important;
@@ -103,16 +129,20 @@ div[data-testid="stForm"] div[data-testid="stButton"] > button {
     font-size: 15px !important;
     font-weight: 600 !important;
     height: 48px !important;
-    margin-top: 4px !important;
+    margin-top: 8px !important;
     transition: opacity 0.15s !important;
 }
-div[data-testid="stForm"] div[data-testid="stButton"] > button:hover { opacity: 0.88 !important; }
+div[data-testid="stForm"] div[data-testid="stButton"] > button:hover { opacity: 0.88 !important; background: white !important; }
+
+/* Error box */
 div[data-testid="stAlert"] {
     background: rgba(255,70,70,0.08) !important;
     border: 1px solid rgba(255,70,70,0.2) !important;
     border-radius: 10px !important;
     color: #ff6b6b !important;
     font-size: 13px !important;
+    max-width: 340px !important;
+    margin: 8px auto 0 !important;
 }
 
 /* ===== LAYOUT UTAMA ===== */
