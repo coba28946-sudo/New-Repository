@@ -301,20 +301,33 @@ section[data-testid="stSidebar"] > div:first-child {
 }
 
 /* Stiker rows — dipusatkan & kompak */
+.st-key-kei_sticker_row {
+    width: 100% !important;
+}
 .st-key-kei_sticker_row div[data-testid="stHorizontalBlock"] {
     justify-content: center !important;
     flex-wrap: nowrap !important;
+    margin: 0 auto !important;
+    width: 100% !important;
 }
 .st-key-kei_sticker_row div[data-testid^="column"] {
-    flex: 0 0 auto !important;
-    width: auto !important;
+    flex: 1 1 0 !important;
     min-width: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 0 !important;
+}
+.st-key-kei_sticker_row [data-testid="stButton"] {
+    width: 100% !important;
     display: flex !important;
     justify-content: center !important;
 }
 .st-key-kei_sticker_row [data-testid="stButton"] button {
-    padding: 6px 10px !important;
+    padding: 6px 0 !important;
     min-width: 0 !important;
+    width: 100% !important;
+    text-align: center !important;
 }
 
 div[data-testid="stTextArea"] label p {
