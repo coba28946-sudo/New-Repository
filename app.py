@@ -33,81 +33,18 @@ st.markdown("""
 <style>
 
 /* ===== GLOBAL ===== */
-html, body, .stApp { background: #0a0a0a !important; color: #ffffff !important; }
+html, body, .stApp { background: #0a0e1a !important; color: #ffffff !important; }
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
 header[data-testid="stHeader"] { background: transparent !important; box-shadow: none !important; }
 .main .block-container { padding: 0 !important; max-width: 100% !important; }
 
-/* FIX: Streamlit membuat elemen container tersembunyi berukuran 0x0px
-   (biasanya untuk tooltip "Press Enter to apply" atau elemen internal
-   lain), tapi atribut HTML-nya overflow="visible" — artinya konten di
-   dalam container 0x0 itu tetap "tumpah" terlihat dan menumpuk di atas
-   elemen lain. Paksa overflow:hidden di sini supaya konten yang memang
-   seharusnya tersembunyi (karena container-nya 0px) benar-benar hilang. */
-[data-testid="stElementContainer"][width="0px"],
-[data-testid="stElementContainer"][height="0px"],
-[data-testid="stElementContainer"][style*="width: 0px"],
-[data-testid="stElementContainer"][style*="height: 0px"] {
-    overflow: hidden !important;
-    display: none !important;
-}
-
-/* Hilangkan outline/box-shadow fokus bawaan browser & Streamlit di SEMUA
-   input, secara global, murni CSS (tanpa JS/MutationObserver). Ini cara
-   yang stabil — versi sebelumnya pakai JS untuk hal ini dan jadinya
-   malah tampil sebagai teks mentah karena <script> tercampur di satu
-   blok st.markdown dengan <style>, yang tidak reliable diparse. */
-*, *:focus, *:focus-visible, *:active {
-    outline: none !important;
-}
-input, input:focus, input:focus-visible, input:active,
-textarea, textarea:focus, textarea:focus-visible, textarea:active {
-    box-shadow: none !important;
-    outline: none !important;
-}
-/* Elemen BaseWeb (pembungkus internal di balik st.text_input) — ini
-   yang jadi sumber garis kanan "nongol" khusus di field tanpa tombol
-   mata (Username), karena strukturnya beda dari field Password (yang
-   punya tombol). Sebelumnya elemen ini cuma ganti border-color tapi
-   border-nya sendiri masih ada tanpa radius — sekarang dimatikan total
-   dan dipaksa transparent + full size supaya tidak ada elemen ber-garis
-   terpisah di dalam wrapper. */
-[data-baseweb="input"],
-[data-baseweb="input"]:focus-within,
-[data-baseweb="base-input"],
-[data-baseweb="base-input"]:focus-within {
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    background: transparent !important;
-    border-radius: 12px !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-[data-testid="stTextInput"] > div,
-[data-testid="stTextInput"] > div:hover,
-[data-testid="stTextInput"] > div:focus,
-[data-testid="stTextInput"] > div:focus-within,
-[data-testid="stTextInput"] > div:active {
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    border-radius: 12px !important;
-    box-shadow: none !important;
-    outline: none !important;
-}
-/* Elemen anak: JANGAN beri border sendiri (cukup wrapper di atas yang
-   punya garis) — sebelumnya baris ini ikut menggambar border 1px lagi
-   di level lebih dalam, dengan radius default (bukan 12px), sehingga
-   menghasilkan 2 lapis garis yang tidak align di pojokan. */
-[data-testid="stTextInput"] > div > div,
-[data-testid="stTextInput"] > div > div:focus-within {
-    border: none !important;
-    border-radius: 12px !important;
-    box-shadow: none !important;
-    outline: none !important;
-}
-
-/* ===== LOGIN ===== */
+/* ===== LOGIN (disederhanakan sesuai permintaan: balik ke tampilan
+   simpel — label tampil normal, input kotak abu polos tanpa border
+   custom pink, tombol Masuk default Streamlit, tanpa card pembungkus).
+   Semua CSS rumit untuk border custom & fix BaseWeb 4-lapis yang
+   sebelumnya diperlukan untuk gaya pink kini tidak relevan lagi karena
+   kita pakai styling default Streamlit yang sudah teruji rapi. */
 .login-title {
     color: #ff8ad8;
     font-size: 42px;
@@ -117,8 +54,8 @@ textarea, textarea:focus, textarea:focus-visible, textarea:active {
     margin-bottom: 4px;
 }
 .login-sub {
-    color: rgba(255,255,255,0.38);
-    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    font-size: 16px;
     text-align: center;
     margin-bottom: 32px;
 }
@@ -127,140 +64,6 @@ textarea, textarea:focus, textarea:focus-visible, textarea:active {
     font-size: 12px;
     text-align: center;
     margin-top: 20px;
-}
-
-/* Card form login */
-div[data-testid="stForm"] {
-    background: rgba(255,255,255,0.03) !important;
-    border: 1px solid rgba(255,255,255,0.07) !important;
-    border-radius: 20px !important;
-    padding: 28px 24px !important;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.6) !important;
-    max-width: 340px !important;
-    margin: 0 auto !important;
-}
-
-/* Sembunyikan label */
-div[data-testid="stTextInput"] label { display: none !important; }
-
-/* Wrapper input — SAMA untuk username & password */
-div[data-testid="stTextInput"] > div {
-    background: rgba(255,255,255,0.04) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
-    border-radius: 12px !important;
-    min-height: 48px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    align-items: center !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-}
-div[data-testid="stTextInput"] > div:focus-within {
-    border-color: rgba(255,138,216,0.5) !important;
-    background: rgba(255,138,216,0.04) !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-}
-
-/* Elemen anak (dibuat oleh BaseWeb di balik st.text_input) — samakan
-   radius & matikan border/outline-nya sendiri, supaya cuma wrapper di
-   atas yang punya garis. Ini yang sebelumnya bikin border pink & border
-   gelap kelihatan "nongol" tidak pas di pojok, karena elemen ini punya
-   radius/border sendiri yang berbeda dari wrapper terluar. */
-div[data-testid="stTextInput"] > div > div {
-    border-radius: 12px !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    width: 100% !important;
-    flex: 1 !important;
-    min-width: 0 !important;
-}
-div[data-testid="stTextInput"] > div > div:focus-within {
-    border-radius: 12px !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* Input field — flex:1 supaya sisa ruang sama */
-div[data-testid="stTextInput"] input {
-    background: transparent !important;
-    color: #fff !important;
-    font-size: 14px !important;
-    height: 48px !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 8px 0 16px !important;
-    flex: 1 !important;
-    min-width: 0 !important;
-}
-div[data-testid="stTextInput"] input::placeholder {
-    color: rgba(255,255,255,0.28) !important;
-    font-size: 14px !important;
-}
-
-/* Tombol mata show/hide password — dikembalikan. Masalah border kanan
-   sebelumnya ternyata BUKAN dari tombol ini, melainkan dari elemen
-   bantuan "Press Enter to apply" milik Streamlit yang memang normal
-   muncul saat field difokus — bukan bug. Styling di bawah memastikan
-   tombolnya tetap rapi menyatu dengan wrapper (radius & border konsisten). */
-div[data-testid="stTextInput"] button {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    color: rgba(255,255,255,0.3) !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    height: 48px !important;
-    width: 38px !important;
-    flex-shrink: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-div[data-testid="stTextInput"] button:hover {
-    color: rgba(255,138,216,0.8) !important;
-}
-div[data-testid="stTextInput"] button svg {
-    width: 14px !important;
-    height: 14px !important;
-}
-
-/* Tombol Masuk - putih */
-div[data-testid="stForm"] div[data-testid="stButton"] > button,
-[data-testid="stButton"] > button {
-    width: 100% !important;
-    background: white !important;
-    color: #111 !important;
-    border: none !important;
-    border-radius: 12px !important;
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    height: 48px !important;
-    margin-top: 8px !important;
-    transition: opacity 0.15s !important;
-    box-shadow: none !important;
-}
-div[data-testid="stForm"] div[data-testid="stButton"] > button:hover,
-[data-testid="stButton"] > button:hover {
-    opacity: 0.88 !important;
-    background: #f0f0f0 !important;
-    color: #111 !important;
-}
-
-/* Error box */
-div[data-testid="stAlert"] {
-    background: rgba(255,70,70,0.08) !important;
-    border: 1px solid rgba(255,70,70,0.2) !important;
-    border-radius: 10px !important;
-    color: #ff6b6b !important;
-    font-size: 13px !important;
-    max-width: 340px !important;
-    margin: 8px auto 0 !important;
 }
 
 /* Sembunyikan popup autocomplete/autofill bawaan browser pada input
@@ -365,7 +168,7 @@ datalist {
     flex-shrink: 0;
     padding: 12px 24px 16px;
     border-top: 1px solid rgba(255,255,255,0.06);
-    background: #0a0a0a;
+    background: #0a0e1a;
 }
 
 /* Chat messages */
@@ -558,32 +361,17 @@ if not st.session_state.logged_in:
     st.markdown("""
     <div style="padding-top:60px; text-align:center; margin-bottom:28px;">
         <div style="color:#ff8ad8; font-size:42px; font-weight:700; letter-spacing:-1px; margin-bottom:8px;">✦ Kei AI</div>
-        <div style="color:rgba(255,255,255,0.38); font-size:14px;">Teman AI Pintar Kamu</div>
+        <div style="color:rgba(255,255,255,0.5); font-size:16px;">Teman AI Pintar Kamu</div>
     </div>
     """, unsafe_allow_html=True)
 
-    # Card login — pakai columns untuk centering
+    # Form login simpel — pakai styling default Streamlit, tanpa card
+    # custom, label tampil normal di atas masing-masing input.
     _, col, _ = st.columns([1, 1.1, 1])
     with col:
-        st.markdown("""
-        <style>
-        [data-testid="column"]:nth-child(2) > div:first-child {
-            background: rgba(255,255,255,0.03) !important;
-            border: 1px solid rgba(255,255,255,0.08) !important;
-            border-radius: 20px !important;
-            padding: 28px 24px !important;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
-            margin-top: 8px !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-
-        username = st.text_input("Username", placeholder="Username",
-                                  key="login_username", label_visibility="collapsed")
-        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
-        password = st.text_input("Password", placeholder="Password", type="password",
-                                  key="login_password", label_visibility="collapsed")
-        submitted = st.button("Masuk", use_container_width=True, key="login_btn")
+        username = st.text_input("Username", key="login_username")
+        password = st.text_input("Password", type="password", key="login_password")
+        submitted = st.button("Masuk", key="login_btn")
 
         # Matikan autocomplete/riwayat isian browser pada field username &
         # password — ini yang menyebabkan kotak saran kecil nongol di
