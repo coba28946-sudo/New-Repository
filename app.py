@@ -381,7 +381,7 @@ def render_dynamic_css():
         text_main    = "#ffffff"
         text_dim     = "rgba(255,255,255,0.5)"
         text_dimmer  = "rgba(255,255,255,0.35)"
-        border_col   = "rgba(255,255,255,0.07)"
+        border_col   = "rgba(255,255,255,0.16)"
         input_bg     = "rgba(255,255,255,0.04)"
         chat_input_bg= "#1a1a1a"
 
@@ -1097,7 +1097,7 @@ with st.sidebar:
     else:
         _ms_bg     = "rgba(255,255,255,0.03)"
         _ms_text   = "rgba(255,255,255,0.5)"
-        _ms_border = "rgba(255,255,255,0.08)"
+        _ms_border = "rgba(255,255,255,0.16)"
 
     active_index = 1 if current_mode == "chat" else 2
     st.markdown(f"""
