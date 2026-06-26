@@ -388,23 +388,22 @@ p, span, label, div { color: inherit; }
     }
 }
 
-/* ===== MOBILE: SIDEBAR JADI OVERLAY DRAWER, BUKAN KOLOM YANG MENGECIL =====
-   Ini perbaikan utama: pada layar sempit, kolom Streamlit (st.columns)
-   TIDAK BISA menyusut rapi sampai 0px — dia hanya jadi sliver beberapa
-   pixel sehingga semua teks di dalamnya (judul "KEI AI", label tombol,
-   dll) jadi terpaksa membungkus satu huruf per baris. Solusinya: jangan
-   andalkan width-shrink, jadikan panel menu sebagai drawer fixed-position
-   yang slide masuk dari kiri DI ATAS konten (overlay), bukan mendorong
-   konten ke samping. */
+/* ===== MOBILE: SIDEBAR JADI OVERLAY DRAWER =====
+   Aturan dasar (selalu sama, tidak peduli open/closed) ditaruh di sini.
+   Status BUKA/TUTUP yang sebenarnya TIDAK dikontrol lewat CSS class
+   (:has() ternyata tidak reliable lintas browser/versi Streamlit), tapi
+   langsung lewat Python: blok <style> kondisional yang di-inject di
+   bagian "TOGGLE MENU" akan menambahkan display:none atau transform
+   yang sesuai berdasarkan st.session_state.sidebar_open saat render.
+   Jadi tidak ada lagi sliver tipis: status closed = benar-benar
+   display:none, tidak bisa "setengah jalan" seperti st.columns shrink. */
 @media (max-width: 768px) {
-    /* Matikan layout flex side-by-side bawaan st.columns */
     div[data-testid="stHorizontalBlock"] {
         display: block !important;
         gap: 0 !important;
+        position: relative !important;
     }
 
-    /* Kolom menu (pertama) -> jadi panel fixed full-height di kiri,
-       default-nya di luar layar (translateX -100%) */
     div[data-testid="stHorizontalBlock"] > div:first-child {
         position: fixed !important;
         top: 0 !important;
@@ -418,30 +417,12 @@ p, span, label, div { color: inherit; }
         padding: 1rem !important;
         box-shadow: 4px 0 24px var(--shadow) !important;
         flex: none !important;
-        transform: translateX(-100%);
         transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
-    /* Saat terbuka (kei-menu-open ada di dalam panel), slide masuk */
-    div[data-testid="stHorizontalBlock"]:has(.kei-menu-open) > div:first-child {
-        transform: translateX(0) !important;
-    }
-
-    /* Kolom konten utama (kedua) selalu full width di mobile,
-       tidak lagi mengikuti rasio [1,3] */
     div[data-testid="stHorizontalBlock"] > div:last-child {
         width: 100% !important;
         flex: none !important;
-    }
-
-    /* Backdrop gelap transparan di belakang drawer saat terbuka,
-       supaya jelas drawer ini melayang DI ATAS konten */
-    div[data-testid="stHorizontalBlock"]:has(.kei-menu-open)::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 999997;
     }
 }
 
@@ -674,6 +655,43 @@ if st.button("☰", key="kei_toggle_menu", help="Buka/Tutup menu"):
     st.session_state.sidebar_open = not st.session_state.sidebar_open
     st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
+
+# ---------------------------------------------------------------
+# PENTING: status drawer (terbuka/tertutup) di mobile dikontrol
+# LANGSUNG dari Python di sini, bukan lewat CSS class (:has()),
+# karena selector :has() di atas terbukti tidak reliable di semua
+# browser/versi Streamlit -> kemarin status "closed" gagal terdeteksi
+# sehingga drawer cuma menyusut jadi sliver tipis, tidak benar-benar
+# hilang. Sekarang Python sudah tahu pasti sidebar_open True/False
+# saat render ini, jadi tinggal kirim CSS yang sesuai, tidak ada lagi
+# tebak-tebakan di sisi CSS.
+if st.session_state.sidebar_open:
+    st.markdown("""
+    <style>
+    @media (max-width: 768px) {
+        div[data-testid="stHorizontalBlock"] > div:first-child {
+            transform: translateX(0) !important;
+        }
+        div[data-testid="stHorizontalBlock"]::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999997;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+    <style>
+    @media (max-width: 768px) {
+        div[data-testid="stHorizontalBlock"] > div:first-child {
+            display: none !important;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # Handle mode switching via query params
 query_params = st.query_params
