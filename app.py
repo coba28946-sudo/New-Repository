@@ -372,8 +372,8 @@ def render_dynamic_css():
         text_main    = "#1a1a1a"
         text_dim     = "rgba(0,0,0,0.55)"
         text_dimmer  = "rgba(0,0,0,0.35)"
-        border_col   = "rgba(0,0,0,0.12)"
-        input_bg     = "rgba(0,0,0,0.04)"
+        border_col   = "#d8d5e0"
+        input_bg     = "#f1eef6"
         chat_input_bg= "#ffffff"
     else:
         bg_main      = "#0a0e1a"
@@ -483,6 +483,7 @@ def render_dynamic_css():
         background: {input_bg} !important;
         border: 1px solid {border_col} !important;
         border-radius: 10px !important;
+        margin-bottom: 10px !important;
     }}
     .kei-sidebar-inner [data-testid="stExpander"] summary {{
         color: {text_main} !important;
