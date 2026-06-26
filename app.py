@@ -5,7 +5,7 @@ import os
 import json
 import time
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # =====================
 # 1. CONFIG
@@ -37,6 +37,15 @@ html, body, .stApp { background: #0a0e1a !important; color: #ffffff !important; 
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
 header[data-testid="stHeader"] { background: transparent !important; box-shadow: none !important; }
+
+/* Sembunyikan tombol "Edit" (ikon pensil) di toolbar atas Streamlit
+   Cloud, tanpa menghilangkan Share/star/GitHub yang lain */
+[data-testid="stToolbarActions"] button[title*="dit" i],
+[data-testid="stToolbarActions"] a[title*="dit" i],
+[data-testid="stToolbarActions"] button[aria-label*="dit" i],
+[data-testid="stToolbarActions"] a[aria-label*="dit" i] {
+    display: none !important;
+}
 .main .block-container { padding: 0 !important; max-width: 100% !important; }
 
 .login-title {
@@ -322,6 +331,7 @@ for key, val in {
 # =====================
 CHAT_FILE  = "chat_history.json"
 DIARY_FILE = "dear_diary.json"
+STREAK_FILE = "streak.json"
 
 def load_json(path):
     if os.path.exists(path):
@@ -454,6 +464,58 @@ def get_sticker(mood):
     return random.choice(STICKERS.get(mood, STICKERS["happy"]))
 
 # =====================
+# 9b. MOOD KEI HARIAN
+# =====================
+KEI_MOODS = [
+    ("😄", "Ceria"),
+    ("🥺", "Manja"),
+    ("✨", "Semangat"),
+    ("😌", "Kalem"),
+    ("👀", "Penasaran"),
+    ("💕", "Sayang banget"),
+    ("😴", "Ngantuk dikit"),
+    ("🌸", "Bahagia"),
+]
+
+def get_today_mood():
+    # Mood Kei berubah setiap hari, tapi tetap sama sepanjang hari yang
+    # sama (di-seed pakai tanggal hari ini, bukan random murni).
+    seed_val = int(datetime.now().strftime("%Y%m%d"))
+    rnd = random.Random(seed_val)
+    return rnd.choice(KEI_MOODS)
+
+# =====================
+# 9c. STREAK NGOBROL
+# =====================
+def update_and_get_streak():
+    data = {}
+    if os.path.exists(STREAK_FILE):
+        try:
+            with open(STREAK_FILE, "r") as f:
+                data = json.load(f)
+        except (json.JSONDecodeError, ValueError):
+            data = {}
+
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    last_date = data.get("last_date")
+    streak    = data.get("streak", 0)
+
+    if last_date == today_str:
+        # Sudah dihitung hari ini, jangan diubah lagi
+        return streak if streak > 0 else 1
+
+    yesterday_str = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+    if last_date == yesterday_str:
+        streak += 1
+    else:
+        streak = 1
+
+    data["last_date"] = today_str
+    data["streak"]    = streak
+    save_json(STREAK_FILE, data)
+    return streak
+
+# =====================
 # 10. SIDEBAR
 # =====================
 with st.sidebar:
@@ -525,6 +587,20 @@ with st.sidebar:
     <div class="status-online">
         <div class="dot-online"></div>
         <span>Online &nbsp;·&nbsp; KEI AI</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    mood_emoji, mood_label = get_today_mood()
+    streak_count = update_and_get_streak()
+
+    st.markdown(f"""
+    <div class="status-online">
+        <span style="font-size:16px;">{mood_emoji}</span>
+        <span>Mood Kei hari ini: <b style="color:#ff8ad8;">{mood_label}</b></span>
+    </div>
+    <div class="status-online">
+        <span style="font-size:16px;">🔥</span>
+        <span>Streak ngobrol: <b style="color:#ff8ad8;">{streak_count} hari</b></span>
     </div>
     """, unsafe_allow_html=True)
 
