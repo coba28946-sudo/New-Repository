@@ -404,6 +404,15 @@ p, span, label, div { color: inherit; }
     padding: 16px !important;
     height: 100%;
 }
+
+/* Tombol toggle - FIXED, selalu nempel di pojok kiri atas viewport,
+   gak ikut scroll meskipun chat sudah panjang */
+.kei-toggle-btn {
+    position: fixed !important;
+    top: 0.7rem !important;
+    left: 0.7rem !important;
+    z-index: 999999 !important;
+}
 .kei-toggle-btn button {
     width: 42px !important;
     height: 42px !important;
@@ -413,10 +422,56 @@ p, span, label, div { color: inherit; }
     color: var(--text-primary) !important;
     font-size: 18px !important;
     padding: 0 !important;
+    box-shadow: 0 2px 10px var(--shadow) !important;
 }
 .kei-toggle-btn button:hover {
     border-color: var(--border-hover) !important;
     color: #ff8ad8 !important;
+}
+
+/* Beri ruang di bagian atas konten supaya tombol fixed gak menutupi apa pun */
+.main .block-container {
+    padding-top: 3.2rem !important;
+}
+
+/* ===== ANIMASI SLIDE DARI KIRI UNTUK PANEL MENU ===== */
+.kei-menu-wrapper {
+    overflow: hidden;
+    transition: max-width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.28s ease;
+}
+.kei-menu-wrapper.kei-menu-closed {
+    max-width: 0 !important;
+    opacity: 0;
+}
+.kei-menu-wrapper.kei-menu-open {
+    max-width: 100% !important;
+    opacity: 1;
+}
+.kei-menu-inner {
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.kei-menu-closed .kei-menu-inner {
+    transform: translateX(-100%);
+}
+.kei-menu-open .kei-menu-inner {
+    transform: translateX(0);
+}
+
+/* Kolom Streamlit pembungkus menu: kecilkan gap saat tertutup supaya
+   tidak menyisakan ruang kosong yang janggal di sebelah konten utama */
+div[data-testid="stHorizontalBlock"] {
+    transition: gap 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+div[data-testid="stHorizontalBlock"]:has(.kei-menu-closed) {
+    gap: 0 !important;
+}
+div[data-testid="stHorizontalBlock"]:has(.kei-menu-closed) > div:first-child {
+    flex: 0 0 0px !important;
+    width: 0px !important;
+    min-width: 0px !important;
+    transition: flex-basis 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.32s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Mode switcher versi menu (vertikal, full width, dipakai di dalam panel kiri) */
@@ -570,105 +625,111 @@ if "mode" in query_params:
         st.rerun()
 
 # =====================
-# 11. LAYOUT: PANEL MENU KIRI (jika terbuka) + KONTEN UTAMA
+# 11. LAYOUT: PANEL MENU KIRI + KONTEN UTAMA
 # =====================
-if st.session_state.sidebar_open:
-    menu_col, main_col = st.columns([1, 3], gap="medium")
-else:
-    main_col = st.container()
-    menu_col = None
+# PENTING: kolom menu SELALU dirender (tidak pakai if/else berdasarkan
+# sidebar_open). Kalau kolomnya dibuat/dihancurkan secara kondisional,
+# Streamlit re-render DOM dari nol setiap toggle, sehingga CSS transition
+# tidak pernah punya kesempatan untuk terlihat (elemen lama hilang &
+# elemen baru muncul instan, tanpa ada waktu animasi di antaranya).
+# Animasi slide dikontrol murni lewat class kei-menu-open/kei-menu-closed.
+menu_state_class = "kei-menu-open" if st.session_state.sidebar_open else "kei-menu-closed"
 
-if menu_col is not None:
-    with menu_col:
-        st.markdown('<div class="kei-custom-sidebar">', unsafe_allow_html=True)
+menu_col, main_col = st.columns([1, 3], gap="medium")
 
-        # ---- Chat / Diary switcher (sekarang di dalam menu) ----
-        current_mode = st.session_state.mode
-        chat_class = "mode-btn active" if current_mode == "chat" else "mode-btn"
-        diary_class = "mode-btn active" if current_mode == "diary" else "mode-btn"
-        st.markdown(f"""
-        <div class="mode-switcher-menu">
-            <a href="#" onclick="window.location.href='?mode=chat'" class="{chat_class}" style="text-decoration:none;">
-                💬 Chat
-            </a>
-            <a href="#" onclick="window.location.href='?mode=diary'" class="{diary_class}" style="text-decoration:none;">
-                💌 Diary
-            </a>
-        </div>
-        """, unsafe_allow_html=True)
+with menu_col:
+    st.markdown(f'<div class="kei-menu-wrapper {menu_state_class}"><div class="kei-menu-inner">', unsafe_allow_html=True)
+    st.markdown('<div class="kei-custom-sidebar">', unsafe_allow_html=True)
 
-        avatar_exists = os.path.exists("kei_avatar.png")
-        if avatar_exists:
-            st.image("kei_avatar.png", width=160)
-            with st.expander("Ganti / Hapus Foto"):
-                uploaded_avatar = st.file_uploader("Upload foto baru", type=["png","jpg","jpeg"], key="ganti_foto")
-                if uploaded_avatar:
-                    with open("kei_avatar.png", "wb") as f:
-                        f.write(uploaded_avatar.getbuffer())
-                    st.success("Foto berhasil diganti!")
-                    st.rerun()
-                if st.button("Hapus Foto"):
-                    os.remove("kei_avatar.png")
-                    st.session_state.avatar = None
-                    st.rerun()
-        else:
-            uploaded_avatar = st.file_uploader("Upload Foto Kei", type=["png","jpg","jpeg"])
+    # ---- Chat / Diary switcher (sekarang di dalam menu) ----
+    current_mode = st.session_state.mode
+    chat_class = "mode-btn active" if current_mode == "chat" else "mode-btn"
+    diary_class = "mode-btn active" if current_mode == "diary" else "mode-btn"
+    st.markdown(f"""
+    <div class="mode-switcher-menu">
+        <a href="#" onclick="window.location.href='?mode=chat'" class="{chat_class}" style="text-decoration:none;">
+            💬 Chat
+        </a>
+        <a href="#" onclick="window.location.href='?mode=diary'" class="{diary_class}" style="text-decoration:none;">
+            💌 Diary
+        </a>
+    </div>
+    """, unsafe_allow_html=True)
+
+    avatar_exists = os.path.exists("kei_avatar.png")
+    if avatar_exists:
+        st.image("kei_avatar.png", width=160)
+        with st.expander("Ganti / Hapus Foto"):
+            uploaded_avatar = st.file_uploader("Upload foto baru", type=["png","jpg","jpeg"], key="ganti_foto")
             if uploaded_avatar:
                 with open("kei_avatar.png", "wb") as f:
                     f.write(uploaded_avatar.getbuffer())
+                st.success("Foto berhasil diganti!")
                 st.rerun()
-
-        st.markdown("""
-        <div class="status-box">
-            🟢 Online &nbsp; KEI AI
-        </div>
-        """, unsafe_allow_html=True)
-
-        st.markdown(f"*Mode aktif: {'💬 Chat' if st.session_state.mode == 'chat' else '💌 Dear Diary'}*")
-        st.markdown("---")
-
-        with st.expander("Kirim Stiker"):
-            cols = st.columns(5)
-            moods  = ["happy", "love", "sad", "cool", "shy"]
-            emojis = ["😄", "💕", "😢", "😎", "🌸"]
-            for i, (mood, emoji) in enumerate(zip(moods, emojis)):
-                with cols[i]:
-                    if st.button(emoji, key=f"sticker_{mood}"):
-                        sticker = get_sticker(mood)
-                        st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
-                        st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
-                        save_json(CHAT_FILE, st.session_state.messages)
-                        st.rerun()
-
-        with st.expander("🎵 Putar Musik"):
-            music_query = st.text_input("Nama lagu / artis", key="music_input")
-            if st.button("Cari", key="music_search"):
-                if music_query:
-                    search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
-                    st.markdown(f"""
-                    <div class="music-box">
-                        🎵 <b>{music_query}</b><br>
-                        <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube</a>
-                    </div>
-                    """, unsafe_allow_html=True)
-
-        if st.button("🆕 New Chat", use_container_width=True):
-            st.session_state.messages = []
-            save_json(CHAT_FILE, [])
+            if st.button("Hapus Foto"):
+                os.remove("kei_avatar.png")
+                st.session_state.avatar = None
+                st.rerun()
+    else:
+        uploaded_avatar = st.file_uploader("Upload Foto Kei", type=["png","jpg","jpeg"])
+        if uploaded_avatar:
+            with open("kei_avatar.png", "wb") as f:
+                f.write(uploaded_avatar.getbuffer())
             st.rerun()
 
-        if st.button("🗑️ Clear Chat", use_container_width=True):
-            st.session_state.messages = []
-            save_json(CHAT_FILE, [])
-            st.rerun()
+    st.markdown("""
+    <div class="status-box">
+        🟢 Online &nbsp; KEI AI
+    </div>
+    """, unsafe_allow_html=True)
 
-        st.markdown("---")
-        if st.button("🚪 Logout", use_container_width=True):
-            st.session_state.logged_in = False
-            st.session_state.messages  = []
-            st.rerun()
+    st.markdown(f"*Mode aktif: {'💬 Chat' if st.session_state.mode == 'chat' else '💌 Dear Diary'}*")
+    st.markdown("---")
 
-        st.markdown('</div>', unsafe_allow_html=True)
+    with st.expander("Kirim Stiker"):
+        cols = st.columns(5)
+        moods  = ["happy", "love", "sad", "cool", "shy"]
+        emojis = ["😄", "💕", "😢", "😎", "🌸"]
+        for i, (mood, emoji) in enumerate(zip(moods, emojis)):
+            with cols[i]:
+                if st.button(emoji, key=f"sticker_{mood}"):
+                    sticker = get_sticker(mood)
+                    st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
+                    st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
+                    save_json(CHAT_FILE, st.session_state.messages)
+                    st.rerun()
+
+    with st.expander("🎵 Putar Musik"):
+        music_query = st.text_input("Nama lagu / artis", key="music_input")
+        if st.button("Cari", key="music_search"):
+            if music_query:
+                search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
+                st.markdown(f"""
+                <div class="music-box">
+                    🎵 <b>{music_query}</b><br>
+                    <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube</a>
+                </div>
+                """, unsafe_allow_html=True)
+
+    if st.button("🆕 New Chat", use_container_width=True):
+        st.session_state.messages = []
+        save_json(CHAT_FILE, [])
+        st.rerun()
+
+    if st.button("🗑️ Clear Chat", use_container_width=True):
+        st.session_state.messages = []
+        save_json(CHAT_FILE, [])
+        st.rerun()
+
+    st.markdown("---")
+    if st.button("🚪 Logout", use_container_width=True):
+        st.session_state.logged_in = False
+        st.session_state.messages  = []
+        st.rerun()
+
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div></div>', unsafe_allow_html=True)
+
 
 # =====================
 # 12. HEADER
