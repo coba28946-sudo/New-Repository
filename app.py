@@ -5,6 +5,9 @@ import os
 import json
 import time
 import random
+import base64
+from PIL import Image
+import io
 from datetime import datetime, timedelta
 
 # =====================
@@ -481,6 +484,39 @@ Responmu harus:
 """
 
 # =====================
+# 8b. VISION / FOTO
+# =====================
+def analyze_image_with_kei(image_bytes, mime_type, user_caption=""):
+    caption_text = f'User mengirim foto dengan keterangan: "{user_caption}"' if user_caption else "User mengirim foto tanpa keterangan."
+    prompt = f"""{KEI_PERSONA}
+
+{caption_text}
+Deskripsikan foto ini dengan gaya Kei yang imut dan antusias.
+Komentari apa yang ada di foto, berikan reaksi yang hangat dan menyenangkan!
+Kei menjawab:"""
+
+    try:
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=[
+                {
+                    "parts": [
+                        {
+                            "inline_data": {
+                                "mime_type": mime_type,
+                                "data": base64.b64encode(image_bytes).decode("utf-8"),
+                            }
+                        },
+                        {"text": prompt},
+                    ]
+                }
+            ],
+        )
+        return response.text
+    except Exception as e:
+        return f"Eh, Kei susah lihat fotonya nih Kak... (｡>﹏<｡) Error: {str(e)}"
+
+# =====================
 # 9. STIKER
 # =====================
 STICKERS = {
@@ -780,8 +816,41 @@ else:
 
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
+            # Kalau ada foto tersimpan, tampilkan
+            if msg.get("image_b64"):
+                img_bytes = base64.b64decode(msg["image_b64"])
+                st.image(img_bytes, width=300)
             st.markdown(msg["content"])
 
+    # --- Upload Foto ---
+    with st.expander("📷 Kirim Foto ke Kei"):
+        uploaded_photo = st.file_uploader(
+            "Pilih foto", type=["jpg", "jpeg", "png", "webp"], key="chat_photo_upload"
+        )
+        photo_caption = st.text_input("Keterangan foto (opsional)", key="chat_photo_caption")
+        send_photo_btn = st.button("Kirim Foto 📸", key="send_photo_btn")
+
+        if send_photo_btn and uploaded_photo:
+            image_bytes = uploaded_photo.read()
+            mime_type   = uploaded_photo.type  # e.g. "image/jpeg"
+            img_b64     = base64.b64encode(image_bytes).decode("utf-8")
+
+            # Simpan pesan user (dengan foto)
+            user_msg_content = f"[Foto dikirim] {photo_caption}" if photo_caption else "[Foto dikirim]"
+            st.session_state.messages.append({
+                "role":      "user",
+                "content":   user_msg_content,
+                "image_b64": img_b64,
+            })
+
+            with st.spinner("Kei lagi lihat fotonya... 👀✨"):
+                reply = analyze_image_with_kei(image_bytes, mime_type, photo_caption)
+
+            st.session_state.messages.append({"role": "assistant", "content": reply})
+            save_json(CHAT_FILE, st.session_state.messages)
+            st.rerun()
+
+    # --- Chat Biasa ---
     prompt = st.chat_input("Ketik pesan ke Kei...")
 
     if prompt:
