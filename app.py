@@ -451,6 +451,14 @@ if not st.session_state.logged_in:
         max-width: 100% !important;
     }
 
+    /* Hapus semua focus ring bawaan browser & Streamlit */
+    [data-testid="stTextInput"] *:focus,
+    [data-testid="stTextInput"] *:focus-visible,
+    [data-testid="stTextInput"] > div:focus-within > div {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
     /* Sembunyikan label */
     [data-testid="stTextInput"] label { display: none !important; }
 
@@ -464,6 +472,7 @@ if not st.session_state.logged_in:
         align-items: center !important;
         overflow: hidden !important;
         padding: 0 !important;
+        box-shadow: none !important;
     }
     [data-testid="stTextInput"] > div:focus-within {
         border-color: rgba(255,138,216,0.55) !important;
@@ -476,10 +485,16 @@ if not st.session_state.logged_in:
         height: 48px !important;
         border: none !important;
         box-shadow: none !important;
+        outline: none !important;
         padding: 0 8px 0 16px !important;
         flex: 1 1 auto !important;
         min-width: 0 !important;
         width: 0 !important;
+    }
+    [data-testid="stTextInput"] input:focus {
+        outline: none !important;
+        box-shadow: none !important;
+        border: none !important;
     }
     [data-testid="stTextInput"] input::placeholder { color: rgba(255,255,255,0.28) !important; }
 
