@@ -38,8 +38,6 @@ html, body, .stApp { background: #0a0e1a !important; color: #ffffff !important; 
 footer { visibility: hidden; }
 header[data-testid="stHeader"] { background: transparent !important; box-shadow: none !important; }
 
-/* Sembunyikan tombol "Edit" (ikon pensil) di toolbar atas Streamlit
-   Cloud, tanpa menghilangkan Share/star/GitHub yang lain */
 [data-testid="stToolbarActions"] button[title*="dit" i],
 [data-testid="stToolbarActions"] a[title*="dit" i],
 [data-testid="stToolbarActions"] button[aria-label*="dit" i],
@@ -85,8 +83,6 @@ datalist {
     position: relative;
 }
 
-/* Kurangi jarak kosong bawaan Streamlit di bagian atas sidebar, supaya
-   tombol Chat/Diary tidak terlalu jauh dari toolbar atas */
 section[data-testid="stSidebar"] div[data-testid="stSidebarUserContent"],
 section[data-testid="stSidebar"] > div:first-child {
     padding-top: 0.5rem !important;
@@ -304,8 +300,7 @@ section[data-testid="stSidebar"] > div:first-child {
     margin-top: 8px;
 }
 
-/* Baris tombol stiker (5 emoji) — dipusatkan & dibuat kompak/persegi,
-   di-scope ke kei_sticker_row saja supaya tidak menyentuh tombol lain */
+/* Stiker rows — dipusatkan & kompak */
 .st-key-kei_sticker_row div[data-testid="stHorizontalBlock"] {
     justify-content: center !important;
     flex-wrap: nowrap !important;
@@ -322,8 +317,6 @@ section[data-testid="stSidebar"] > div:first-child {
     min-width: 0 !important;
 }
 
-/* Label "Cerita ke Kei..." di mode diary — dibuat sedikit lebih besar
-   dari default Streamlit (yang terlalu kecil), tapi tidak berlebihan */
 div[data-testid="stTextArea"] label p {
     font-size: 16px !important;
 }
@@ -478,11 +471,16 @@ Responmu harus:
 # 9. STIKER
 # =====================
 STICKERS = {
-    "happy": ["(｡♥‿♥｡)", "✨(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "٩(◕‿◕｡)۶", "(≧◡≦)", "🎉✨💕"],
-    "love":  ["(♥ω♥*)", "💕(｡･ω･｡)💕", "ʕ•ᴥ•ʔ♥", "(˘³˘)♥", "💖💖💖"],
-    "sad":   ["(´；ω；`)", "(T_T)", "｡ﾟ(ﾟ´ω`ﾟ)ﾟ｡", "(っ˘̩╭╮˘̩)っ", "🥺💧"],
-    "cool":  ["(•̀ᴗ•́)و", "✌️😎", "(¬‿¬)", "( ͡° ͜ʖ ͡°)", "🔥💪"],
-    "shy":   ["(///▽///)", "(/ω＼)", "(〃＞＿＜;〃)", "///(^v^)///", "🌸💗"],
+    "happy":   ["(｡♥‿♥｡)", "✨(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "٩(◕‿◕｡)۶", "(≧◡≦)", "🎉✨💕"],
+    "love":    ["(♥ω♥*)", "💕(｡･ω･｡)💕", "ʕ•ᴥ•ʔ♥", "(˘³˘)♥", "💖💖💖"],
+    "sad":     ["(´；ω；`)", "(T_T)", "｡ﾟ(ﾟ´ω`ﾟ)ﾟ｡", "(っ˘̩╭╮˘̩)っ", "🥺💧"],
+    "cool":    ["(•̀ᴗ•́)و", "✌️😎", "(¬‿¬)", "( ͡° ͜ʖ ͡°)", "🔥💪"],
+    "shy":     ["(///▽///)", "(/ω＼)", "(〃＞＿＜;〃)", "///(^v^)///", "🌸💗"],
+    "excited": ["(ﾉ≧∀≦)ﾉ", "٩(๑•̀ω•́๑)۶", "ヽ(°〇°)ﾉ", "(灬°‿°灬)", "🎊🎉✨"],
+    "sleepy":  ["(－_－) zzZ", "(￣_￣)zzZ", "(-_-)💤", "( ˘ω˘ )スヤァ", "😴💤"],
+    "angry":   ["(╬ Ò﹏Ó)", "( ｀皿´)", "٩(ఠ益ఠ)۶", "(￣ヘ￣)", "😤🔥"],
+    "hungry":  ["(￣﹃￣)", "( ◕‿◕)🍡", "(*゜▽゜)🍜", "( ˙༥˙ )🍰", "🍣🍜🍡"],
+    "sparkle": ["(ﾉ◕ヮ◕)ﾉ:･ﾟ✧", "✧･ﾟ: *✧･ﾟ:*", "☆*:.｡.o(≧▽≦)o.｡.:*☆", "⸜(｡˃ᵕ˂)⸝", "✨🌟💫"],
 }
 
 def get_sticker(mood):
@@ -503,8 +501,6 @@ KEI_MOODS = [
 ]
 
 def get_today_mood():
-    # Mood Kei berubah setiap hari, tapi tetap sama sepanjang hari yang
-    # sama (di-seed pakai tanggal hari ini, bukan random murni).
     seed_val = int(datetime.now().strftime("%Y%m%d"))
     rnd = random.Random(seed_val)
     return rnd.choice(KEI_MOODS)
@@ -526,7 +522,6 @@ def update_and_get_streak():
     streak    = data.get("streak", 0)
 
     if last_date == today_str:
-        # Sudah dihitung hari ini, jangan diubah lagi
         return streak if streak > 0 else 1
 
     yesterday_str = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
@@ -548,9 +543,6 @@ with st.sidebar:
 
     current_mode = st.session_state.mode
 
-    # Highlight tombol yang sedang aktif lewat CSS yang di-inject sesuai
-    # mode saat ini. Di-scope ke key="kei_mode_switch" supaya tidak
-    # menyentuh tombol lain di sidebar (New Chat, Logout, dll).
     active_index = 1 if current_mode == "chat" else 2
     st.markdown(f"""
     <style>
@@ -636,13 +628,26 @@ with st.sidebar:
     with st.expander("😄 Kirim Stiker"):
         sticker_row = st.container(key="kei_sticker_row")
         with sticker_row:
-            cols = st.columns(5)
-            moods  = ["happy", "love", "sad", "cool", "shy"]
-            emojis = ["😄", "💕", "😢", "😎", "🌸"]
-            for i, (mood, emoji) in enumerate(zip(moods, emojis)):
-                with cols[i]:
-                    if st.button(emoji, key=f"sticker_{mood}"):
-                        sticker = get_sticker(mood)
+            all_moods  = ["happy", "love", "sad", "cool", "shy", "excited", "sleepy", "angry", "hungry", "sparkle"]
+            all_emojis = ["😄",   "💕",   "😢",  "😎",   "🌸",  "🎉",      "😴",     "😤",    "🍜",     "✨"]
+
+            # Baris 1
+            cols1 = st.columns(5)
+            for i in range(5):
+                with cols1[i]:
+                    if st.button(all_emojis[i], key=f"sticker_{all_moods[i]}"):
+                        sticker = get_sticker(all_moods[i])
+                        st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
+                        st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
+                        save_json(CHAT_FILE, st.session_state.messages)
+                        st.rerun()
+
+            # Baris 2
+            cols2 = st.columns(5)
+            for i in range(5, 10):
+                with cols2[i - 5]:
+                    if st.button(all_emojis[i], key=f"sticker_{all_moods[i]}"):
+                        sticker = get_sticker(all_moods[i])
                         st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
                         st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
                         save_json(CHAT_FILE, st.session_state.messages)
