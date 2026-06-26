@@ -39,6 +39,20 @@ footer { visibility: hidden; }
 header[data-testid="stHeader"] { background: transparent !important; box-shadow: none !important; }
 .main .block-container { padding: 0 !important; max-width: 100% !important; }
 
+/* FIX: Streamlit membuat elemen container tersembunyi berukuran 0x0px
+   (biasanya untuk tooltip "Press Enter to apply" atau elemen internal
+   lain), tapi atribut HTML-nya overflow="visible" — artinya konten di
+   dalam container 0x0 itu tetap "tumpah" terlihat dan menumpuk di atas
+   elemen lain. Paksa overflow:hidden di sini supaya konten yang memang
+   seharusnya tersembunyi (karena container-nya 0px) benar-benar hilang. */
+[data-testid="stElementContainer"][width="0px"],
+[data-testid="stElementContainer"][height="0px"],
+[data-testid="stElementContainer"][style*="width: 0px"],
+[data-testid="stElementContainer"][style*="height: 0px"] {
+    overflow: hidden !important;
+    display: none !important;
+}
+
 /* Hilangkan outline/box-shadow fokus bawaan browser & Streamlit di SEMUA
    input, secara global, murni CSS (tanpa JS/MutationObserver). Ini cara
    yang stabil — versi sebelumnya pakai JS untuk hal ini dan jadinya
