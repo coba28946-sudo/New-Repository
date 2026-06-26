@@ -180,7 +180,7 @@ section[data-testid="stSidebar"] > div:first-child {
 [data-testid="stChatInput"] textarea {
     background: transparent !important;
     color: #fff !important;
-    font-size: 14px !important;
+    font-size: 16px !important;
 }
 [data-testid="stChatInput"] textarea::placeholder { color: rgba(255,255,255,0.3) !important; }
 [data-testid="stChatInput"] button {
