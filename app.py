@@ -39,12 +39,6 @@ footer { visibility: hidden; }
 header[data-testid="stHeader"] { background: transparent !important; box-shadow: none !important; }
 .main .block-container { padding: 0 !important; max-width: 100% !important; }
 
-/* ===== LOGIN (disederhanakan sesuai permintaan: balik ke tampilan
-   simpel — label tampil normal, input kotak abu polos tanpa border
-   custom pink, tombol Masuk default Streamlit, tanpa card pembungkus).
-   Semua CSS rumit untuk border custom & fix BaseWeb 4-lapis yang
-   sebelumnya diperlukan untuk gaya pink kini tidak relevan lagi karena
-   kita pakai styling default Streamlit yang sudah teruji rapi. */
 .login-title {
     color: #ff8ad8;
     font-size: 42px;
@@ -66,9 +60,6 @@ header[data-testid="stHeader"] { background: transparent !important; box-shadow:
     margin-top: 20px;
 }
 
-/* Sembunyikan popup autocomplete/autofill bawaan browser pada input
-   login (ini yang muncul sebagai kotak abu kecil di bawah field saat
-   diklik — bukan input dobel, cuma saran isian dari riwayat browser) */
 input::-webkit-contacts-auto-fill-button,
 input::-webkit-credentials-auto-fill-button {
     visibility: hidden;
@@ -78,7 +69,6 @@ datalist {
     display: none !important;
 }
 
-/* ===== LAYOUT UTAMA ===== */
 .kei-layout {
     display: flex;
     height: 100vh;
@@ -86,7 +76,6 @@ datalist {
     position: relative;
 }
 
-/* ===== SIDEBAR ===== */
 .kei-sidebar {
     width: 260px;
     min-width: 260px;
@@ -106,7 +95,6 @@ datalist {
     opacity: 0;
 }
 
-/* ===== TOGGLE BUTTON ===== */
 .sidebar-toggle {
     position: fixed;
     top: 14px;
@@ -128,7 +116,6 @@ datalist {
 }
 .sidebar-toggle:hover { border-color: #ff8ad8; color: #ff8ad8; }
 
-/* ===== KONTEN UTAMA ===== */
 .kei-main {
     flex: 1;
     display: flex;
@@ -137,7 +124,6 @@ datalist {
     padding-left: 52px;
 }
 
-/* ===== HEADER ===== */
 .kei-header {
     text-align: center;
     padding: 20px 0 8px;
@@ -156,14 +142,12 @@ datalist {
     margin: 4px 0 0;
 }
 
-/* ===== CHAT AREA ===== */
 .kei-chat-area {
     flex: 1;
     overflow-y: auto;
     padding: 16px 24px;
 }
 
-/* ===== CHAT INPUT STICKY ===== */
 .kei-input-area {
     flex-shrink: 0;
     padding: 12px 24px 16px;
@@ -171,13 +155,11 @@ datalist {
     background: #0a0e1a;
 }
 
-/* Chat messages */
 [data-testid="stChatMessage"] {
     background: transparent !important;
     padding: 4px 0 !important;
 }
 
-/* Chat input */
 [data-testid="stChatInput"] {
     background: #1a1a1a !important;
     border: 1px solid rgba(255,255,255,0.1) !important;
@@ -196,7 +178,6 @@ datalist {
 }
 [data-testid="stChatInput"] button svg { fill: white !important; }
 
-/* Sidebar buttons */
 .kei-sidebar-inner .stButton > button {
     background: rgba(255,255,255,0.04) !important;
     color: rgba(255,255,255,0.7) !important;
@@ -214,7 +195,6 @@ datalist {
     background: rgba(255,138,216,0.05) !important;
 }
 
-/* Sidebar text input */
 .kei-sidebar-inner [data-testid="stTextInput"] > div {
     background: rgba(255,255,255,0.04) !important;
     border: 1px solid rgba(255,255,255,0.08) !important;
@@ -231,7 +211,6 @@ datalist {
 }
 .kei-sidebar-inner [data-testid="stTextInput"] label { color: rgba(255,255,255,0.5) !important; font-size: 12px !important; }
 
-/* Expander */
 .kei-sidebar-inner [data-testid="stExpander"] {
     background: rgba(255,255,255,0.02) !important;
     border: 1px solid rgba(255,255,255,0.06) !important;
@@ -242,7 +221,6 @@ datalist {
     font-size: 13px !important;
 }
 
-/* Mode buttons */
 .mode-btn-wrap {
     display: flex;
     gap: 8px;
@@ -270,7 +248,6 @@ datalist {
     color: #ff8ad8;
 }
 
-/* Status online */
 .status-online {
     display: flex;
     align-items: center;
@@ -285,7 +262,6 @@ datalist {
 }
 .dot-online { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
 
-/* Diary */
 .diary-box {
     background: rgba(255,182,230,0.05);
     border: 1px solid rgba(255,138,216,0.1);
@@ -296,14 +272,12 @@ datalist {
     font-size: 14px;
 }
 
-/* Divider */
 .kei-divider {
     height: 1px;
     background: rgba(255,255,255,0.06);
     margin: 12px 0;
 }
 
-/* Music box */
 .music-result {
     background: rgba(255,138,216,0.04);
     border: 1px solid rgba(255,138,216,0.1);
@@ -357,7 +331,6 @@ def save_json(path, data):
 # 6. LOGIN
 # =====================
 if not st.session_state.logged_in:
-    # Header di luar columns (full width, centered)
     st.markdown("""
     <div style="padding-top:50px; text-align:center; margin-bottom:20px;">
         <div style="color:#ff8ad8; font-size:50px; font-weight:700; letter-spacing:-1px; margin-bottom:8px;">✦ Kei AI</div>
@@ -365,19 +338,12 @@ if not st.session_state.logged_in:
     </div>
     """, unsafe_allow_html=True)
 
-    # Form login simpel — pakai styling default Streamlit, tanpa card
-    # custom, label tampil normal di atas masing-masing input.
     _, col, _ = st.columns([1, 1.1, 1])
     with col:
         username = st.text_input("Username", key="login_username")
         password = st.text_input("Password", type="password", key="login_password")
         submitted = st.button("Masuk", key="login_btn")
 
-        # Matikan autocomplete/riwayat isian browser pada field username &
-        # password — ini yang menyebabkan kotak saran kecil nongol di
-        # bawah input saat diklik. Dipasang lewat components.html (bukan
-        # st.markdown) karena <script> di st.markdown tidak reliable
-        # dieksekusi, sementara components.html memang dirancang untuk itu.
         st.components.v1.html("""
         <script>
         (function setNoAutocomplete() {
@@ -587,15 +553,15 @@ with st.sidebar:
 if st.session_state.mode == "diary":
     st.markdown("""
     <div style="text-align:center;padding:24px 0 8px;">
-        <h1 style="color:#ff8ad8;margin:0;font-size:36px;">💌 Dear Diary</h1>
-        <p style="color:rgba(255,255,255,0.4);font-size:14px;margin:4px 0 0;">Ceritain semua ke Kei ya~ 🥺</p>
+        <h1 style="color:#ff8ad8;margin:0;font-size:48px;">💌 Dear Diary</h1>
+        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:4px 0 0;">Ceritain semua ke Kei ya~ 🥺</p>
     </div>
     """, unsafe_allow_html=True)
 else:
     st.markdown("""
     <div style="text-align:center;padding:24px 0 8px;">
-        <h1 style="color:#ff8ad8;margin:0;font-size:36px;">✦ Kei AI</h1>
-        <p style="color:rgba(255,255,255,0.4);font-size:14px;margin:4px 0 0;">Your AI Companion</p>
+        <h1 style="color:#ff8ad8;margin:0;font-size:48px;">✦ Kei AI</h1>
+        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:4px 0 0;">Your AI Companion</p>
     </div>
     """, unsafe_allow_html=True)
 
