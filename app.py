@@ -405,7 +405,9 @@ def render_dynamic_css():
     [data-testid="stMain"],
     [data-testid="stMainBlockContainer"],
     [data-testid="stBottomBlockContainer"],
-    [data-testid="stBottom"] {{
+    [data-testid="stBottom"],
+    [data-testid="stBottom"] > div,
+    .kei-input-area {{
         background: {bg_main} !important;
         color: {text_main} !important;
     }}
@@ -448,22 +450,28 @@ def render_dynamic_css():
     [data-testid="stChatInput"] button {{ background: {accent} !important; }}
 
     /* ===== Sidebar: tombol ===== */
-    .kei-sidebar-inner .stButton > button {{
+    .kei-sidebar-inner .stButton button,
+    .kei-sidebar-inner [data-testid="stButton"] button,
+    .kei-sidebar-inner button[kind="secondary"],
+    .kei-sidebar-inner [data-testid^="stBaseButton"] {{
         background: {input_bg} !important;
         color: {text_main} !important;
         border: 1px solid {border_col} !important;
     }}
-    .kei-sidebar-inner .stButton > button p,
-    .kei-sidebar-inner .stButton > button span {{
+    .kei-sidebar-inner .stButton button p,
+    .kei-sidebar-inner .stButton button span,
+    .kei-sidebar-inner [data-testid^="stBaseButton"] p,
+    .kei-sidebar-inner [data-testid^="stBaseButton"] span {{
         color: {text_main} !important;
     }}
-    .kei-sidebar-inner .stButton > button:hover {{
+    .kei-sidebar-inner .stButton button:hover,
+    .kei-sidebar-inner [data-testid^="stBaseButton"]:hover {{
         border-color: rgba({r},{g},{b},0.4) !important;
         color: {accent} !important;
         background: rgba({r},{g},{b},0.08) !important;
     }}
-    .kei-sidebar-inner .stButton > button:hover p,
-    .kei-sidebar-inner .stButton > button:hover span {{
+    .kei-sidebar-inner .stButton button:hover p,
+    .kei-sidebar-inner .stButton button:hover span {{
         color: {accent} !important;
     }}
 
@@ -581,6 +589,26 @@ def render_dynamic_css():
         border-color: rgba({r},{g},{b},0.4) !important;
         color: {accent} !important;
         background: rgba({r},{g},{b},0.08) !important;
+    }}
+
+    /* ===== Scrollbar: lebih halus, tidak hitam pekat seperti default browser ===== */
+    ::-webkit-scrollbar {{
+        width: 8px;
+        height: 8px;
+    }}
+    ::-webkit-scrollbar-track {{
+        background: transparent;
+    }}
+    ::-webkit-scrollbar-thumb {{
+        background: rgba({r},{g},{b},0.25) !important;
+        border-radius: 8px !important;
+    }}
+    ::-webkit-scrollbar-thumb:hover {{
+        background: rgba({r},{g},{b},0.4) !important;
+    }}
+    * {{
+        scrollbar-width: thin;
+        scrollbar-color: rgba({r},{g},{b},0.25) transparent;
     }}
 
     /* ===== SPESIFIK: ditaruh paling akhir agar menang melawan aturan generic di atas ===== */
