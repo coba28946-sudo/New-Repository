@@ -435,75 +435,65 @@ if not st.session_state.logged_in:
     # Wrapper center via HTML
     st.markdown("""
     <style>
-    /* Paksa semua konten login center */
-    .login-page-wrap {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 90vh;
-        width: 100%;
-    }
-    /* Paksa kolom tengah Streamlit full center */
-    [data-testid="stHorizontalBlock"] {
-        justify-content: center !important;
-    }
-    /* Override ukuran form dan field lebih besar */
-    div[data-testid="stForm"] {
-        width: 360px !important;
-        max-width: 360px !important;
-        min-width: 360px !important;
+    /* Hapus padding atas bawaan Streamlit */
+    .main .block-container {
+        padding-top: 2rem !important;
+        padding-bottom: 1rem !important;
+        max-width: 480px !important;
         margin: 0 auto !important;
+    }
+    /* Form card */
+    div[data-testid="stForm"] {
         background: rgba(255,255,255,0.03) !important;
         border: 1px solid rgba(255,255,255,0.08) !important;
         border-radius: 20px !important;
         padding: 32px 28px !important;
         box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+        width: 100% !important;
     }
+    /* Input wrapper */
     div[data-testid="stTextInput"] > div {
         background: rgba(255,255,255,0.05) !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
         border-radius: 12px !important;
-        min-height: 54px !important;
+        min-height: 56px !important;
+        width: 100% !important;
     }
     div[data-testid="stTextInput"] > div:focus-within {
         border-color: rgba(255,138,216,0.55) !important;
         background: rgba(255,138,216,0.05) !important;
     }
+    /* Input field */
     div[data-testid="stTextInput"] input {
         background: transparent !important;
         color: #fff !important;
         font-size: 16px !important;
-        height: 54px !important;
+        height: 56px !important;
         border: none !important;
         box-shadow: none !important;
         padding: 0 8px 0 18px !important;
+        width: 100% !important;
     }
     div[data-testid="stTextInput"] input::placeholder {
         color: rgba(255,255,255,0.28) !important;
         font-size: 16px !important;
     }
     div[data-testid="stTextInput"] label { display: none !important; }
+    /* Tombol mata */
     div[data-testid="stTextInput"] button {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
         color: rgba(255,255,255,0.3) !important;
-        padding: 0 12px 0 4px !important;
-        height: 54px !important;
+        padding: 0 14px 0 4px !important;
+        height: 56px !important;
         display: flex !important;
         align-items: center !important;
     }
-    div[data-testid="stTextInput"] button svg {
-        width: 16px !important;
-        height: 16px !important;
-    }
+    div[data-testid="stTextInput"] button svg { width: 16px !important; height: 16px !important; }
     div[data-testid="stTextInput"] button:hover { color: #ff8ad8 !important; }
-    /* Tombol Masuk PUTIH dan besar */
-    div[data-testid="stForm"] div[data-testid="stButton"] > button,
-    div[data-testid="stForm"] div[data-testid="stButton"] > button:hover,
-    div[data-testid="stForm"] div[data-testid="stButton"] > button:focus,
-    div[data-testid="stForm"] div[data-testid="stButton"] > button:active {
+    /* Tombol Masuk PUTIH */
+    div[data-testid="stForm"] div[data-testid="stButton"] > button {
         background: #ffffff !important;
         background-color: #ffffff !important;
         color: #111111 !important;
@@ -511,59 +501,54 @@ if not st.session_state.logged_in:
         border-radius: 12px !important;
         font-size: 16px !important;
         font-weight: 700 !important;
-        height: 54px !important;
+        height: 56px !important;
         width: 100% !important;
-        margin-top: 8px !important;
+        margin-top: 10px !important;
         box-shadow: none !important;
-        opacity: 1 !important;
     }
     div[data-testid="stForm"] div[data-testid="stButton"] > button:hover {
-        opacity: 0.9 !important;
+        background: #f0f0f0 !important;
+        background-color: #f0f0f0 !important;
+        color: #111 !important;
     }
+    /* Error */
     div[data-testid="stAlert"] {
         background: rgba(255,70,70,0.08) !important;
         border: 1px solid rgba(255,70,70,0.2) !important;
         border-radius: 10px !important;
         color: #ff6b6b !important;
         font-size: 14px !important;
-        max-width: 360px !important;
-        margin: 8px auto 0 !important;
     }
     </style>
-    <div class="login-page-wrap">
     """, unsafe_allow_html=True)
 
-    c1, col, c2 = st.columns([1, 2, 1])
-    with col:
-        st.markdown("""
-        <div style="text-align:center; margin-bottom:32px;">
-            <div style="color:#ff8ad8; font-size:44px; font-weight:700; letter-spacing:-1px; margin-bottom:6px;">✦ Kei AI</div>
-            <div style="color:rgba(255,255,255,0.38); font-size:15px;">Teman AI Pintar Kamu</div>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div style="text-align:center; margin-bottom:28px;">
+        <div style="color:#ff8ad8; font-size:44px; font-weight:700; letter-spacing:-1px; line-height:1.1; margin-bottom:8px;">✦ Kei AI</div>
+        <div style="color:rgba(255,255,255,0.38); font-size:15px;">Teman AI Pintar Kamu</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-        with st.form("login_form", clear_on_submit=False):
-            username = st.text_input("u", placeholder="Username", label_visibility="collapsed")
-            password = st.text_input("p", placeholder="Password", type="password", label_visibility="collapsed")
-            submitted = st.form_submit_button("Masuk", use_container_width=True)
+    with st.form("login_form", clear_on_submit=False):
+        username = st.text_input("u", placeholder="Username", label_visibility="collapsed")
+        password = st.text_input("p", placeholder="Password", type="password", label_visibility="collapsed")
+        submitted = st.form_submit_button("Masuk", use_container_width=True)
 
-        if submitted:
-            if not username or not password:
-                st.error("Username dan password tidak boleh kosong.")
-            elif username == "ryuu" and password == "12345":
-                st.session_state.logged_in = True
-                st.session_state.messages = load_json(CHAT_FILE)
-                st.rerun()
-            else:
-                st.error("Username atau password salah.")
+    if submitted:
+        if not username or not password:
+            st.error("Username dan password tidak boleh kosong.")
+        elif username == "ryuu" and password == "12345":
+            st.session_state.logged_in = True
+            st.session_state.messages = load_json(CHAT_FILE)
+            st.rerun()
+        else:
+            st.error("Username atau password salah.")
 
-        st.markdown("""
-        <div style="text-align:center; margin-top:20px; color:rgba(255,255,255,0.18); font-size:12px;">
-            Kei AI — Your AI Companion ✦
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style="text-align:center; margin-top:20px; color:rgba(255,255,255,0.18); font-size:12px;">
+        Kei AI — Your AI Companion ✦
+    </div>
+    """, unsafe_allow_html=True)
     st.stop()
 
 # =====================
