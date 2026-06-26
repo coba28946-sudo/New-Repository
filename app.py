@@ -356,6 +356,7 @@ for key, val in {
     "messages": [],
     "avatar": None,
     "sidebar_open": True,
+    "conv_result": None,   # {"bytes": ..., "filename": ..., "mime": ...}
 }.items():
     if key not in st.session_state:
         st.session_state[key] = val
@@ -895,11 +896,25 @@ else:
 
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
-            # Kalau ada foto tersimpan, tampilkan
             if msg.get("image_b64"):
                 img_bytes = base64.b64decode(msg["image_b64"])
                 st.image(img_bytes, width=300)
             st.markdown(msg["content"])
+
+    # Tampilkan tombol download hasil konversi kalau ada
+    if st.session_state.conv_result:
+        cr = st.session_state.conv_result
+        with st.chat_message("assistant"):
+            st.download_button(
+                label=cr["label"],
+                data=cr["bytes"],
+                file_name=cr["filename"],
+                mime=cr["mime"],
+                key="dl_conv_persistent",
+            )
+            if st.button("✅ Selesai", key="conv_done_btn"):
+                st.session_state.conv_result = None
+                st.rerun()
 
     # --- Chat Input: foto, PDF, Word, atau teks biasa ---
     chat_input = st.chat_input(
@@ -938,24 +953,19 @@ else:
                             docx_bytes = f.read()
                         os.remove(tmp_path)
                         os.remove(out_path)
-                        reply_text = f"Yeay berhasil Kak! ✨ File **{uploaded_file.name}** sudah Kei konversi ke Word~ (｡♥‿♥｡) Langsung download ya!"
+                        reply_text = f"Yeay berhasil Kak! ✨ File **{uploaded_file.name}** sudah Kei konversi ke Word~ (｡♥‿♥｡) Klik tombol download di bawah ya!"
                         st.session_state.messages.append({"role": "assistant", "content": reply_text})
+                        st.session_state.conv_result = {
+                            "bytes":    docx_bytes,
+                            "filename": uploaded_file.name.replace(".pdf", ".docx"),
+                            "mime":     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            "label":    "⬇️ Download .docx",
+                        }
                         save_json(CHAT_FILE, st.session_state.messages)
-                        # Tampilkan tombol download langsung di chat
-                        with st.chat_message("assistant"):
-                            st.download_button(
-                                "⬇️ Download .docx",
-                                data=docx_bytes,
-                                file_name=uploaded_file.name.replace(".pdf", ".docx"),
-                                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                                key="dl_docx_chat",
-                            )
-                        st.rerun()
                     except Exception as e:
                         err = f"Aduh Kak, Kei gagal konversinya... (｡>﹏<｡) Error: {e}"
                         st.session_state.messages.append({"role": "assistant", "content": err})
                         save_json(CHAT_FILE, st.session_state.messages)
-                        st.rerun()
 
             # ── Word → PDF ──
             elif fname.endswith(".docx"):
@@ -982,30 +992,25 @@ else:
                                 pdf_bytes = f.read()
                             os.remove(tmp_path)
                             os.remove(out_pdf)
-                            reply_text = f"Yeay berhasil Kak! ✨ File **{uploaded_file.name}** sudah Kei konversi ke PDF~ (｡♥‿♥｡) Langsung download ya!"
+                            reply_text = f"Yeay berhasil Kak! ✨ File **{uploaded_file.name}** sudah Kei konversi ke PDF~ (｡♥‿♥｡) Klik tombol download di bawah ya!"
                             st.session_state.messages.append({"role": "assistant", "content": reply_text})
+                            st.session_state.conv_result = {
+                                "bytes":    pdf_bytes,
+                                "filename": uploaded_file.name.replace(".docx", ".pdf"),
+                                "mime":     "application/pdf",
+                                "label":    "⬇️ Download .pdf",
+                            }
                             save_json(CHAT_FILE, st.session_state.messages)
-                            with st.chat_message("assistant"):
-                                st.download_button(
-                                    "⬇️ Download .pdf",
-                                    data=pdf_bytes,
-                                    file_name=uploaded_file.name.replace(".docx", ".pdf"),
-                                    mime="application/pdf",
-                                    key="dl_pdf_chat",
-                                )
-                            st.rerun()
                         else:
                             raise Exception(result.stderr)
                     except FileNotFoundError:
                         err = "Aduh Kak, LibreOffice belum terinstall di server... (｡>﹏<｡) Pastikan `packages.txt` sudah ada ya!"
                         st.session_state.messages.append({"role": "assistant", "content": err})
                         save_json(CHAT_FILE, st.session_state.messages)
-                        st.rerun()
                     except Exception as e:
                         err = f"Aduh Kak, Kei gagal konversinya... (｡>﹏<｡) Error: {e}"
                         st.session_state.messages.append({"role": "assistant", "content": err})
                         save_json(CHAT_FILE, st.session_state.messages)
-                        st.rerun()
 
             # ── Foto / Gambar ──
             else:
