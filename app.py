@@ -903,7 +903,7 @@ else:
 
     # --- Chat Input: foto, PDF, Word, atau teks biasa ---
     chat_input = st.chat_input(
-        "Ketik pesan atau kirim foto/PDF/Word ke Kei...",
+        "Ketik pesan ke Kei... 💕",
         accept_file=True,
         file_type=["jpg", "jpeg", "png", "webp", "pdf", "docx"],
     )
