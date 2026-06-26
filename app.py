@@ -394,7 +394,6 @@ def render_dynamic_css():
         login_title_color = "#2a1a2e"
         login_sub_color = "rgba(0,0,0,0.4)"
         login_footer_color = "rgba(0,0,0,0.2)"
-        # tambahan untuk chat message
         chat_msg_bg_user = "#e8e0f0"
         chat_msg_bg_kei = "#f0edf5"
     else:
@@ -810,4 +809,4 @@ TEXTS = {
         "diary_cleared": "Diary berhasil dihapus!",
         "diary_you_wrote": "Kamu tulis:",
         "diary_kei_answers": "Kei menjawab:",
-        "chat_placeholder": "Ketik
+        "chat_placeholder": "Ketik pesan ke Kei... 💕",
