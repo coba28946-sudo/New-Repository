@@ -202,13 +202,32 @@ div[data-testid="stTextInput"] input::placeholder {
     font-size: 14px !important;
 }
 
-/* Tombol mata show/hide password — DIHAPUS sepenuhnya. Tombol ini
-   (dan slot kosong yang ditempatinya) adalah sumber border kanan yang
-   tidak align rapi di field Password. Dengan dihapus total, struktur
-   field Username & Password jadi identik (cuma <input> tanpa elemen
-   tambahan), sehingga border-nya konsisten rapi di kedua field. */
+/* Tombol mata show/hide password — dikembalikan. Masalah border kanan
+   sebelumnya ternyata BUKAN dari tombol ini, melainkan dari elemen
+   bantuan "Press Enter to apply" milik Streamlit yang memang normal
+   muncul saat field difokus — bukan bug. Styling di bawah memastikan
+   tombolnya tetap rapi menyatu dengan wrapper (radius & border konsisten). */
 div[data-testid="stTextInput"] button {
-    display: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    color: rgba(255,255,255,0.3) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 48px !important;
+    width: 38px !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+div[data-testid="stTextInput"] button:hover {
+    color: rgba(255,138,216,0.8) !important;
+}
+div[data-testid="stTextInput"] button svg {
+    width: 14px !important;
+    height: 14px !important;
 }
 
 /* Tombol Masuk - putih */
