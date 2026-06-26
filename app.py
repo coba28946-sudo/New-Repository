@@ -437,17 +437,17 @@ if not st.session_state.logged_in:
     <style>
     /* Hapus padding atas bawaan Streamlit */
     .main .block-container {
-        padding-top: 2rem !important;
+        padding-top: 3rem !important;
         padding-bottom: 1rem !important;
-        max-width: 480px !important;
+        max-width: 560px !important;
         margin: 0 auto !important;
     }
     /* Form card */
     div[data-testid="stForm"] {
         background: rgba(255,255,255,0.03) !important;
         border: 1px solid rgba(255,255,255,0.08) !important;
-        border-radius: 20px !important;
-        padding: 32px 28px !important;
+        border-radius: 24px !important;
+        padding: 40px 36px !important;
         box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
         width: 100% !important;
     }
@@ -455,8 +455,8 @@ if not st.session_state.logged_in:
     div[data-testid="stTextInput"] > div {
         background: rgba(255,255,255,0.05) !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
-        border-radius: 12px !important;
-        min-height: 56px !important;
+        border-radius: 14px !important;
+        min-height: 64px !important;
         width: 100% !important;
     }
     div[data-testid="stTextInput"] > div:focus-within {
@@ -467,16 +467,16 @@ if not st.session_state.logged_in:
     div[data-testid="stTextInput"] input {
         background: transparent !important;
         color: #fff !important;
-        font-size: 16px !important;
-        height: 56px !important;
+        font-size: 18px !important;
+        height: 64px !important;
         border: none !important;
         box-shadow: none !important;
-        padding: 0 8px 0 18px !important;
+        padding: 0 8px 0 20px !important;
         width: 100% !important;
     }
     div[data-testid="stTextInput"] input::placeholder {
         color: rgba(255,255,255,0.28) !important;
-        font-size: 16px !important;
+        font-size: 18px !important;
     }
     div[data-testid="stTextInput"] label { display: none !important; }
     /* Tombol mata */
@@ -485,31 +485,41 @@ if not st.session_state.logged_in:
         border: none !important;
         box-shadow: none !important;
         color: rgba(255,255,255,0.3) !important;
-        padding: 0 14px 0 4px !important;
-        height: 56px !important;
+        padding: 0 16px 0 4px !important;
+        height: 64px !important;
         display: flex !important;
         align-items: center !important;
     }
-    div[data-testid="stTextInput"] button svg { width: 16px !important; height: 16px !important; }
+    div[data-testid="stTextInput"] button svg { width: 18px !important; height: 18px !important; }
     div[data-testid="stTextInput"] button:hover { color: #ff8ad8 !important; }
-    /* Tombol Masuk PUTIH */
+    /* Tombol Masuk PUTIH BESAR */
     div[data-testid="stForm"] div[data-testid="stButton"] > button {
         background: #ffffff !important;
         background-color: #ffffff !important;
         color: #111111 !important;
         border: none !important;
-        border-radius: 12px !important;
-        font-size: 16px !important;
+        border-radius: 14px !important;
+        font-size: 18px !important;
         font-weight: 700 !important;
-        height: 56px !important;
+        height: 64px !important;
         width: 100% !important;
-        margin-top: 10px !important;
+        margin-top: 12px !important;
         box-shadow: none !important;
+        letter-spacing: 0.3px !important;
     }
     div[data-testid="stForm"] div[data-testid="stButton"] > button:hover {
         background: #f0f0f0 !important;
         background-color: #f0f0f0 !important;
         color: #111 !important;
+        border: none !important;
+    }
+    div[data-testid="stForm"] div[data-testid="stButton"] > button:focus,
+    div[data-testid="stForm"] div[data-testid="stButton"] > button:active {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #111111 !important;
+        border: none !important;
+        box-shadow: none !important;
     }
     /* Error */
     div[data-testid="stAlert"] {
@@ -523,9 +533,9 @@ if not st.session_state.logged_in:
     """, unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="text-align:center; margin-bottom:28px;">
-        <div style="color:#ff8ad8; font-size:44px; font-weight:700; letter-spacing:-1px; line-height:1.1; margin-bottom:8px;">✦ Kei AI</div>
-        <div style="color:rgba(255,255,255,0.38); font-size:15px;">Teman AI Pintar Kamu</div>
+    <div style="text-align:center; margin-bottom:32px;">
+        <div style="color:#ff8ad8; font-size:54px; font-weight:700; letter-spacing:-1.5px; line-height:1.1; margin-bottom:10px;">✦ Kei AI</div>
+        <div style="color:rgba(255,255,255,0.38); font-size:17px;">Teman AI Pintar Kamu</div>
     </div>
     """, unsafe_allow_html=True)
 
