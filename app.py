@@ -396,13 +396,13 @@ p, span, label, div { color: inherit; }
     padding-top: 1rem !important;
 }
 
-/* ===== SIDEBAR CUSTOM (pengganti st.sidebar) ===== */
+/* ===== SIDEBAR CUSTOM (pengganti st.sidebar) - PANEL KIRI VERTIKAL ===== */
 .kei-custom-sidebar {
     background: var(--bg-secondary) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 16px !important;
     padding: 16px !important;
-    margin-bottom: 16px !important;
+    height: 100%;
 }
 .kei-toggle-btn button {
     width: 42px !important;
@@ -417,6 +417,20 @@ p, span, label, div { color: inherit; }
 .kei-toggle-btn button:hover {
     border-color: var(--border-hover) !important;
     color: #ff8ad8 !important;
+}
+
+/* Mode switcher versi menu (vertikal, full width, dipakai di dalam panel kiri) */
+.mode-switcher-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.mode-switcher-menu .mode-btn {
+    width: 100%;
+    justify-content: flex-start;
+    border-radius: 12px;
+    padding: 10px 16px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -539,31 +553,13 @@ def get_sticker(mood):
     return random.choice(STICKERS.get(mood, STICKERS["happy"]))
 
 # =====================
-# 10. TOMBOL TOGGLE MENU + MODE SWITCHER
+# 10. TOMBOL TOGGLE MENU (di luar, pojok kiri atas)
 # =====================
-top_cols = st.columns([0.6, 5, 0.6])
-with top_cols[0]:
-    st.markdown('<div class="kei-toggle-btn">', unsafe_allow_html=True)
-    if st.button("☰", key="kei_toggle_menu", help="Buka/Tutup menu"):
-        st.session_state.sidebar_open = not st.session_state.sidebar_open
-        st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-
-with top_cols[1]:
-    current_mode = st.session_state.mode
-    chat_class = "mode-btn active" if current_mode == "chat" else "mode-btn"
-    diary_class = "mode-btn active" if current_mode == "diary" else "mode-btn"
-
-    st.markdown(f"""
-    <div class="mode-switcher">
-        <a href="#" onclick="window.location.href='?mode=chat'" class="{chat_class}" style="text-decoration:none;">
-            💬 Chat
-        </a>
-        <a href="#" onclick="window.location.href='?mode=diary'" class="{diary_class}" style="text-decoration:none;">
-            💌 Diary
-        </a>
-    </div>
-    """, unsafe_allow_html=True)
+st.markdown('<div class="kei-toggle-btn">', unsafe_allow_html=True)
+if st.button("☰", key="kei_toggle_menu", help="Buka/Tutup menu"):
+    st.session_state.sidebar_open = not st.session_state.sidebar_open
+    st.rerun()
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Handle mode switching via query params
 query_params = st.query_params
@@ -574,11 +570,32 @@ if "mode" in query_params:
         st.rerun()
 
 # =====================
-# 11. MENU (panel custom, bukan st.sidebar — supaya tombol toggle 100% terkendali)
+# 11. LAYOUT: PANEL MENU KIRI (jika terbuka) + KONTEN UTAMA
 # =====================
 if st.session_state.sidebar_open:
-    with st.container():
+    menu_col, main_col = st.columns([1, 3], gap="medium")
+else:
+    main_col = st.container()
+    menu_col = None
+
+if menu_col is not None:
+    with menu_col:
         st.markdown('<div class="kei-custom-sidebar">', unsafe_allow_html=True)
+
+        # ---- Chat / Diary switcher (sekarang di dalam menu) ----
+        current_mode = st.session_state.mode
+        chat_class = "mode-btn active" if current_mode == "chat" else "mode-btn"
+        diary_class = "mode-btn active" if current_mode == "diary" else "mode-btn"
+        st.markdown(f"""
+        <div class="mode-switcher-menu">
+            <a href="#" onclick="window.location.href='?mode=chat'" class="{chat_class}" style="text-decoration:none;">
+                💬 Chat
+            </a>
+            <a href="#" onclick="window.location.href='?mode=diary'" class="{diary_class}" style="text-decoration:none;">
+                💌 Diary
+            </a>
+        </div>
+        """, unsafe_allow_html=True)
 
         avatar_exists = os.path.exists("kei_avatar.png")
         if avatar_exists:
@@ -610,165 +627,163 @@ if st.session_state.sidebar_open:
         st.markdown(f"*Mode aktif: {'💬 Chat' if st.session_state.mode == 'chat' else '💌 Dear Diary'}*")
         st.markdown("---")
 
-        menu_cols = st.columns(2)
-        with menu_cols[0]:
-            with st.expander("Kirim Stiker"):
-                cols = st.columns(5)
-                moods  = ["happy", "love", "sad", "cool", "shy"]
-                emojis = ["😄", "💕", "😢", "😎", "🌸"]
-                for i, (mood, emoji) in enumerate(zip(moods, emojis)):
-                    with cols[i]:
-                        if st.button(emoji, key=f"sticker_{mood}"):
-                            sticker = get_sticker(mood)
-                            st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
-                            st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
-                            save_json(CHAT_FILE, st.session_state.messages)
-                            st.rerun()
-        with menu_cols[1]:
-            with st.expander("🎵 Putar Musik"):
-                music_query = st.text_input("Nama lagu / artis", key="music_input")
-                if st.button("Cari", key="music_search"):
-                    if music_query:
-                        search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
-                        st.markdown(f"""
-                        <div class="music-box">
-                            🎵 <b>{music_query}</b><br>
-                            <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube</a>
-                        </div>
-                        """, unsafe_allow_html=True)
+        with st.expander("Kirim Stiker"):
+            cols = st.columns(5)
+            moods  = ["happy", "love", "sad", "cool", "shy"]
+            emojis = ["😄", "💕", "😢", "😎", "🌸"]
+            for i, (mood, emoji) in enumerate(zip(moods, emojis)):
+                with cols[i]:
+                    if st.button(emoji, key=f"sticker_{mood}"):
+                        sticker = get_sticker(mood)
+                        st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
+                        st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
+                        save_json(CHAT_FILE, st.session_state.messages)
+                        st.rerun()
 
-        btn_cols = st.columns(3)
-        with btn_cols[0]:
-            if st.button("🆕 New Chat", use_container_width=True):
-                st.session_state.messages = []
-                save_json(CHAT_FILE, [])
-                st.rerun()
-        with btn_cols[1]:
-            if st.button("🗑️ Clear Chat", use_container_width=True):
-                st.session_state.messages = []
-                save_json(CHAT_FILE, [])
-                st.rerun()
-        with btn_cols[2]:
-            if st.button("🚪 Logout", use_container_width=True):
-                st.session_state.logged_in = False
-                st.session_state.messages  = []
-                st.rerun()
+        with st.expander("🎵 Putar Musik"):
+            music_query = st.text_input("Nama lagu / artis", key="music_input")
+            if st.button("Cari", key="music_search"):
+                if music_query:
+                    search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
+                    st.markdown(f"""
+                    <div class="music-box">
+                        🎵 <b>{music_query}</b><br>
+                        <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube</a>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+        if st.button("🆕 New Chat", use_container_width=True):
+            st.session_state.messages = []
+            save_json(CHAT_FILE, [])
+            st.rerun()
+
+        if st.button("🗑️ Clear Chat", use_container_width=True):
+            st.session_state.messages = []
+            save_json(CHAT_FILE, [])
+            st.rerun()
+
+        st.markdown("---")
+        if st.button("🚪 Logout", use_container_width=True):
+            st.session_state.logged_in = False
+            st.session_state.messages  = []
+            st.rerun()
 
         st.markdown('</div>', unsafe_allow_html=True)
 
 # =====================
 # 12. HEADER
 # =====================
-if st.session_state.mode == "diary":
-    st.markdown("""
-    <div style="text-align:center;margin-top:-10px;">
-        <h1 style="color:#ff8ad8;margin-bottom:0;">💌 Dear Diary</h1>
-        <p style="color:var(--text-secondary);font-size:18px;margin-top:0;">Ceritain semua ke Kei ya~ 🥺</p>
-    </div>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-    <div style="text-align:center;margin-top:-10px;">
-        <h1 style="color:#ff8ad8;margin-bottom:0;">✦ Kei AI</h1>
-        <p style="color:var(--text-secondary);font-size:18px;margin-top:0;">Your AI Companion</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-# =====================
-# 13. DEAR DIARY MODE
-# =====================
-if st.session_state.mode == "diary":
-    diary_entries = load_json(DIARY_FILE)
-
-    if diary_entries:
-        with st.expander(f"📖 Lihat {len(diary_entries)} entri diary lama"):
-            for entry in reversed(diary_entries[-10:]):
-                st.markdown(f"""
-                <div class="diary-box">
-                    <small style="color:#ff8ad8;">📅 {entry['date']}</small><br><br>
-                    <b>Kamu:</b> {entry['user']}<br><br>
-                    <b>Kei:</b> {entry['kei']}
-                </div>
-                """, unsafe_allow_html=True)
-
-    st.markdown("---")
-    diary_input = st.text_area("💌 Cerita ke Kei...", placeholder="Hari ini aku ngerasa... / Kei, aku mau curhat nih...", height=150)
-
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        send_diary = st.button("Kirim ke Kei 💕", use_container_width=True)
-    with col2:
-        clear_diary = st.button("Hapus Diary", use_container_width=True)
-
-    if clear_diary:
-        save_json(DIARY_FILE, [])
-        st.success("Diary berhasil dihapus!")
-        st.rerun()
-
-    if send_diary and diary_input:
-        with st.spinner("Kei lagi baca curhatanmu... 🥺"):
-            full_prompt = f"{KEI_DIARY_PERSONA}\n\nUser curhat: {diary_input}\n\nKei menjawab dengan hangat:"
-            kei_reply   = generate_content_with_retry(full_prompt)
-
-        entry = {
-            "date": datetime.now().strftime("%d %B %Y, %H:%M"),
-            "user": diary_input,
-            "kei":  kei_reply,
-        }
-        diary_entries.append(entry)
-        save_json(DIARY_FILE, diary_entries)
-
-        st.markdown(f"""
-        <div class="diary-box">
-            <b style="color:#ff8ad8;">Kamu tulis:</b><br>{diary_input}<br><br>
-            <b style="color:#ff8ad8;">Kei menjawab:</b><br>{kei_reply}
+with main_col:
+    if st.session_state.mode == "diary":
+        st.markdown("""
+        <div style="text-align:center;margin-top:-10px;">
+            <h1 style="color:#ff8ad8;margin-bottom:0;">💌 Dear Diary</h1>
+            <p style="color:var(--text-secondary);font-size:18px;margin-top:0;">Ceritain semua ke Kei ya~ 🥺</p>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div style="text-align:center;margin-top:-10px;">
+            <h1 style="color:#ff8ad8;margin-bottom:0;">✦ Kei AI</h1>
+            <p style="color:var(--text-secondary);font-size:18px;margin-top:0;">Your AI Companion</p>
         </div>
         """, unsafe_allow_html=True)
 
-    st.stop()
+    # =====================
+    # 13. DEAR DIARY MODE
+    # =====================
+    if st.session_state.mode == "diary":
+        diary_entries = load_json(DIARY_FILE)
 
-# =====================
-# 14. CHAT DISPLAY & INPUT (DIPERBAIKI)
-# =====================
-# Load chat history
-if not st.session_state.messages:
-    st.session_state.messages = load_json(CHAT_FILE)
+        if diary_entries:
+            with st.expander(f"📖 Lihat {len(diary_entries)} entri diary lama"):
+                for entry in reversed(diary_entries[-10:]):
+                    st.markdown(f"""
+                    <div class="diary-box">
+                        <small style="color:#ff8ad8;">📅 {entry['date']}</small><br><br>
+                        <b>Kamu:</b> {entry['user']}<br><br>
+                        <b>Kei:</b> {entry['kei']}
+                    </div>
+                    """, unsafe_allow_html=True)
 
-# Tampilkan pesan
-chat_container = st.container()
-with chat_container:
-    for idx, msg in enumerate(st.session_state.messages):
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
+        st.markdown("---")
+        diary_input = st.text_area("💌 Cerita ke Kei...", placeholder="Hari ini aku ngerasa... / Kei, aku mau curhat nih...", height=150)
+
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            send_diary = st.button("Kirim ke Kei 💕", use_container_width=True)
+        with col2:
+            clear_diary = st.button("Hapus Diary", use_container_width=True)
+
+        if clear_diary:
+            save_json(DIARY_FILE, [])
+            st.success("Diary berhasil dihapus!")
+            st.rerun()
+
+        if send_diary and diary_input:
+            with st.spinner("Kei lagi baca curhatanmu... 🥺"):
+                full_prompt = f"{KEI_DIARY_PERSONA}\n\nUser curhat: {diary_input}\n\nKei menjawab dengan hangat:"
+                kei_reply   = generate_content_with_retry(full_prompt)
+
+            entry = {
+                "date": datetime.now().strftime("%d %B %Y, %H:%M"),
+                "user": diary_input,
+                "kei":  kei_reply,
+            }
+            diary_entries.append(entry)
+            save_json(DIARY_FILE, diary_entries)
+
+            st.markdown(f"""
+            <div class="diary-box">
+                <b style="color:#ff8ad8;">Kamu tulis:</b><br>{diary_input}<br><br>
+                <b style="color:#ff8ad8;">Kei menjawab:</b><br>{kei_reply}
+            </div>
+            """, unsafe_allow_html=True)
+
+    else:
+        # =====================
+        # 14. CHAT DISPLAY
+        # =====================
+        # Load chat history
+        if not st.session_state.messages:
+            st.session_state.messages = load_json(CHAT_FILE)
+
+        # Tampilkan pesan
+        chat_container = st.container()
+        with chat_container:
+            for idx, msg in enumerate(st.session_state.messages):
+                with st.chat_message(msg["role"]):
+                    st.markdown(msg["content"])
 
 # ===== CHAT INPUT =====
-# st.chat_input mengembalikan None setiap saat sampai user benar-benar
-# mengirim pesan — ini normal, BUKAN tanda bahwa input gagal render.
-# Fallback manual sebelumnya selalu ikut muncul karena salah membaca None
-# sebagai "input tidak muncul", makanya jadi dobel. Sekarang dihapus.
-prompt = st.chat_input("Ketik pesan ke Kei...", key="chat_input_main")
+# PENTING: chat_input HARUS di luar st.columns/main_col, karena Streamlit
+# hanya membuat chat_input sticky di bawah layar kalau dia berada di level
+# utama (bukan di dalam kolom) — taruh di dalam kolom membuat dia
+# kehilangan sifat sticky-nya (jadi nempel naik, gak di bawah).
+if st.session_state.mode != "diary":
+    prompt = st.chat_input("Ketik pesan ke Kei...", key="chat_input_main")
 
-if prompt:
-    # Proses pesan
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    if prompt:
+        # Proses pesan
+        st.session_state.messages.append({"role": "user", "content": prompt})
 
-    browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
-    if any(kw in prompt.lower() for kw in browsing_keywords):
-        search_url  = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
-        search_note = f"\n\n🌐 *Kei juga nyariin buat Kak di sini ya:* [Klik untuk lihat hasil pencarian]({search_url})"
-    else:
-        search_note = ""
+        browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
+        if any(kw in prompt.lower() for kw in browsing_keywords):
+            search_url  = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
+            search_note = f"\n\n🌐 *Kei juga nyariin buat Kak di sini ya:* [Klik untuk lihat hasil pencarian]({search_url})"
+        else:
+            search_note = ""
 
-    history_text = ""
-    for m in st.session_state.messages[-10:]:
-        role = "User" if m["role"] == "user" else "Kei"
-        history_text += f"{role}: {m['content']}\n"
+        history_text = ""
+        for m in st.session_state.messages[-10:]:
+            role = "User" if m["role"] == "user" else "Kei"
+            history_text += f"{role}: {m['content']}\n"
 
-    full_prompt = f"{KEI_PERSONA}\n\nRiwayat percakapan:\n{history_text}\nKei:"
+        full_prompt = f"{KEI_PERSONA}\n\nRiwayat percakapan:\n{history_text}\nKei:"
 
-    with st.spinner("Kei sedang mengetik... ✨"):
-        reply = generate_content_with_retry(full_prompt) + search_note
+        with st.spinner("Kei sedang mengetik... ✨"):
+            reply = generate_content_with_retry(full_prompt) + search_note
 
-    st.session_state.messages.append({"role": "assistant", "content": reply})
-    save_json(CHAT_FILE, st.session_state.messages)
-    st.rerun()
+        st.session_state.messages.append({"role": "assistant", "content": reply})
+        save_json(CHAT_FILE, st.session_state.messages)
+        st.rerun()
