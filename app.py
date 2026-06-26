@@ -95,29 +95,6 @@ header[data-testid="stHeader"] [data-testid="stToolbar"] {
     display: none !important;
 }
 
-/* Tombol toggle sidebar custom (gak gantung ke elemen internal Streamlit) */
-#kei-sidebar-toggle {
-    position: fixed;
-    top: 0.6rem;
-    left: 0.6rem;
-    z-index: 999999;
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 2px 8px var(--shadow);
-}
-#kei-sidebar-toggle svg {
-    width: 18px;
-    height: 18px;
-    stroke: var(--text-primary);
-}
-
 /* ===== LOGIN PAGE ===== */
 .login-title {
     color: #ff8ad8;
@@ -220,26 +197,21 @@ div[data-testid="stAlert"] {
     font-size: 14px !important;
 }
 
-/* ===== SIDEBAR ===== */
-[data-testid="stSidebar"] {
-    background: var(--bg-secondary) !important;
-    border-right: 1px solid var(--border-color) !important;
-    transition: background-color 0.3s ease;
-}
-[data-testid="stSidebar"] * {
+/* ===== MENU CUSTOM (pengganti st.sidebar) ===== */
+.kei-custom-sidebar {
     color: var(--text-primary) !important;
 }
-[data-testid="stSidebar"] .stButton button {
+.kei-custom-sidebar .stButton button {
     background: var(--bg-input) !important;
     color: var(--text-secondary) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 10px !important;
 }
-[data-testid="stSidebar"] .stButton button:hover {
+.kei-custom-sidebar .stButton button:hover {
     border-color: var(--border-hover) !important;
     color: #ff8ad8 !important;
 }
-[data-testid="stSidebar"] [data-testid="stExpander"] {
+.kei-custom-sidebar [data-testid="stExpander"] {
     background: var(--bg-card) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 12px !important;
@@ -370,15 +342,9 @@ p, span, label, div { color: inherit; }
 
 /* ===== RESPONSIVE MOBILE ===== */
 @media (max-width: 768px) {
-    [data-testid="stSidebar"] {
-        min-width: 200px !important;
-        max-width: 280px !important;
-    }
-
-    [data-testid="stSidebar"] .stButton button {
+    .kei-custom-sidebar .stButton button {
         font-size: 14px !important;
         padding: 8px 12px !important;
-        width: 100% !important;
     }
 
     .login-title {
@@ -422,109 +388,41 @@ p, span, label, div { color: inherit; }
     }
 }
 
-/* Tablet */
-@media (max-width: 1024px) and (min-width: 769px) {
-    [data-testid="stSidebar"] {
-        min-width: 240px !important;
-        max-width: 300px !important;
-    }
-}
-
-/* Iframe dari components.html (tombol toggle) jangan sampai keblok ukurannya */
-iframe.kei-toggle-frame {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 60px !important;
-    height: 60px !important;
-    z-index: 999999 !important;
-    border: none !important;
-    background: transparent !important;
-}
 
 /* Batasi lebar konten utama biar simetris (layout wide tapi konten center) */
 .main .block-container {
     max-width: 800px !important;
     margin: 0 auto !important;
-    padding-top: 2rem !important;
+    padding-top: 1rem !important;
+}
+
+/* ===== SIDEBAR CUSTOM (pengganti st.sidebar) ===== */
+.kei-custom-sidebar {
+    background: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
+    margin-bottom: 16px !important;
+}
+.kei-toggle-btn button {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 10px !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    font-size: 18px !important;
+    padding: 0 !important;
+}
+.kei-toggle-btn button:hover {
+    border-color: var(--border-hover) !important;
+    color: #ff8ad8 !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# =====================
-# 3b. TOMBOL TOGGLE SIDEBAR CUSTOM
-# =====================
-import streamlit.components.v1 as components
 
-components.html("""
-<style>
-  html, body { margin:0; padding:0; background: transparent; }
-  #kei-sidebar-toggle {
-      position: fixed;
-      top: 0.6rem;
-      left: 0.6rem;
-      z-index: 999999;
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: #161616;
-      border: 1px solid rgba(255,255,255,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-  }
-  #kei-sidebar-toggle svg {
-      width: 18px;
-      height: 18px;
-      stroke: #ffffff;
-  }
-</style>
-<div id="kei-sidebar-toggle" title="Buka/Tutup menu">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-    </svg>
-</div>
-<script>
-function findToggle() {
-    const doc = window.parent.document;
-    return doc.querySelector('[data-testid="collapsedControl"] button')
-        || doc.querySelector('[data-testid="collapsedControl"]')
-        || doc.querySelector('button[kind="header"]')
-        || doc.querySelector('[data-testid="stSidebarCollapseButton"] button');
-}
-
-const myBtn = document.getElementById('kei-sidebar-toggle');
-myBtn.addEventListener('click', function() {
-    const target = findToggle();
-    if (target) {
-        target.click();
-    } else {
-        const doc = window.parent.document;
-        const sidebar = doc.querySelector('[data-testid="stSidebar"]');
-        if (sidebar) {
-            sidebar.style.display = (sidebar.style.display === 'none') ? '' : 'none';
-        }
-    }
-});
-
-// Tandai iframe pembungkus widget ini sendiri agar bisa ditarget CSS global
-(function markFrame() {
-    try {
-        const myFrame = window.frameElement;
-        if (myFrame) {
-            myFrame.classList.add('kei-toggle-frame');
-        }
-    } catch (e) {}
-})();
-</script>
-""", height=0, width=0)
-
-
-for key, val in {"logged_in": False, "mode": "chat", "messages": [], "avatar": None, "input_text": ""}.items():
+for key, val in {"logged_in": False, "mode": "chat", "messages": [], "avatar": None, "input_text": "", "sidebar_open": False}.items():
     if key not in st.session_state:
         st.session_state[key] = val
 
@@ -641,23 +539,31 @@ def get_sticker(mood):
     return random.choice(STICKERS.get(mood, STICKERS["happy"]))
 
 # =====================
-# 10. MODE SWITCHER (FLOATING BUTTONS)
+# 10. TOMBOL TOGGLE MENU + MODE SWITCHER
 # =====================
-current_mode = st.session_state.mode
+top_cols = st.columns([0.6, 5, 0.6])
+with top_cols[0]:
+    st.markdown('<div class="kei-toggle-btn">', unsafe_allow_html=True)
+    if st.button("☰", key="kei_toggle_menu", help="Buka/Tutup menu"):
+        st.session_state.sidebar_open = not st.session_state.sidebar_open
+        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
-chat_class = "mode-btn active" if current_mode == "chat" else "mode-btn"
-diary_class = "mode-btn active" if current_mode == "diary" else "mode-btn"
+with top_cols[1]:
+    current_mode = st.session_state.mode
+    chat_class = "mode-btn active" if current_mode == "chat" else "mode-btn"
+    diary_class = "mode-btn active" if current_mode == "diary" else "mode-btn"
 
-st.markdown(f"""
-<div class="mode-switcher">
-    <a href="#" onclick="window.location.href='?mode=chat'" class="{chat_class}" style="text-decoration:none;">
-        💬 Chat
-    </a>
-    <a href="#" onclick="window.location.href='?mode=diary'" class="{diary_class}" style="text-decoration:none;">
-        💌 Diary
-    </a>
-</div>
-""", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class="mode-switcher">
+        <a href="#" onclick="window.location.href='?mode=chat'" class="{chat_class}" style="text-decoration:none;">
+            💬 Chat
+        </a>
+        <a href="#" onclick="window.location.href='?mode=diary'" class="{diary_class}" style="text-decoration:none;">
+            💌 Diary
+        </a>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Handle mode switching via query params
 query_params = st.query_params
@@ -668,79 +574,87 @@ if "mode" in query_params:
         st.rerun()
 
 # =====================
-# 11. SIDEBAR
+# 11. MENU (panel custom, bukan st.sidebar — supaya tombol toggle 100% terkendali)
 # =====================
-with st.sidebar:
-    avatar_exists = os.path.exists("kei_avatar.png")
-    if avatar_exists:
-        st.image("kei_avatar.png", width=220)
-        with st.expander("Ganti / Hapus Foto"):
-            uploaded_avatar = st.file_uploader("Upload foto baru", type=["png","jpg","jpeg"], key="ganti_foto")
+if st.session_state.sidebar_open:
+    with st.container():
+        st.markdown('<div class="kei-custom-sidebar">', unsafe_allow_html=True)
+
+        avatar_exists = os.path.exists("kei_avatar.png")
+        if avatar_exists:
+            st.image("kei_avatar.png", width=160)
+            with st.expander("Ganti / Hapus Foto"):
+                uploaded_avatar = st.file_uploader("Upload foto baru", type=["png","jpg","jpeg"], key="ganti_foto")
+                if uploaded_avatar:
+                    with open("kei_avatar.png", "wb") as f:
+                        f.write(uploaded_avatar.getbuffer())
+                    st.success("Foto berhasil diganti!")
+                    st.rerun()
+                if st.button("Hapus Foto"):
+                    os.remove("kei_avatar.png")
+                    st.session_state.avatar = None
+                    st.rerun()
+        else:
+            uploaded_avatar = st.file_uploader("Upload Foto Kei", type=["png","jpg","jpeg"])
             if uploaded_avatar:
                 with open("kei_avatar.png", "wb") as f:
                     f.write(uploaded_avatar.getbuffer())
-                st.success("Foto berhasil diganti!")
                 st.rerun()
-            if st.button("Hapus Foto"):
-                os.remove("kei_avatar.png")
-                st.session_state.avatar = None
+
+        st.markdown("""
+        <div class="status-box">
+            🟢 Online &nbsp; KEI AI
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"*Mode aktif: {'💬 Chat' if st.session_state.mode == 'chat' else '💌 Dear Diary'}*")
+        st.markdown("---")
+
+        menu_cols = st.columns(2)
+        with menu_cols[0]:
+            with st.expander("Kirim Stiker"):
+                cols = st.columns(5)
+                moods  = ["happy", "love", "sad", "cool", "shy"]
+                emojis = ["😄", "💕", "😢", "😎", "🌸"]
+                for i, (mood, emoji) in enumerate(zip(moods, emojis)):
+                    with cols[i]:
+                        if st.button(emoji, key=f"sticker_{mood}"):
+                            sticker = get_sticker(mood)
+                            st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
+                            st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
+                            save_json(CHAT_FILE, st.session_state.messages)
+                            st.rerun()
+        with menu_cols[1]:
+            with st.expander("🎵 Putar Musik"):
+                music_query = st.text_input("Nama lagu / artis", key="music_input")
+                if st.button("Cari", key="music_search"):
+                    if music_query:
+                        search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
+                        st.markdown(f"""
+                        <div class="music-box">
+                            🎵 <b>{music_query}</b><br>
+                            <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube</a>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+        btn_cols = st.columns(3)
+        with btn_cols[0]:
+            if st.button("🆕 New Chat", use_container_width=True):
+                st.session_state.messages = []
+                save_json(CHAT_FILE, [])
                 st.rerun()
-    else:
-        uploaded_avatar = st.file_uploader("Upload Foto Kei", type=["png","jpg","jpeg"])
-        if uploaded_avatar:
-            with open("kei_avatar.png", "wb") as f:
-                f.write(uploaded_avatar.getbuffer())
-            st.rerun()
+        with btn_cols[1]:
+            if st.button("🗑️ Clear Chat", use_container_width=True):
+                st.session_state.messages = []
+                save_json(CHAT_FILE, [])
+                st.rerun()
+        with btn_cols[2]:
+            if st.button("🚪 Logout", use_container_width=True):
+                st.session_state.logged_in = False
+                st.session_state.messages  = []
+                st.rerun()
 
-    st.markdown("""
-    <div class="status-box">
-        🟢 Online &nbsp; KEI AI
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown(f"*Mode aktif: {'💬 Chat' if st.session_state.mode == 'chat' else '💌 Dear Diary'}*")
-    st.markdown("---")
-
-    with st.expander("Kirim Stiker"):
-        cols = st.columns(5)
-        moods  = ["happy", "love", "sad", "cool", "shy"]
-        emojis = ["😄", "💕", "😢", "😎", "🌸"]
-        for i, (mood, emoji) in enumerate(zip(moods, emojis)):
-            with cols[i]:
-                if st.button(emoji, key=f"sticker_{mood}"):
-                    sticker = get_sticker(mood)
-                    st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
-                    st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
-                    save_json(CHAT_FILE, st.session_state.messages)
-                    st.rerun()
-
-    with st.expander("🎵 Putar Musik"):
-        music_query = st.text_input("Nama lagu / artis", key="music_input")
-        if st.button("Cari", key="music_search"):
-            if music_query:
-                search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
-                st.markdown(f"""
-                <div class="music-box">
-                    🎵 <b>{music_query}</b><br>
-                    <a href="{search_url}" target="_blank" style="color:#ff8ad8;">Buka di YouTube</a>
-                </div>
-                """, unsafe_allow_html=True)
-
-    if st.button("🆕 New Chat", use_container_width=True):
-        st.session_state.messages = []
-        save_json(CHAT_FILE, [])
-        st.rerun()
-
-    if st.button("🗑️ Clear Chat", use_container_width=True):
-        st.session_state.messages = []
-        save_json(CHAT_FILE, [])
-        st.rerun()
-
-    st.markdown("---")
-    if st.button("🚪 Logout", use_container_width=True):
-        st.session_state.logged_in = False
-        st.session_state.messages  = []
-        st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # =====================
 # 12. HEADER
