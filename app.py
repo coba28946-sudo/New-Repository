@@ -413,7 +413,7 @@ def render_dynamic_css():
         color: {text_main};
     }}
 
-    .kei-header h1 {{ color: {accent} !important; }}
+    .kei-header h1 {{ color: {text_main} !important; }}
     .kei-header p {{ color: {text_dim} !important; }}
 
     /* Area input bawah (di luar sidebar) — dulu selalu gelap solid, sekarang ikut tema */
@@ -524,7 +524,7 @@ def render_dynamic_css():
 
     .diary-box {{
         background: rgba({r},{g},{b},0.06) !important;
-        border: 1px solid rgba({r},{g},{b},0.15) !important;
+        border: 1px solid {border_col} !important;
         color: {text_main} !important;
     }}
     .diary-box b {{ color: {accent} !important; }}
@@ -539,6 +539,11 @@ def render_dynamic_css():
     .music-result a {{ color: {accent} !important; }}
 
     /* Area chat utama: bubble pesan, markdown teks, dsb */
+    [data-testid="stChatMessage"] {{
+        border: 1px solid {border_col} !important;
+        border-radius: 10px !important;
+        padding: 10px 14px !important;
+    }}
     [data-testid="stChatMessage"],
     [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"],
     [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p,
@@ -549,6 +554,10 @@ def render_dynamic_css():
     [data-testid="stChatMessageAvatarUser"],
     [data-testid="stChatMessageAvatarAssistant"] {{
         background: {input_bg} !important;
+    }}
+    [data-testid="stChatMessageAvatarUser"] svg,
+    [data-testid="stChatMessageAvatarAssistant"] svg {{
+        fill: {text_main} !important;
     }}
 
     [data-testid="stMarkdownContainer"] p,
@@ -1380,17 +1389,19 @@ with st.sidebar:
 # =====================
 header_mood_emoji, _header_mood_label = get_current_mood()
 
+_header_text_color = "#ffffff" if st.session_state.theme == "dark" else "#1a1a1a"
+
 if st.session_state.mode == "diary":
     st.markdown(f"""
     <div style="text-align:center;padding:4px 0 4px;">
-        <h1 style="color:{st.session_state.theme_color};margin:0;font-size:48px;line-height:1.1;">💌 Dear Diary</h1>
+        <h1 style="color:{_header_text_color};margin:0;font-size:48px;line-height:1.1;">💌 Dear Diary</h1>
         <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">{t('diary_header_sub')} {header_mood_emoji}</p>
     </div>
     """, unsafe_allow_html=True)
 else:
     st.markdown(f"""
     <div style="text-align:center;padding:4px 0 4px;">
-        <h1 style="color:{st.session_state.theme_color};margin:0;font-size:48px;line-height:1.1;">✦ Kei AI</h1>
+        <h1 style="color:{_header_text_color};margin:0;font-size:48px;line-height:1.1;">✦ Kei AI</h1>
         <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">{t('app_companion')} {header_mood_emoji}</p>
     </div>
     """, unsafe_allow_html=True)
