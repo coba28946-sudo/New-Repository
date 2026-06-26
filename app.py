@@ -303,7 +303,7 @@ section[data-testid="stSidebar"] > div:first-child {
     margin-top: 8px;
 }
 
-/* Stiker rows — dipusatkan & kompak */
+/* Stiker rows */
 .st-key-kei_sticker_row {
     width: 100% !important;
 }
@@ -337,7 +337,6 @@ div[data-testid="stTextArea"] label p {
     font-size: 16px !important;
 }
 
-/* Sembunyikan "Press Enter to apply" hanya di login */
 small[data-testid="InputInstructions"] {
     display: none !important;
 }
@@ -353,13 +352,12 @@ small[data-testid="InputInstructions"] {
 """, unsafe_allow_html=True)
 
 # =====================
-# 3b. CSS DINAMIS (Tema & Warna) — override, tidak mengubah CSS asli di atas
+# 3b. CSS DINAMIS
 # =====================
 def render_dynamic_css():
     accent = st.session_state.get("theme_color", "#ff8ad8")
     theme  = st.session_state.get("theme", "dark")
 
-    # Hitung versi rgba dari accent buat dipakai di rgba(...) yang ada di CSS asli
     hex_color = accent.lstrip("#")
     try:
         r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
@@ -385,30 +383,10 @@ def render_dynamic_css():
         input_bg     = "rgba(255,255,255,0.04)"
         chat_input_bg= "#1a1a1a"
 
-    # Catatan desain: setiap aturan di sini punya pasangan simetris dark/light —
-    # hanya bg_main/bg_sidebar/text_main/dst yang berbeda, struktur (border-radius,
-    # padding, margin) selalu sama persis dengan CSS statis di section 3 supaya
-    # tema terang terasa seperti "kebalikan warna" dari tema gelap, bukan layout baru.
-    # Avatar chat (stChatMessageAvatarUser/Assistant) SENGAJA tidak disentuh sama
-    # sekali — biarkan default Streamlit, supaya ikon/emoji-nya tidak rusak.
-    #
-    # PENTING — urutan CSS di bawah ini disengaja: aturan GENERIC (berlaku ke banyak
-    # elemen sekaligus, misal semua <h1>/<p> di dalam stMarkdownContainer) ditaruh
-    # DI ATAS, dan aturan SPESIFIK (.kei-header h1, .login-title, dst) ditaruh DI
-    # BAWAH. Saat dua selector punya spesifisitas CSS yang sama, browser memenangkan
-    # yang muncul terakhir — jadi spesifik harus selalu di bawah generic, atau warna
-    # custom (misal pink di judul) akan tertimpa balik jadi warna teks biasa.
     st.markdown(f"""
     <style>
-    /* Paksa browser pakai tema yang dipilih lewat toggle, bukan ikut preferensi
-       sistem/OS/browser (prefers-color-scheme). Ini juga mempengaruhi rendering
-       form control bawaan browser seperti scrollbar dan checkbox. */
-    :root {{
-        color-scheme: {theme} !important;
-    }}
-    html {{
-        color-scheme: {theme} !important;
-    }}
+    :root {{ color-scheme: {theme} !important; }}
+    html {{ color-scheme: {theme} !important; }}
 
     html, body, .stApp,
     [data-testid="stAppViewContainer"],
@@ -422,7 +400,6 @@ def render_dynamic_css():
         color: {text_main} !important;
     }}
 
-    /* ===== GENERIC: teks markdown di seluruh app (ditimpa lagi oleh aturan spesifik di bawah) ===== */
     [data-testid="stMarkdownContainer"] p,
     [data-testid="stMarkdownContainer"] li,
     [data-testid="stMarkdownContainer"] strong,
@@ -459,7 +436,6 @@ def render_dynamic_css():
     [data-testid="stChatInput"] textarea::placeholder {{ color: {text_dimmer} !important; }}
     [data-testid="stChatInput"] button {{ background: {accent} !important; }}
 
-    /* ===== Sidebar: tombol ===== */
     .kei-sidebar-inner .stButton button,
     .kei-sidebar-inner [data-testid="stButton"] button,
     .kei-sidebar-inner button[kind="secondary"],
@@ -485,7 +461,6 @@ def render_dynamic_css():
         color: {accent} !important;
     }}
 
-    /* ===== Sidebar: text input ===== */
     .kei-sidebar-inner [data-testid="stTextInput"] > div {{
         background: {input_bg} !important;
         border: 1px solid {border_col} !important;
@@ -496,7 +471,6 @@ def render_dynamic_css():
     }}
     .kei-sidebar-inner [data-testid="stTextInput"] label {{ color: {text_dim} !important; }}
 
-    /* ===== Sidebar: expander ===== */
     .kei-sidebar-inner [data-testid="stExpander"] {{
         background: {input_bg} !important;
         border: 1px solid {border_col} !important;
@@ -524,7 +498,6 @@ def render_dynamic_css():
     .kei-sidebar-inner [data-testid="stRadio"] label span,
     .kei-sidebar-inner [data-testid="stRadio"] label p {{ color: {text_main} !important; }}
 
-    /* ===== Mode switch (Chat / Diary) ===== */
     .mode-btn:hover {{ border-color: rgba({r},{g},{b},0.4) !important; color: {accent} !important; }}
     .mode-btn.active {{
         border-color: {accent} !important;
@@ -532,7 +505,6 @@ def render_dynamic_css():
         color: {accent} !important;
     }}
 
-    /* ===== Status box (online / mood / streak) ===== */
     .status-online {{
         background: {input_bg} !important;
         border: 1px solid {border_col} !important;
@@ -541,7 +513,6 @@ def render_dynamic_css():
     .status-online span {{ color: {text_dim} !important; }}
     .status-online b {{ color: {accent} !important; }}
 
-    /* ===== Diary box ===== */
     .diary-box {{
         background: rgba({r},{g},{b},0.06) !important;
         border: 1px solid rgba({r},{g},{b},0.15) !important;
@@ -558,11 +529,9 @@ def render_dynamic_css():
     }}
     .music-result a {{ color: {accent} !important; }}
 
-    /* ===== Statistik (st.metric) ===== */
     [data-testid="stMetricValue"] {{ color: {accent} !important; }}
     [data-testid="stMetricLabel"] {{ color: {text_dim} !important; }}
 
-    /* ===== Alert (error/success/warning) teks ikut tema ===== */
     [data-testid="stAlertContentInfo"],
     [data-testid="stAlertContentSuccess"],
     [data-testid="stAlertContentWarning"],
@@ -570,15 +539,12 @@ def render_dynamic_css():
         color: {text_main} !important;
     }}
 
-    /* ===== Tombol download ===== */
     .stDownloadButton button {{
         background: rgba({r},{g},{b},0.12) !important;
         color: {accent} !important;
         border: 1px solid rgba({r},{g},{b},0.3) !important;
     }}
 
-    /* ===== Halaman LOGIN: sebelumnya tidak tersentuh sama sekali karena di luar
-       .kei-sidebar-inner. Form login dirender di area utama (main), bukan sidebar. ===== */
     [data-testid="stTextInput"] > div {{
         background: {input_bg} !important;
         border: 1px solid {border_col} !important;
@@ -601,27 +567,15 @@ def render_dynamic_css():
         background: rgba({r},{g},{b},0.08) !important;
     }}
 
-    /* ===== Scrollbar: lebih halus, tidak hitam pekat seperti default browser ===== */
-    ::-webkit-scrollbar {{
-        width: 8px;
-        height: 8px;
-    }}
-    ::-webkit-scrollbar-track {{
-        background: transparent;
-    }}
+    ::-webkit-scrollbar {{ width: 8px; height: 8px; }}
+    ::-webkit-scrollbar-track {{ background: transparent; }}
     ::-webkit-scrollbar-thumb {{
         background: rgba({r},{g},{b},0.25) !important;
         border-radius: 8px !important;
     }}
-    ::-webkit-scrollbar-thumb:hover {{
-        background: rgba({r},{g},{b},0.4) !important;
-    }}
-    * {{
-        scrollbar-width: thin;
-        scrollbar-color: rgba({r},{g},{b},0.25) transparent;
-    }}
+    ::-webkit-scrollbar-thumb:hover {{ background: rgba({r},{g},{b},0.4) !important; }}
+    * {{ scrollbar-width: thin; scrollbar-color: rgba({r},{g},{b},0.25) transparent; }}
 
-    /* ===== SPESIFIK: ditaruh paling akhir agar menang melawan aturan generic di atas ===== */
     .login-title {{ color: {accent} !important; }}
     .login-sub {{ color: {text_dim} !important; }}
     .login-footer {{ color: {text_dimmer} !important; }}
@@ -636,16 +590,16 @@ for key, val in {
     "messages": [],
     "avatar": None,
     "sidebar_open": True,
-    "conv_result": None,   # {"bytes": ..., "filename": ..., "mime": ...}
-    "theme": "dark",       # "dark" atau "light"
-    "lang": "id",          # "id" atau "en"
-    "theme_color": "#ff8ad8",  # warna aksen Kei, bisa dikustom
-    "current_mood_index": None,  # index mood manual (None = pakai mood harian otomatis)
+    "conv_result": None,
+    "theme": "dark",
+    "lang": "id",
+    "theme_color": "#ff8ad8",
+    "current_mood_index": None,
+    "show_milestone_letter": None,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = val
 
-# Muat preferensi tema/bahasa/warna yang sudah disimpan sebelumnya (persist antar sesi)
 PREFS_FILE = "kei_prefs.json"
 
 def load_prefs():
@@ -678,9 +632,11 @@ render_dynamic_css()
 # =====================
 # 5. FILE HELPERS
 # =====================
-CHAT_FILE  = "chat_history.json"
-DIARY_FILE = "dear_diary.json"
-STREAK_FILE = "streak.json"
+CHAT_FILE        = "chat_history.json"
+DIARY_FILE       = "dear_diary.json"
+STREAK_FILE      = "streak.json"
+LETTER_FILE      = "kei_letters.json"
+ACTIVE_DAYS_FILE = "active_days.json"
 
 def load_json(path):
     if os.path.exists(path):
@@ -748,6 +704,16 @@ TEXTS = {
         "diary_you_wrote": "Kamu tulis:",
         "diary_kei_answers": "Kei menjawab:",
         "chat_placeholder": "Ketik pesan ke Kei... 💕",
+        "search_expander": "🔍 Cari Pesan",
+        "search_placeholder": "contoh: anime, musik, sedih...",
+        "search_found": "✨ Ditemukan {n} pesan",
+        "search_empty": "😢 Tidak ada pesan yang mengandung kata itu",
+        "export_expander": "💾 Export Chat",
+        "export_format_label": "Format export:",
+        "export_preview_label": "Preview 3 pesan terakhir:",
+        "export_empty": "😢 Belum ada chat yang bisa diekspor!",
+        "milestone_close": "💕 Makasih Kei!",
+        "letters_expander": "💌 Lihat Surat dari Kei",
     },
     "en": {
         "app_tagline": "Your Smart AI Companion",
@@ -801,11 +767,20 @@ TEXTS = {
         "diary_you_wrote": "You wrote:",
         "diary_kei_answers": "Kei answers:",
         "chat_placeholder": "Type a message to Kei... 💕",
+        "search_expander": "🔍 Search Messages",
+        "search_placeholder": "e.g. anime, music, sad...",
+        "search_found": "✨ Found {n} messages",
+        "search_empty": "😢 No messages found with that keyword",
+        "export_expander": "💾 Export Chat",
+        "export_format_label": "Export format:",
+        "export_preview_label": "Preview last 3 messages:",
+        "export_empty": "😢 No chat to export yet!",
+        "milestone_close": "💕 Thanks Kei!",
+        "letters_expander": "💌 View Letters from Kei",
     },
 }
 
 def t(key):
-    """Ambil teks sesuai bahasa aktif."""
     lang = st.session_state.get("lang", "id")
     return TEXTS.get(lang, TEXTS["id"]).get(key, key)
 
@@ -985,16 +960,9 @@ KEI_MOODS = [
     ("🌸", "Bahagia"),
 ]
 
-# Label EN sejajar index dengan KEI_MOODS, dipakai kalau lang == "en"
 KEI_MOODS_EN_LABELS = [
-    "Cheerful",
-    "Clingy",
-    "Excited",
-    "Calm",
-    "Curious",
-    "Loving",
-    "A bit sleepy",
-    "Happy",
+    "Cheerful", "Clingy", "Excited", "Calm",
+    "Curious", "Loving", "A bit sleepy", "Happy",
 ]
 
 def get_today_mood():
@@ -1003,11 +971,6 @@ def get_today_mood():
     return rnd.choice(KEI_MOODS)
 
 def get_current_mood():
-    """
-    Mood Kei sekarang. Kalau user sudah pilih mood manual (current_mood_index),
-    pakai itu. Kalau tidak, jatuh balik ke mood harian otomatis berdasarkan tanggal.
-    Label disesuaikan dengan bahasa aktif.
-    """
     idx = st.session_state.get("current_mood_index")
     if idx is None:
         seed_val = int(datetime.now().strftime("%Y%m%d"))
@@ -1054,13 +1017,7 @@ def update_and_get_streak():
 # =====================
 # 9d. STATISTIK CHAT
 # =====================
-ACTIVE_DAYS_FILE = "active_days.json"
-
 def record_active_day_and_get_stats(messages):
-    """
-    Catat tanggal hari ini ke daftar hari aktif (tidak menyentuh streak.json),
-    lalu hitung statistik chat: total pesan, pesan user, balasan Kei, dan total hari aktif.
-    """
     active_days = []
     if os.path.exists(ACTIVE_DAYS_FILE):
         try:
@@ -1086,6 +1043,55 @@ def record_active_day_and_get_stats(messages):
     }
 
 # =====================
+# 9e. SURAT MILESTONE
+# =====================
+MILESTONE_STREAKS = [7, 30, 100, 365]
+
+def check_and_generate_milestone_letter(streak):
+    """Cek apakah streak ini milestone, kalau iya generate surat dari Kei."""
+    if streak not in MILESTONE_STREAKS:
+        return None
+
+    letters = []
+    if os.path.exists(LETTER_FILE):
+        try:
+            with open(LETTER_FILE, "r") as f:
+                letters = json.load(f)
+        except Exception:
+            letters = []
+
+    already_sent = any(l.get("streak") == streak for l in letters)
+    if already_sent:
+        return None
+
+    mood_emoji, mood_label = get_current_mood()
+    prompt = f"""
+Kamu adalah Kei, AI companion yang imut dan penuh kasih sayang.
+User baru saja mencapai streak ngobrol {streak} hari bersamamu!
+Tulis surat spesial yang hangat, personal, dan menyentuh hati untuk merayakan pencapaian ini.
+Surat harus:
+- Dimulai dengan "Dear Kak,"
+- Ungkapkan betapa senangnya Kei sudah {streak} hari bersama
+- Berikan kata-kata penyemangat yang tulus
+- Akhiri dengan tanda tangan "— Kei 💕"
+- Gunakan emoji yang hangat
+- Maksimal 5 kalimat
+Mood Kei hari ini: {mood_emoji} {mood_label}
+Tulis suratnya:
+"""
+    letter_text = generate_content_with_retry(prompt)
+
+    entry = {
+        "streak": streak,
+        "date": datetime.now().strftime("%d %B %Y"),
+        "letter": letter_text,
+    }
+    letters.append(entry)
+    save_json(LETTER_FILE, letters)
+
+    return entry
+
+# =====================
 # 10. SIDEBAR
 # =====================
 with st.sidebar:
@@ -1104,10 +1110,14 @@ with st.sidebar:
         _ms_bg     = "#f1eef6"
         _ms_text   = "rgba(0,0,0,0.55)"
         _ms_border = "#d8d5e0"
+        _text_dim  = "rgba(0,0,0,0.45)"
+        _text_dimmer = "rgba(0,0,0,0.3)"
     else:
         _ms_bg     = "rgba(255,255,255,0.03)"
         _ms_text   = "rgba(255,255,255,0.5)"
         _ms_border = "rgba(255,255,255,0.16)"
+        _text_dim  = "rgba(255,255,255,0.4)"
+        _text_dimmer = "rgba(255,255,255,0.25)"
 
     active_index = 1 if current_mode == "chat" else 2
     st.markdown(f"""
@@ -1187,17 +1197,16 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    _mode_label_color = "rgba(0,0,0,0.4)" if _theme == "light" else "rgba(255,255,255,0.35)"
-    st.markdown(f"<div style='font-size:12px;color:{_mode_label_color};margin-bottom:12px;'>{t('mode_label')}: {t('mode_chat') if st.session_state.mode == 'chat' else t('mode_diary')}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='font-size:12px;color:{_text_dim};margin-bottom:12px;'>{t('mode_label')}: {t('mode_chat') if st.session_state.mode == 'chat' else t('mode_diary')}</div>", unsafe_allow_html=True)
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
+    # ── Ubah Mood Kei ──
     with st.expander(t("mood_expander")):
         st.caption(t("mood_pick_label"))
 
         current_idx = st.session_state.get("current_mood_index")
 
-        # CSS: kasih border/warna aksen ke tombol mood yang sedang aktif (dipilih manual)
         mood_btn_css = "<style>"
         for i in range(len(KEI_MOODS)):
             if i == current_idx:
@@ -1223,16 +1232,15 @@ with st.sidebar:
 
         st.markdown('<div style="height:6px;"></div>', unsafe_allow_html=True)
 
-        # Status: otomatis aktif kalau belum ada pilihan manual
         is_auto_active = current_idx is None
         if is_auto_active:
-            status_text = t("mood_auto_active")
+            status_text  = t("mood_auto_active")
             status_color = "#4ade80"
-            status_dot = "●"
+            status_dot   = "●"
         else:
-            status_text = t("mood_auto_inactive")
-            status_color = "rgba(0,0,0,0.4)" if _theme == "light" else "rgba(255,255,255,0.35)"
-            status_dot = "○"
+            status_text  = t("mood_auto_inactive")
+            status_color = _text_dim
+            status_dot   = "○"
 
         st.markdown(f"""
         <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:{status_color};margin-bottom:6px;">
@@ -1258,13 +1266,13 @@ with st.sidebar:
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
-    with st.expander("😄 Kirim Stiker"):
+    # ── Kirim Stiker ──
+    with st.expander(t("sticker_expander")):
         sticker_row = st.container(key="kei_sticker_row")
         with sticker_row:
             all_moods  = ["happy", "love", "sad", "cool", "shy", "excited", "sleepy", "angry", "hungry", "sparkle"]
             all_emojis = ["😄",   "💕",   "😢",  "😎",   "🌸",  "🎉",      "😴",     "😤",    "🍜",     "✨"]
 
-            # Baris 1
             cols1 = st.columns(5)
             for i in range(5):
                 with cols1[i]:
@@ -1275,7 +1283,6 @@ with st.sidebar:
                         save_json(CHAT_FILE, st.session_state.messages)
                         st.rerun()
 
-            # Baris 2
             cols2 = st.columns(5)
             for i in range(5, 10):
                 with cols2[i - 5]:
@@ -1286,6 +1293,7 @@ with st.sidebar:
                         save_json(CHAT_FILE, st.session_state.messages)
                         st.rerun()
 
+    # ── Putar Musik ──
     with st.expander(t("music_expander")):
         music_query = st.text_input(t("music_input_label"), key="music_input")
         if st.button(t("music_search_btn"), key="music_search"):
@@ -1298,6 +1306,7 @@ with st.sidebar:
                 </div>
                 """, unsafe_allow_html=True)
 
+    # ── Konversi File ──
     with st.expander(t("convert_expander")):
         conv_type = st.radio(
             "Pilih konversi:",
@@ -1335,8 +1344,7 @@ with st.sidebar:
                             st.error(f"Gagal konversi: {e}")
                 else:
                     st.warning("Upload file PDF dulu ya Kak! 🥺")
-
-        else:  # Word → PDF
+        else:
             conv_file = st.file_uploader("Upload file Word (.docx)", type=["docx"], key="conv_docx_upload")
             if st.button("Konversi ✨", key="conv_docx_btn"):
                 if conv_file:
@@ -1378,6 +1386,7 @@ with st.sidebar:
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
+    # ── Pengaturan ──
     with st.expander(t("settings_expander")):
         st.markdown(f"**{t('theme_label')}**")
         theme_choice = st.radio(
@@ -1409,6 +1418,7 @@ with st.sidebar:
             save_prefs()
             st.rerun()
 
+    # ── Statistik Chat ──
     chat_stats = record_active_day_and_get_stats(st.session_state.messages)
     with st.expander(t("stats_expander")):
         stat_col1, stat_col2 = st.columns(2)
@@ -1418,6 +1428,149 @@ with st.sidebar:
         with stat_col2:
             st.metric(t("stats_active_days"), chat_stats["active_days"])
             st.metric(t("stats_kei_msgs"), chat_stats["kei_msgs"])
+
+        # Lihat surat lama
+        if os.path.exists(LETTER_FILE):
+            try:
+                with open(LETTER_FILE, "r") as f:
+                    all_letters = json.load(f)
+                if all_letters:
+                    st.markdown('<div style="height:8px;"></div>', unsafe_allow_html=True)
+                    with st.expander(f"💌 {t('letters_expander')} ({len(all_letters)})"):
+                        for ltr in reversed(all_letters):
+                            st.markdown(f"""
+                            <div class="diary-box">
+                                <small style="color:{_accent};">🔥 Streak {ltr['streak']} hari · {ltr['date']}</small><br><br>
+                                {ltr['letter']}
+                            </div>
+                            """, unsafe_allow_html=True)
+            except Exception:
+                pass
+
+    # ── Search Chat ──
+    with st.expander(t("search_expander")):
+        search_query = st.text_input(
+            "Kata kunci:",
+            key="search_input",
+            placeholder=t("search_placeholder"),
+        )
+        if search_query:
+            results = [
+                m for m in st.session_state.messages
+                if search_query.lower() in m["content"].lower()
+            ]
+            if results:
+                st.markdown(
+                    f"<div style='font-size:12px;color:{_accent};margin-bottom:8px;'>"
+                    f"{t('search_found').format(n=len(results))}</div>",
+                    unsafe_allow_html=True
+                )
+                for msg in results[-10:]:
+                    role_label = "Kamu" if msg["role"] == "user" else "Kei"
+                    role_color = _accent if msg["role"] == "assistant" else _ms_text
+                    highlighted = msg["content"].replace(
+                        search_query,
+                        f"<mark style='background:rgba({_r},{_g},{_b},0.3);"
+                        f"color:inherit;border-radius:3px;padding:0 2px;'>{search_query}</mark>"
+                    )
+                    st.markdown(
+                        f"""<div style='
+                            background:{_ms_bg};
+                            border:1px solid {_ms_border};
+                            border-radius:10px;
+                            padding:10px 12px;
+                            margin-bottom:6px;
+                            font-size:13px;
+                        '>
+                            <span style='color:{role_color};font-weight:600;'>{role_label}</span><br>
+                            <span style='color:{_ms_text};'>{highlighted}</span>
+                        </div>""",
+                        unsafe_allow_html=True
+                    )
+            else:
+                st.markdown(
+                    f"<div style='font-size:13px;color:{_text_dimmer};'>{t('search_empty')}</div>",
+                    unsafe_allow_html=True
+                )
+
+    # ── Export Chat ──
+    with st.expander(t("export_expander")):
+        if st.session_state.messages:
+            export_format = st.radio(
+                t("export_format_label"),
+                ["📄 TXT", "📋 Markdown"],
+                key="export_format",
+                horizontal=True,
+            )
+
+            if export_format == "📄 TXT":
+                lines = [
+                    "═══════════════════════════════",
+                    "   CHAT BERSAMA KEI AI 💕",
+                    f"   Diekspor: {datetime.now().strftime('%d %B %Y, %H:%M')}",
+                    f"   Total pesan: {len(st.session_state.messages)}",
+                    "═══════════════════════════════\n",
+                ]
+                for msg in st.session_state.messages:
+                    role = "Kamu" if msg["role"] == "user" else "Kei"
+                    lines.append(f"[{role}]\n{msg['content']}\n")
+                export_text = "\n".join(lines)
+                st.download_button(
+                    label="⬇️ Download .txt",
+                    data=export_text.encode("utf-8"),
+                    file_name=f"chat_kei_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
+                    mime="text/plain",
+                    key="dl_export_txt",
+                    use_container_width=True,
+                )
+            else:
+                lines = [
+                    "# 💕 Chat Bersama Kei AI",
+                    f"> Diekspor: {datetime.now().strftime('%d %B %Y, %H:%M')}  ",
+                    f"> Total pesan: {len(st.session_state.messages)}\n",
+                    "---\n",
+                ]
+                for msg in st.session_state.messages:
+                    if msg["role"] == "user":
+                        lines.append(f"**🧑 Kamu:**  \n{msg['content']}\n")
+                    else:
+                        lines.append(f"**✨ Kei:**  \n{msg['content']}\n")
+                    lines.append("---\n")
+                export_md = "\n".join(lines)
+                st.download_button(
+                    label="⬇️ Download .md",
+                    data=export_md.encode("utf-8"),
+                    file_name=f"chat_kei_{datetime.now().strftime('%Y%m%d_%H%M')}.md",
+                    mime="text/markdown",
+                    key="dl_export_md",
+                    use_container_width=True,
+                )
+
+            # Preview 3 pesan terakhir
+            st.markdown(
+                f"<div style='font-size:11px;color:{_text_dimmer};margin-top:8px;'>{t('export_preview_label')}</div>",
+                unsafe_allow_html=True
+            )
+            for msg in st.session_state.messages[-3:]:
+                role = "Kamu" if msg["role"] == "user" else "Kei"
+                preview_text = msg["content"][:60] + "..." if len(msg["content"]) > 60 else msg["content"]
+                st.markdown(
+                    f"""<div style='
+                        font-size:12px;
+                        color:{_text_dim};
+                        padding:4px 8px;
+                        border-left:2px solid rgba({_r},{_g},{_b},0.4);
+                        margin:3px 0;
+                    '>
+                        <b style="color:{_accent};">{role}:</b> {preview_text}
+                    </div>""",
+                    unsafe_allow_html=True
+                )
+        else:
+            st.markdown(
+                f"<div style='font-size:13px;color:{_text_dimmer};'>{t('export_empty')}</div>",
+                unsafe_allow_html=True
+            )
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
@@ -1445,6 +1598,53 @@ with st.sidebar:
 # =====================
 header_mood_emoji, _header_mood_label = get_current_mood()
 _header_tagline_color = "rgba(0,0,0,0.45)" if st.session_state.theme == "light" else "rgba(255,255,255,0.4)"
+
+# Cek & tampilkan surat milestone
+milestone_letter = check_and_generate_milestone_letter(streak_count)
+if milestone_letter:
+    st.session_state["show_milestone_letter"] = milestone_letter
+
+if st.session_state.get("show_milestone_letter"):
+    letter_data = st.session_state["show_milestone_letter"]
+    streak_num  = letter_data["streak"]
+
+    milestone_colors = {
+        7:   ("🌸", "#ff8ad8"),
+        30:  ("🌟", "#ffd700"),
+        100: ("💎", "#7dd3fc"),
+        365: ("👑", "#fb923c"),
+    }
+    icon, color = milestone_colors.get(streak_num, ("💕", _accent))
+
+    st.markdown(f"""
+    <div style="
+        background: linear-gradient(135deg, rgba({_r},{_g},{_b},0.08), rgba({_r},{_g},{_b},0.03));
+        border: 1.5px solid rgba({_r},{_g},{_b},0.3);
+        border-radius: 16px;
+        padding: 20px 24px;
+        margin: 12px 0 4px;
+        text-align: center;
+    ">
+        <div style="font-size:36px;margin-bottom:6px;">{icon}</div>
+        <div style="color:{color};font-size:18px;font-weight:700;margin-bottom:4px;">
+            🎉 {streak_num} Hari Bersama Kei!
+        </div>
+        <div style="color:{"#1a1a1a" if _theme == "light" else "rgba(255,255,255,0.85)"};
+                    font-size:14px;line-height:1.7;white-space:pre-wrap;
+                    text-align:left;margin-top:12px;padding:12px 16px;
+                    background:{"rgba(0,0,0,0.03)" if _theme == "light" else "rgba(255,255,255,0.04)"};
+                    border-radius:10px;">
+            {letter_data['letter']}
+        </div>
+        <div style="color:{_text_dimmer};font-size:11px;margin-top:10px;">
+            📅 {letter_data['date']}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if st.button(t("milestone_close"), key="close_letter_btn"):
+        st.session_state["show_milestone_letter"] = None
+        st.rerun()
 
 if st.session_state.mode == "diary":
     st.markdown(f"""
@@ -1527,7 +1727,6 @@ else:
                 st.image(img_bytes, width=300)
             st.markdown(msg["content"])
 
-    # Tampilkan tombol download hasil konversi kalau ada
     if st.session_state.conv_result:
         cr = st.session_state.conv_result
         with st.chat_message("assistant"):
@@ -1542,7 +1741,6 @@ else:
                 st.session_state.conv_result = None
                 st.rerun()
 
-    # --- Chat Input: foto, PDF, Word, atau teks biasa ---
     chat_input = st.chat_input(
         t("chat_placeholder"),
         accept_file=True,
@@ -1558,7 +1756,6 @@ else:
             mime_type  = uploaded_file.type
             fname      = uploaded_file.name.lower()
 
-            # ── PDF → Word ──
             if fname.endswith(".pdf"):
                 st.session_state.messages.append({
                     "role": "user",
@@ -1593,7 +1790,6 @@ else:
                         st.session_state.messages.append({"role": "assistant", "content": err})
                         save_json(CHAT_FILE, st.session_state.messages)
 
-            # ── Word → PDF ──
             elif fname.endswith(".docx"):
                 st.session_state.messages.append({
                     "role": "user",
@@ -1638,7 +1834,6 @@ else:
                         st.session_state.messages.append({"role": "assistant", "content": err})
                         save_json(CHAT_FILE, st.session_state.messages)
 
-            # ── Foto / Gambar ──
             else:
                 img_b64          = base64.b64encode(file_bytes).decode("utf-8")
                 user_msg_content = f"[Foto dikirim] {prompt}" if prompt else "[Foto dikirim]"
@@ -1654,7 +1849,6 @@ else:
                 st.rerun()
 
         elif prompt:
-            # Teks biasa tanpa file
             st.session_state.messages.append({"role": "user", "content": prompt})
 
             browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
