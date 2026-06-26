@@ -446,45 +446,29 @@ if not st.session_state.logged_in:
     st.markdown("""
     <style>
     .main .block-container {
-        padding-top: 3rem !important;
-        padding-bottom: 1rem !important;
-        max-width: 420px !important;
-        margin: 0 auto !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
     }
-    div[data-testid="stForm"] {
-        background: rgba(255,255,255,0.03) !important;
-        border: 1px solid rgba(255,255,255,0.08) !important;
-        border-radius: 20px !important;
-        padding: 28px 24px !important;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
-        width: 100% !important;
-    }
-    /* Paksa SEMUA stTextInput wrapper lebar penuh dan tinggi sama */
-    div[data-testid="stTextInput"] {
-        width: 100% !important;
-        box-sizing: border-box !important;
-        margin-bottom: 10px !important;
-    }
-    div[data-testid="stTextInput"] > div {
+    [data-testid="stTextInput"] label { display: none !important; }
+    [data-testid="stTextInput"] > div {
         background: rgba(255,255,255,0.05) !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
         border-radius: 12px !important;
         height: 48px !important;
-        min-height: 48px !important;
-        max-height: 48px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
         display: flex !important;
-        flex-direction: row !important;
         align-items: center !important;
         overflow: hidden !important;
         padding: 0 !important;
+        margin-bottom: 10px !important;
     }
-    div[data-testid="stTextInput"] > div:focus-within {
+    [data-testid="stTextInput"] > div:focus-within {
         border-color: rgba(255,138,216,0.55) !important;
         background: rgba(255,138,216,0.05) !important;
     }
-    div[data-testid="stTextInput"] input {
+    [data-testid="stTextInput"] input {
         background: transparent !important;
         color: #fff !important;
         font-size: 14px !important;
@@ -494,20 +478,10 @@ if not st.session_state.logged_in:
         padding: 0 8px 0 16px !important;
         flex: 1 1 auto !important;
         min-width: 0 !important;
-        width: 0 !important;          /* flex item — grows via flex:1 */
+        width: 0 !important;
     }
-    div[data-testid="stTextInput"] input::placeholder {
-        color: rgba(255,255,255,0.28) !important;
-        font-size: 14px !important;
-    }
-    /* Sembunyikan tooltip "Press Enter to submit form" bawaan browser */
-    div[data-testid="stTextInput"] input[title] {
-        pointer-events: auto !important;
-    }
-    div[data-testid="stTextInput"] input::-webkit-input-placeholder { color: rgba(255,255,255,0.28) !important; }
-    div[data-testid="stTextInput"] label { display: none !important; }
-    /* Tombol mata — lebar tetap 38px, tidak mempengaruhi lebar input */
-    div[data-testid="stTextInput"] button {
+    [data-testid="stTextInput"] input::placeholder { color: rgba(255,255,255,0.28) !important; }
+    [data-testid="stTextInput"] button {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -520,12 +494,10 @@ if not st.session_state.logged_in:
         align-items: center !important;
         justify-content: center !important;
     }
-    div[data-testid="stTextInput"] button svg { width: 14px !important; height: 14px !important; }
-    div[data-testid="stTextInput"] button:hover { color: #ff8ad8 !important; }
-    /* Tombol Masuk PUTIH */
-    div[data-testid="stForm"] div[data-testid="stButton"] > button {
+    [data-testid="stTextInput"] button:hover { color: #ff8ad8 !important; }
+    [data-testid="stTextInput"] button svg { width: 14px !important; height: 14px !important; }
+    [data-testid="stButton"] > button {
         background: #ffffff !important;
-        background-color: #ffffff !important;
         color: #111111 !important;
         border: none !important;
         border-radius: 12px !important;
@@ -536,80 +508,58 @@ if not st.session_state.logged_in:
         margin-top: 8px !important;
         box-shadow: none !important;
     }
-    div[data-testid="stForm"] div[data-testid="stButton"] > button:hover {
-        background: #f0f0f0 !important;
-        background-color: #f0f0f0 !important;
-        color: #111 !important;
-    }
-    div[data-testid="stAlert"] {
+    [data-testid="stButton"] > button:hover { background: #f0f0f0 !important; color: #111 !important; }
+    [data-testid="stAlert"] {
         background: rgba(255,70,70,0.08) !important;
         border: 1px solid rgba(255,70,70,0.2) !important;
         border-radius: 10px !important;
         color: #ff6b6b !important;
         font-size: 13px !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div style="text-align:center; margin-bottom:28px;">
-        <div style="color:#ff8ad8; font-size:42px; font-weight:700; letter-spacing:-1px; line-height:1.1; margin-bottom:8px;">✦ Kei AI</div>
-        <div style="color:rgba(255,255,255,0.38); font-size:14px;">Teman AI Pintar Kamu</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # SOLUSI PERMANEN: tanpa st.form, pakai st.text_input + st.button biasa
-    # Browser tidak akan pernah inject "Press Enter to submit form" karena tidak ada <form> HTML
-    username = st.text_input(
-        "Username",
-        placeholder="Username",
-        key="login_username",
-        label_visibility="collapsed"
-    )
-    password = st.text_input(
-        "Password",
-        placeholder="Password",
-        type="password",
-        key="login_password",
-        label_visibility="collapsed"
-    )
-    # Styling tombol Masuk agar sama seperti sebelumnya
-    st.markdown("""
-    <style>
-    div[data-testid="stButton"] > button {
-        background: #ffffff !important;
-        color: #111111 !important;
-        border: none !important;
-        border-radius: 12px !important;
-        font-size: 15px !important;
-        font-weight: 600 !important;
-        height: 48px !important;
-        width: 100% !important;
         margin-top: 8px !important;
     }
-    div[data-testid="stButton"] > button:hover {
-        background: #f0f0f0 !important;
-        color: #111 !important;
-    }
+    /* Hilangkan padding kolom */
+    [data-testid="column"] { padding: 0 !important; }
     </style>
     """, unsafe_allow_html=True)
-    submitted = st.button("Masuk", use_container_width=True, key="login_btn")
 
-    if submitted:
-        if not username or not password:
-            st.error("Username dan password tidak boleh kosong.")
-        elif username == "ryuu" and password == "12345":
-            st.session_state.logged_in = True
-            st.session_state.messages = load_json(CHAT_FILE)
-            st.rerun()
-        else:
-            st.error("Username atau password salah.")
+    # Centering pakai columns: kiri flex, tengah 340px equiv, kanan flex
+    _, col, _ = st.columns([1, 1.1, 1])
+    with col:
+        st.markdown("""
+        <div style="padding-top:60px; text-align:center; margin-bottom:24px;">
+            <div style="color:#ff8ad8; font-size:42px; font-weight:700; letter-spacing:-1px; margin-bottom:8px;">✦ Kei AI</div>
+            <div style="color:rgba(255,255,255,0.38); font-size:14px;">Teman AI Pintar Kamu</div>
+        </div>
+        <div style="
+            background:rgba(255,255,255,0.03);
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:20px;
+            padding:28px 24px;
+            box-shadow:0 20px 60px rgba(0,0,0,0.5);
+        ">
+        """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <div style="text-align:center; margin-top:20px; color:rgba(255,255,255,0.18); font-size:12px;">
-        Kei AI — Your AI Companion ✦
-    </div>
-    """, unsafe_allow_html=True)
+        username = st.text_input("Username", placeholder="Username", key="login_username", label_visibility="collapsed")
+        password = st.text_input("Password", placeholder="Password", type="password", key="login_password", label_visibility="collapsed")
+        submitted = st.button("Masuk", use_container_width=True, key="login_btn")
+
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        if submitted:
+            if not username or not password:
+                st.error("Username dan password tidak boleh kosong.")
+            elif username == "ryuu" and password == "12345":
+                st.session_state.logged_in = True
+                st.session_state.messages = load_json(CHAT_FILE)
+                st.rerun()
+            else:
+                st.error("Username atau password salah.")
+
+        st.markdown('''
+        <div style="text-align:center;margin-top:20px;color:rgba(255,255,255,0.18);font-size:12px;">
+            Kei AI — Your AI Companion ✦
+        </div>''', unsafe_allow_html=True)
+
     st.stop()
 
 # =====================
