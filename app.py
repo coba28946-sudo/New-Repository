@@ -901,11 +901,11 @@ else:
                 st.image(img_bytes, width=300)
             st.markdown(msg["content"])
 
-    # --- Chat Input dengan tombol + untuk foto ---
+    # --- Chat Input: foto, PDF, Word, atau teks biasa ---
     chat_input = st.chat_input(
-        "Ketik pesan ke Kei...",
+        "Ketik pesan atau kirim foto/PDF/Word ke Kei...",
         accept_file=True,
-        file_type=["jpg", "jpeg", "png", "webp"],
+        file_type=["jpg", "jpeg", "png", "webp", "pdf", "docx"],
     )
 
     if chat_input:
@@ -913,27 +913,117 @@ else:
         uploaded_file = chat_input["files"][0] if chat_input["files"] else None
 
         if uploaded_file:
-            # Ada foto (dengan atau tanpa teks)
-            image_bytes = uploaded_file.read()
-            mime_type   = uploaded_file.type
-            img_b64     = base64.b64encode(image_bytes).decode("utf-8")
+            file_bytes = uploaded_file.read()
+            mime_type  = uploaded_file.type
+            fname      = uploaded_file.name.lower()
 
-            user_msg_content = f"[Foto dikirim] {prompt}" if prompt else "[Foto dikirim]"
-            st.session_state.messages.append({
-                "role":      "user",
-                "content":   user_msg_content,
-                "image_b64": img_b64,
-            })
+            # ── PDF → Word ──
+            if fname.endswith(".pdf"):
+                st.session_state.messages.append({
+                    "role": "user",
+                    "content": f"📄 Mengkonversi **{uploaded_file.name}** dari PDF ke Word...",
+                })
+                with st.spinner("Kei lagi konversi PDF ke Word... 🥺✨"):
+                    try:
+                        import tempfile
+                        from pdf2docx import Converter
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+                            tmp.write(file_bytes)
+                            tmp_path = tmp.name
+                        out_path = tmp_path.replace(".pdf", ".docx")
+                        cv = Converter(tmp_path)
+                        cv.convert(out_path, start=0, end=None)
+                        cv.close()
+                        with open(out_path, "rb") as f:
+                            docx_bytes = f.read()
+                        os.remove(tmp_path)
+                        os.remove(out_path)
+                        reply_text = f"Yeay berhasil Kak! ✨ File **{uploaded_file.name}** sudah Kei konversi ke Word~ (｡♥‿♥｡) Langsung download ya!"
+                        st.session_state.messages.append({"role": "assistant", "content": reply_text})
+                        save_json(CHAT_FILE, st.session_state.messages)
+                        # Tampilkan tombol download langsung di chat
+                        with st.chat_message("assistant"):
+                            st.download_button(
+                                "⬇️ Download .docx",
+                                data=docx_bytes,
+                                file_name=uploaded_file.name.replace(".pdf", ".docx"),
+                                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                key="dl_docx_chat",
+                            )
+                        st.rerun()
+                    except Exception as e:
+                        err = f"Aduh Kak, Kei gagal konversinya... (｡>﹏<｡) Error: {e}"
+                        st.session_state.messages.append({"role": "assistant", "content": err})
+                        save_json(CHAT_FILE, st.session_state.messages)
+                        st.rerun()
 
-            with st.spinner("Kei lagi lihat fotonya... 👀✨"):
-                reply = analyze_image_with_kei(image_bytes, mime_type, prompt)
+            # ── Word → PDF ──
+            elif fname.endswith(".docx"):
+                st.session_state.messages.append({
+                    "role": "user",
+                    "content": f"📝 Mengkonversi **{uploaded_file.name}** dari Word ke PDF...",
+                })
+                with st.spinner("Kei lagi konversi Word ke PDF... 🥺✨"):
+                    try:
+                        import tempfile, subprocess
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
+                            tmp.write(file_bytes)
+                            tmp_path = tmp.name
+                        out_dir = tempfile.mkdtemp()
+                        result = subprocess.run(
+                            ["libreoffice", "--headless", "--convert-to", "pdf",
+                             "--outdir", out_dir, tmp_path],
+                            capture_output=True, text=True, timeout=60
+                        )
+                        base_name = os.path.splitext(os.path.basename(tmp_path))[0]
+                        out_pdf   = os.path.join(out_dir, base_name + ".pdf")
+                        if os.path.exists(out_pdf):
+                            with open(out_pdf, "rb") as f:
+                                pdf_bytes = f.read()
+                            os.remove(tmp_path)
+                            os.remove(out_pdf)
+                            reply_text = f"Yeay berhasil Kak! ✨ File **{uploaded_file.name}** sudah Kei konversi ke PDF~ (｡♥‿♥｡) Langsung download ya!"
+                            st.session_state.messages.append({"role": "assistant", "content": reply_text})
+                            save_json(CHAT_FILE, st.session_state.messages)
+                            with st.chat_message("assistant"):
+                                st.download_button(
+                                    "⬇️ Download .pdf",
+                                    data=pdf_bytes,
+                                    file_name=uploaded_file.name.replace(".docx", ".pdf"),
+                                    mime="application/pdf",
+                                    key="dl_pdf_chat",
+                                )
+                            st.rerun()
+                        else:
+                            raise Exception(result.stderr)
+                    except FileNotFoundError:
+                        err = "Aduh Kak, LibreOffice belum terinstall di server... (｡>﹏<｡) Pastikan `packages.txt` sudah ada ya!"
+                        st.session_state.messages.append({"role": "assistant", "content": err})
+                        save_json(CHAT_FILE, st.session_state.messages)
+                        st.rerun()
+                    except Exception as e:
+                        err = f"Aduh Kak, Kei gagal konversinya... (｡>﹏<｡) Error: {e}"
+                        st.session_state.messages.append({"role": "assistant", "content": err})
+                        save_json(CHAT_FILE, st.session_state.messages)
+                        st.rerun()
 
-            st.session_state.messages.append({"role": "assistant", "content": reply})
-            save_json(CHAT_FILE, st.session_state.messages)
-            st.rerun()
+            # ── Foto / Gambar ──
+            else:
+                img_b64          = base64.b64encode(file_bytes).decode("utf-8")
+                user_msg_content = f"[Foto dikirim] {prompt}" if prompt else "[Foto dikirim]"
+                st.session_state.messages.append({
+                    "role":      "user",
+                    "content":   user_msg_content,
+                    "image_b64": img_b64,
+                })
+                with st.spinner("Kei lagi lihat fotonya... 👀✨"):
+                    reply = analyze_image_with_kei(file_bytes, mime_type, prompt)
+                st.session_state.messages.append({"role": "assistant", "content": reply})
+                save_json(CHAT_FILE, st.session_state.messages)
+                st.rerun()
 
         elif prompt:
-            # Teks biasa tanpa foto
+            # Teks biasa tanpa file
             st.session_state.messages.append({"role": "user", "content": prompt})
 
             browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
