@@ -199,9 +199,17 @@ div[data-testid="stAlert"] {
     margin: 8px auto 0 !important;
 }
 
-/* Hapus gap antar kolom dan padding kolom (dipakai layout login) */
-[data-testid="column"] { padding: 0 !important; }
-[data-testid="stHorizontalBlock"] { gap: 0 !important; }
+/* Sembunyikan popup autocomplete/autofill bawaan browser pada input
+   login (ini yang muncul sebagai kotak abu kecil di bawah field saat
+   diklik — bukan input dobel, cuma saran isian dari riwayat browser) */
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+}
+datalist {
+    display: none !important;
+}
 
 /* ===== LAYOUT UTAMA ===== */
 .kei-layout {
@@ -512,6 +520,26 @@ if not st.session_state.logged_in:
         password = st.text_input("Password", placeholder="Password", type="password",
                                   key="login_password", label_visibility="collapsed")
         submitted = st.button("Masuk", use_container_width=True, key="login_btn")
+
+        # Matikan autocomplete/riwayat isian browser pada field username &
+        # password — ini yang menyebabkan kotak saran kecil nongol di
+        # bawah input saat diklik. Dipasang lewat components.html (bukan
+        # st.markdown) karena <script> di st.markdown tidak reliable
+        # dieksekusi, sementara components.html memang dirancang untuk itu.
+        st.components.v1.html("""
+        <script>
+        (function setNoAutocomplete() {
+            const doc = window.parent.document;
+            const inputs = doc.querySelectorAll('[data-testid="stTextInput"] input');
+            inputs.forEach(function(el) {
+                el.setAttribute('autocomplete', 'off');
+                el.setAttribute('autocorrect', 'off');
+                el.setAttribute('autocapitalize', 'off');
+                el.setAttribute('spellcheck', 'false');
+            });
+        })();
+        </script>
+        """, height=0, width=0)
 
         if submitted:
             if not username or not password:
