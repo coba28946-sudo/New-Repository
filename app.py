@@ -337,6 +337,11 @@ div[data-testid="stTextArea"] label p {
     font-size: 16px !important;
 }
 
+/* Sembunyikan "Press Enter to apply" hanya di login */
+small[data-testid="InputInstructions"] {
+    display: none !important;
+}
+
 @media (max-width: 768px) {
     .kei-sidebar { width: 220px; min-width: 220px; }
     .kei-main { padding-left: 46px; }
@@ -397,14 +402,15 @@ if not st.session_state.logged_in:
 
         st.components.v1.html("""
         <script>
-        (function setNoAutocomplete() {
+        (function fixInputs() {
             const doc = window.parent.document;
             const inputs = doc.querySelectorAll('[data-testid="stTextInput"] input');
             inputs.forEach(function(el) {
-                el.setAttribute('autocomplete', 'off');
-                el.setAttribute('autocorrect', 'off');
-                el.setAttribute('autocapitalize', 'off');
-                el.setAttribute('spellcheck', 'false');
+                if (el.type === 'password') {
+                    el.setAttribute('autocomplete', 'current-password');
+                } else {
+                    el.setAttribute('autocomplete', 'username');
+                }
             });
         })();
         </script>
