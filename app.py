@@ -39,6 +39,39 @@ footer { visibility: hidden; }
 header[data-testid="stHeader"] { background: transparent !important; box-shadow: none !important; }
 .main .block-container { padding: 0 !important; max-width: 100% !important; }
 
+/* Hilangkan outline/box-shadow fokus bawaan browser & Streamlit di SEMUA
+   input, secara global, murni CSS (tanpa JS/MutationObserver). Ini cara
+   yang stabil — versi sebelumnya pakai JS untuk hal ini dan jadinya
+   malah tampil sebagai teks mentah karena <script> tercampur di satu
+   blok st.markdown dengan <style>, yang tidak reliable diparse. */
+*, *:focus, *:focus-visible, *:active {
+    outline: none !important;
+}
+input, input:focus, input:focus-visible, input:active,
+textarea, textarea:focus, textarea:focus-visible, textarea:active {
+    box-shadow: none !important;
+    outline: none !important;
+}
+[data-baseweb="input"],
+[data-baseweb="input"]:focus-within,
+[data-baseweb="base-input"],
+[data-baseweb="base-input"]:focus-within {
+    box-shadow: none !important;
+    outline: none !important;
+    border-color: rgba(255,255,255,0.1) !important;
+}
+[data-testid="stTextInput"] > div,
+[data-testid="stTextInput"] > div:hover,
+[data-testid="stTextInput"] > div:focus,
+[data-testid="stTextInput"] > div:focus-within,
+[data-testid="stTextInput"] > div:active,
+[data-testid="stTextInput"] > div > div,
+[data-testid="stTextInput"] > div > div:focus-within {
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
 /* ===== LOGIN ===== */
 .login-title {
     color: #ff8ad8;
@@ -104,15 +137,10 @@ div[data-testid="stTextInput"] input {
     padding: 0 8px 0 16px !important;
     flex: 1 !important;
     min-width: 0 !important;
-    /* Sembunyikan placeholder bawaan browser yg kadang muncul "Press Enter" */
 }
 div[data-testid="stTextInput"] input::placeholder {
     color: rgba(255,255,255,0.28) !important;
     font-size: 14px !important;
-}
-/* Hilangkan teks placeholder bawaan Streamlit form */
-div[data-testid="stTextInput"] input[aria-label] {
-    /* reset aria placeholder yg Streamlit inject */
 }
 
 /* Tombol mata show/hide password — lebar tetap 38px */
@@ -139,7 +167,8 @@ div[data-testid="stTextInput"] button svg {
 }
 
 /* Tombol Masuk - putih */
-div[data-testid="stForm"] div[data-testid="stButton"] > button {
+div[data-testid="stForm"] div[data-testid="stButton"] > button,
+[data-testid="stButton"] > button {
     width: 100% !important;
     background: white !important;
     color: #111 !important;
@@ -150,8 +179,14 @@ div[data-testid="stForm"] div[data-testid="stButton"] > button {
     height: 48px !important;
     margin-top: 8px !important;
     transition: opacity 0.15s !important;
+    box-shadow: none !important;
 }
-div[data-testid="stForm"] div[data-testid="stButton"] > button:hover { opacity: 0.88 !important; background: white !important; }
+div[data-testid="stForm"] div[data-testid="stButton"] > button:hover,
+[data-testid="stButton"] > button:hover {
+    opacity: 0.88 !important;
+    background: #f0f0f0 !important;
+    color: #111 !important;
+}
 
 /* Error box */
 div[data-testid="stAlert"] {
@@ -163,6 +198,10 @@ div[data-testid="stAlert"] {
     max-width: 340px !important;
     margin: 8px auto 0 !important;
 }
+
+/* Hapus gap antar kolom dan padding kolom (dipakai layout login) */
+[data-testid="column"] { padding: 0 !important; }
+[data-testid="stHorizontalBlock"] { gap: 0 !important; }
 
 /* ===== LAYOUT UTAMA ===== */
 .kei-layout {
@@ -443,134 +482,6 @@ def save_json(path, data):
 # 6. LOGIN
 # =====================
 if not st.session_state.logged_in:
-    st.markdown("""
-    <style>
-    /* Reset container */
-    .main .block-container {
-        padding: 0 !important;
-        max-width: 100% !important;
-    }
-
-    /* Hapus semua focus ring bawaan browser & Streamlit */
-    [data-testid="stTextInput"] *:focus,
-    [data-testid="stTextInput"] *:focus-visible,
-    [data-testid="stTextInput"] > div:focus-within > div {
-        outline: none !important;
-        box-shadow: none !important;
-    }
-    /* Kill border pink Streamlit di semua kondisi */
-    [data-testid="stTextInput"] > div,
-    [data-testid="stTextInput"] > div:hover,
-    [data-testid="stTextInput"] > div:focus,
-    [data-testid="stTextInput"] > div:focus-within,
-    [data-testid="stTextInput"] > div:active {
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        box-shadow: none !important;
-        outline: none !important;
-    }
-
-    /* Sembunyikan label */
-    [data-testid="stTextInput"] label { display: none !important; }
-
-    /* Input wrapper */
-    [data-testid="stTextInput"] > div {
-        background: rgba(255,255,255,0.05) !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        border-radius: 12px !important;
-        height: 48px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-        display: flex !important;
-        align-items: center !important;
-        overflow: hidden !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-    }
-    /* Hapus semua perubahan saat focus — border tetap sama */
-    [data-testid="stTextInput"] > div:focus-within {
-        border-color: rgba(255,255,255,0.1) !important;
-        background: rgba(255,255,255,0.05) !important;
-        box-shadow: none !important;
-        outline: none !important;
-    }
-    [data-testid="stTextInput"] input {
-        background: transparent !important;
-        color: #fff !important;
-        font-size: 14px !important;
-        height: 48px !important;
-        border: none !important;
-        box-shadow: none !important;
-        outline: none !important;
-        padding: 0 8px 0 16px !important;
-        flex: 1 1 auto !important;
-        min-width: 0 !important;
-        width: 0 !important;
-    }
-    [data-testid="stTextInput"] input:focus {
-        outline: none !important;
-        box-shadow: none !important;
-        border: none !important;
-    }
-    [data-testid="stTextInput"] input::placeholder { color: rgba(255,255,255,0.28) !important; }
-
-    /* Tombol mata */
-    [data-testid="stTextInput"] button {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        color: rgba(255,255,255,0.3) !important;
-        padding: 0 !important;
-        height: 48px !important;
-        width: 40px !important;
-        flex: 0 0 40px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-    [data-testid="stTextInput"] button:hover { color: #ff8ad8 !important; }
-    [data-testid="stTextInput"] button svg { width: 14px !important; height: 14px !important; }
-
-    /* Tombol Masuk */
-    [data-testid="stButton"] > button {
-        background: #ffffff !important;
-        color: #111111 !important;
-        border: none !important;
-        border-radius: 12px !important;
-        font-size: 15px !important;
-        font-weight: 600 !important;
-        height: 48px !important;
-        width: 100% !important;
-        margin-top: 8px !important;
-        box-shadow: none !important;
-    }
-    [data-testid="stButton"] > button:hover { background: #f0f0f0 !important; color: #111 !important; }
-
-    /* Error */
-    [data-testid="stAlert"] {
-        background: rgba(255,70,70,0.08) !important;
-        border: 1px solid rgba(255,70,70,0.2) !important;
-        border-radius: 10px !important;
-        color: #ff6b6b !important;
-        font-size: 13px !important;
-        margin-top: 8px !important;
-    }
-
-    /* Hapus gap antar kolom dan padding kolom */
-    [data-testid="column"] { padding: 0 !important; }
-    [data-testid="stHorizontalBlock"] { gap: 0 !important; }
-
-    /* Card via column styling */
-    [data-testid="column"]:nth-child(2) > div:first-child {
-        background: rgba(255,255,255,0.03) !important;
-        border: 1px solid rgba(255,255,255,0.08) !important;
-        border-radius: 20px !important;
-        padding: 28px 24px !important;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
-        margin-top: 8px !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
     # Header di luar columns (full width, centered)
     st.markdown("""
     <div style="padding-top:60px; text-align:center; margin-bottom:28px;">
@@ -579,63 +490,22 @@ if not st.session_state.logged_in:
     </div>
     """, unsafe_allow_html=True)
 
-    # JS: paksa hapus glow/shadow Streamlit saat focus
-    st.markdown("""
-    <style>
-    [data-baseweb="input"],
-    [data-baseweb="input"]:focus-within,
-    [data-baseweb="base-input"],
-    [data-baseweb="base-input"]:focus-within,
-    [data-testid="stTextInput"] > div,
-    [data-testid="stTextInput"] > div:focus-within,
-    [data-testid="stTextInput"] > div > div,
-    [data-testid="stTextInput"] > div > div:focus-within {
-        box-shadow: none !important;
-        outline: none !important;
-        border-color: rgba(255,255,255,0.1) !important;
-    }
-    input, input:focus, input:focus-visible, input:active {
-        box-shadow: none !important;
-        outline: none !important;
-    }
-    /* Override inline style yang di-inject Streamlit */
-    * { --focus-ring: none !important; }
-    </style>
-    <script>
-    (function() {
-        // Inject style tag langsung ke head — lebih kuat dari inline style
-        var style = document.createElement('style');
-        style.innerHTML = [
-            '* { outline: none !important; }',
-            'input, input:focus, input:active, input:focus-visible { box-shadow: none !important; outline: none !important; border: none !important; }',
-            '[data-baseweb="base-input"] { border: none !important; box-shadow: none !important; }',
-            '[data-baseweb="base-input"]:focus-within { border: none !important; box-shadow: none !important; }',
-            '[data-testid="stTextInput"] > div { border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: none !important; }',
-            '[data-testid="stTextInput"] > div:focus-within { border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: none !important; }'
-        ].join('\n');
-        document.head.appendChild(style);
-
-        function kill(el) {
-            el.style.cssText += ';box-shadow:none!important;outline:none!important;border-color:rgba(255,255,255,0.1)!important;';
-        }
-
-        function killAll() {
-            document.querySelectorAll('input, [data-baseweb="base-input"], [data-testid="stTextInput"] > div, [data-testid="stTextInput"] > div > div').forEach(function(el) {
-                kill(el);
-                el.onfocus = function() { kill(this); setTimeout(()=>kill(this),0); setTimeout(()=>kill(this),100); };
-                el.onmousedown = function() { setTimeout(()=>kill(this),0); };
-            });
-        }
-
-        killAll();
-        new MutationObserver(killAll).observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['style','class']});
-    })();
-    </script>
-    """, unsafe_allow_html=True)
-
     # Card login — pakai columns untuk centering
     _, col, _ = st.columns([1, 1.1, 1])
     with col:
+        st.markdown("""
+        <style>
+        [data-testid="column"]:nth-child(2) > div:first-child {
+            background: rgba(255,255,255,0.03) !important;
+            border: 1px solid rgba(255,255,255,0.08) !important;
+            border-radius: 20px !important;
+            padding: 28px 24px !important;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+            margin-top: 8px !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
         username = st.text_input("Username", placeholder="Username",
                                   key="login_username", label_visibility="collapsed")
         st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
