@@ -1089,15 +1089,25 @@ with st.sidebar:
     except Exception:
         _r, _g, _b = (255, 138, 216)
 
+    _theme = st.session_state.get("theme", "dark")
+    if _theme == "light":
+        _ms_bg     = "#f1eef6"
+        _ms_text   = "rgba(0,0,0,0.55)"
+        _ms_border = "#d8d5e0"
+    else:
+        _ms_bg     = "rgba(255,255,255,0.03)"
+        _ms_text   = "rgba(255,255,255,0.5)"
+        _ms_border = "rgba(255,255,255,0.08)"
+
     active_index = 1 if current_mode == "chat" else 2
     st.markdown(f"""
     <style>
     .st-key-kei_mode_switch [data-testid="stButton"] button {{
         border-radius: 12px !important;
         font-weight: 600 !important;
-        background: rgba(255,255,255,0.03) !important;
-        color: rgba(255,255,255,0.5) !important;
-        border: 1px solid rgba(255,255,255,0.08) !important;
+        background: {_ms_bg} !important;
+        color: {_ms_text} !important;
+        border: 1px solid {_ms_border} !important;
         text-align: center !important;
     }}
     .st-key-kei_mode_switch [data-testid="stButton"] button:hover {{
@@ -1167,7 +1177,8 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown(f"<div style='font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:12px;'>{t('mode_label')}: {t('mode_chat') if st.session_state.mode == 'chat' else t('mode_diary')}</div>", unsafe_allow_html=True)
+    _mode_label_color = "rgba(0,0,0,0.4)" if _theme == "light" else "rgba(255,255,255,0.35)"
+    st.markdown(f"<div style='font-size:12px;color:{_mode_label_color};margin-bottom:12px;'>{t('mode_label')}: {t('mode_chat') if st.session_state.mode == 'chat' else t('mode_diary')}</div>", unsafe_allow_html=True)
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
@@ -1210,7 +1221,7 @@ with st.sidebar:
             status_dot = "●"
         else:
             status_text = t("mood_auto_inactive")
-            status_color = "rgba(255,255,255,0.35)"
+            status_color = "rgba(0,0,0,0.4)" if _theme == "light" else "rgba(255,255,255,0.35)"
             status_dot = "○"
 
         st.markdown(f"""
@@ -1423,19 +1434,20 @@ with st.sidebar:
 # 11. HEADER
 # =====================
 header_mood_emoji, _header_mood_label = get_current_mood()
+_header_tagline_color = "rgba(0,0,0,0.45)" if st.session_state.theme == "light" else "rgba(255,255,255,0.4)"
 
 if st.session_state.mode == "diary":
     st.markdown(f"""
     <div style="text-align:center;padding:4px 0 4px;">
         <h1 style="color:{st.session_state.theme_color};margin:0;font-size:48px;line-height:1.1;">💌 Dear Diary</h1>
-        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">{t('diary_header_sub')} {header_mood_emoji}</p>
+        <p style="color:{_header_tagline_color};font-size:20px;margin:2px 0 0;">{t('diary_header_sub')} {header_mood_emoji}</p>
     </div>
     """, unsafe_allow_html=True)
 else:
     st.markdown(f"""
     <div style="text-align:center;padding:4px 0 4px;">
         <h1 style="color:{st.session_state.theme_color};margin:0;font-size:48px;line-height:1.1;">✦ Kei AI</h1>
-        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">{t('app_companion')} {header_mood_emoji}</p>
+        <p style="color:{_header_tagline_color};font-size:20px;margin:2px 0 0;">{t('app_companion')} {header_mood_emoji}</p>
     </div>
     """, unsafe_allow_html=True)
 
