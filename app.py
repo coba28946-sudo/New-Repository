@@ -468,15 +468,20 @@ if not st.session_state.logged_in:
         border: 1px solid rgba(255,255,255,0.1) !important;
         border-radius: 12px !important;
         height: 48px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
         display: flex !important;
         align-items: center !important;
         overflow: hidden !important;
         padding: 0 !important;
         box-shadow: none !important;
     }
+    /* Hapus semua perubahan saat focus — border tetap sama */
     [data-testid="stTextInput"] > div:focus-within {
-        border-color: rgba(255,138,216,0.55) !important;
-        background: rgba(255,138,216,0.05) !important;
+        border-color: rgba(255,255,255,0.1) !important;
+        background: rgba(255,255,255,0.05) !important;
+        box-shadow: none !important;
+        outline: none !important;
     }
     [data-testid="stTextInput"] input {
         background: transparent !important;
@@ -563,36 +568,64 @@ if not st.session_state.logged_in:
     # JS: paksa hapus glow/shadow Streamlit saat focus
     st.markdown("""
     <style>
-    input:focus, input:focus-visible, input:active,
+    [data-baseweb="input"],
+    [data-baseweb="input"]:focus-within,
+    [data-baseweb="base-input"],
     [data-baseweb="base-input"]:focus-within,
-    [data-testid="stTextInput"] > div:focus-within {
+    [data-testid="stTextInput"] > div,
+    [data-testid="stTextInput"] > div:focus-within,
+    [data-testid="stTextInput"] > div > div,
+    [data-testid="stTextInput"] > div > div:focus-within {
+        box-shadow: none !important;
+        outline: none !important;
+        border-color: rgba(255,255,255,0.1) !important;
+    }
+    input, input:focus, input:focus-visible, input:active {
         box-shadow: none !important;
         outline: none !important;
     }
-    [data-baseweb="base-input"] { box-shadow: none !important; }
+    /* Override inline style yang di-inject Streamlit */
+    * { --focus-ring: none !important; }
     </style>
     <script>
     (function() {
-        function killGlow() {
-            document.querySelectorAll(
-                'input, [data-baseweb="base-input"], [data-testid="stTextInput"] > div, [data-testid="stTextInput"] > div > div'
-            ).forEach(function(el) {
-                el.style.setProperty('box-shadow', 'none', 'important');
-                el.style.setProperty('outline', 'none', 'important');
-                el.addEventListener('focus', function() {
-                    this.style.setProperty('box-shadow', 'none', 'important');
-                    this.style.setProperty('outline', 'none', 'important');
-                }, true);
-                el.addEventListener('mousedown', function() {
-                    setTimeout(() => {
-                        this.style.setProperty('box-shadow', 'none', 'important');
-                        this.style.setProperty('outline', 'none', 'important');
-                    }, 0);
-                }, true);
+        var SELECTORS = [
+            'input',
+            '[data-baseweb="input"]',
+            '[data-baseweb="base-input"]',
+            '[data-testid="stTextInput"] > div',
+            '[data-testid="stTextInput"] > div > div'
+        ].join(',');
+
+        function kill(el) {
+            el.style.setProperty('box-shadow', 'none', 'important');
+            el.style.setProperty('outline', 'none', 'important');
+            el.style.setProperty('border-color', 'rgba(255,255,255,0.1)', 'important');
+        }
+
+        function killAll() {
+            document.querySelectorAll(SELECTORS).forEach(function(el) {
+                kill(el);
+                ['focus','focusin','mousedown','click','keydown'].forEach(function(ev) {
+                    el.addEventListener(ev, function() {
+                        kill(this);
+                        setTimeout(() => kill(this), 0);
+                        setTimeout(() => kill(this), 50);
+                        setTimeout(() => kill(this), 150);
+                    }, true);
+                });
             });
         }
-        killGlow();
-        new MutationObserver(killGlow).observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['style']});
+
+        killAll();
+        new MutationObserver(function(mutations) {
+            killAll();
+            mutations.forEach(function(m) {
+                m.addedNodes.forEach(function(n) {
+                    if (n.querySelectorAll) n.querySelectorAll(SELECTORS).forEach(kill);
+                });
+            });
+        }).observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['style','class']});
     })();
     </script>
     """, unsafe_allow_html=True)
