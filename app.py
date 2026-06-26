@@ -387,13 +387,26 @@ def render_dynamic_css():
 
     st.markdown(f"""
     <style>
-    html, body, .stApp {{ background: {bg_main} !important; color: {text_main} !important; }}
+    html, body, .stApp,
+    [data-testid="stAppViewContainer"],
+    [data-testid="stMain"],
+    [data-testid="stMainBlockContainer"],
+    .main, .main .block-container,
+    section.main {{
+        background: {bg_main} !important;
+        color: {text_main} !important;
+    }}
 
     .login-title {{ color: {accent} !important; }}
     .login-sub {{ color: {text_dim} !important; }}
     .login-footer {{ color: {text_dimmer} !important; }}
 
-    .kei-sidebar {{ background: {bg_sidebar} !important; border-right: 1px solid {border_col} !important; }}
+    .kei-sidebar,
+    section[data-testid="stSidebar"],
+    [data-testid="stSidebarContent"] {{
+        background: {bg_sidebar} !important;
+        border-right: 1px solid {border_col} !important;
+    }}
 
     .kei-header h1 {{ color: {accent} !important; }}
     .kei-header p {{ color: {text_dim} !important; }}
@@ -403,6 +416,7 @@ def render_dynamic_css():
         border: 1px solid {border_col} !important;
     }}
     [data-testid="stChatInput"] textarea {{ color: {text_main} !important; }}
+    [data-testid="stChatInput"] textarea::placeholder {{ color: {text_dimmer} !important; }}
     [data-testid="stChatInput"] button {{ background: {accent} !important; }}
 
     .kei-sidebar-inner .stButton > button {{
@@ -428,6 +442,18 @@ def render_dynamic_css():
         border: 1px solid {border_col} !important;
     }}
     .kei-sidebar-inner [data-testid="stExpander"] summary {{ color: {text_dim} !important; }}
+    .kei-sidebar-inner [data-testid="stExpander"] summary span,
+    .kei-sidebar-inner [data-testid="stExpander"] p,
+    .kei-sidebar-inner label,
+    .kei-sidebar-inner [data-testid="stCaptionContainer"],
+    .kei-sidebar-inner [data-testid="stWidgetLabel"] p {{
+        color: {text_dim} !important;
+    }}
+    .kei-sidebar-inner [data-testid="stRadio"] label span {{ color: {text_main} !important; }}
+    .kei-sidebar-inner [data-testid="stMarkdownContainer"] p,
+    .kei-sidebar-inner [data-testid="stMarkdownContainer"] strong {{
+        color: {text_main} !important;
+    }}
 
     .mode-btn:hover {{ border-color: rgba({r},{g},{b},0.4) !important; color: {accent} !important; }}
     .mode-btn.active {{
@@ -458,13 +484,43 @@ def render_dynamic_css():
     }}
     .music-result a {{ color: {accent} !important; }}
 
-    [data-testid="stMarkdownContainer"] p {{ color: inherit; }}
-    .stMarkdown, .stMarkdown p {{ color: {text_main}; }}
+    /* Area chat utama: bubble pesan, markdown teks, dsb */
+    [data-testid="stChatMessage"],
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"],
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p,
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] strong,
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li {{
+        color: {text_main} !important;
+    }}
+    [data-testid="stChatMessageAvatarUser"],
+    [data-testid="stChatMessageAvatarAssistant"] {{
+        background: {input_bg} !important;
+    }}
 
-    [data-testid="stChatMessage"] {{ color: {text_main} !important; }}
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] li,
+    [data-testid="stMarkdownContainer"] strong,
+    [data-testid="stMarkdownContainer"] h1,
+    [data-testid="stMarkdownContainer"] h2,
+    [data-testid="stMarkdownContainer"] h3 {{
+        color: {text_main} !important;
+    }}
 
     [data-testid="stMetricValue"] {{ color: {accent} !important; }}
     [data-testid="stMetricLabel"] {{ color: {text_dim} !important; }}
+
+    /* Tombol download / spinner / alert teks ikut tema */
+    [data-testid="stAlertContentInfo"],
+    [data-testid="stAlertContentSuccess"],
+    [data-testid="stAlertContentWarning"],
+    [data-testid="stAlertContentError"] {{
+        color: {text_main} !important;
+    }}
+    .stDownloadButton button {{
+        background: rgba({r},{g},{b},0.12) !important;
+        color: {accent} !important;
+        border: 1px solid rgba({r},{g},{b},0.3) !important;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -566,6 +622,8 @@ TEXTS = {
         "mood_expander": "🎭 Ubah Mood Kei",
         "mood_pick_label": "Pilih mood Kei sekarang:",
         "mood_auto_btn": "🔄 Otomatis (harian)",
+        "mood_auto_active": "Aktif — mood berganti otomatis tiap hari",
+        "mood_auto_inactive": "Nonaktif — kamu pilih mood manual",
         "stats_expander": "📊 Statistik Chat",
         "stats_total_msgs": "Total pesan",
         "stats_user_msgs": "Pesan kamu",
@@ -617,6 +675,8 @@ TEXTS = {
         "mood_expander": "🎭 Change Kei's Mood",
         "mood_pick_label": "Pick Kei's mood now:",
         "mood_auto_btn": "🔄 Automatic (daily)",
+        "mood_auto_active": "Active — mood changes automatically every day",
+        "mood_auto_inactive": "Inactive — you picked a manual mood",
         "stats_expander": "📊 Chat Stats",
         "stats_total_msgs": "Total messages",
         "stats_user_msgs": "Your messages",
@@ -1015,16 +1075,67 @@ with st.sidebar:
 
     with st.expander(t("mood_expander")):
         st.caption(t("mood_pick_label"))
+
+        current_idx = st.session_state.get("current_mood_index")
+
+        # CSS: kasih border/warna aksen ke tombol mood yang sedang aktif (dipilih manual)
+        mood_btn_css = "<style>"
+        for i in range(len(KEI_MOODS)):
+            if i == current_idx:
+                mood_btn_css += f"""
+                .st-key-mood_wrap_{i} [data-testid="stButton"] button {{
+                    border: 2px solid {_accent} !important;
+                    background: rgba({_r},{_g},{_b},0.15) !important;
+                    box-shadow: 0 0 0 1px rgba({_r},{_g},{_b},0.3) !important;
+                }}
+                """
+        mood_btn_css += "</style>"
+        st.markdown(mood_btn_css, unsafe_allow_html=True)
+
         mood_cols = st.columns(4)
         for i, (m_emoji, m_label_id) in enumerate(KEI_MOODS):
             m_label = KEI_MOODS_EN_LABELS[i] if st.session_state.get("lang") == "en" else m_label_id
             with mood_cols[i % 4]:
-                if st.button(f"{m_emoji}", key=f"mood_pick_{i}", help=m_label, use_container_width=True):
-                    st.session_state.current_mood_index = i
-                    st.rerun()
-        if st.button(t("mood_auto_btn"), key="mood_auto_btn", use_container_width=True):
-            st.session_state.current_mood_index = None
-            st.rerun()
+                mood_btn_wrap = st.container(key=f"mood_wrap_{i}")
+                with mood_btn_wrap:
+                    if st.button(f"{m_emoji}", key=f"mood_pick_{i}", help=m_label, use_container_width=True):
+                        st.session_state.current_mood_index = i
+                        st.rerun()
+
+        st.markdown('<div style="height:6px;"></div>', unsafe_allow_html=True)
+
+        # Status: otomatis aktif kalau belum ada pilihan manual
+        is_auto_active = current_idx is None
+        if is_auto_active:
+            status_text = t("mood_auto_active")
+            status_color = "#4ade80"
+            status_dot = "●"
+        else:
+            status_text = t("mood_auto_inactive")
+            status_color = "rgba(255,255,255,0.35)"
+            status_dot = "○"
+
+        st.markdown(f"""
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:{status_color};margin-bottom:6px;">
+            <span>{status_dot}</span><span>{status_text}</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        auto_btn_wrap = st.container(key="mood_auto_btn_wrap")
+        with auto_btn_wrap:
+            if is_auto_active:
+                st.markdown(f"""
+                <style>
+                .st-key-mood_auto_btn_wrap [data-testid="stButton"] button {{
+                    border: 2px solid {_accent} !important;
+                    background: rgba({_r},{_g},{_b},0.15) !important;
+                    color: {_accent} !important;
+                }}
+                </style>
+                """, unsafe_allow_html=True)
+            if st.button(t("mood_auto_btn"), key="mood_auto_btn", use_container_width=True):
+                st.session_state.current_mood_index = None
+                st.rerun()
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
