@@ -445,14 +445,16 @@ def save_json(path, data):
 if not st.session_state.logged_in:
     st.markdown("""
     <style>
+    /* Reset container */
     .main .block-container {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
+        padding: 0 !important;
         max-width: 100% !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
     }
+
+    /* Sembunyikan label */
     [data-testid="stTextInput"] label { display: none !important; }
+
+    /* Input wrapper */
     [data-testid="stTextInput"] > div {
         background: rgba(255,255,255,0.05) !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
@@ -462,7 +464,6 @@ if not st.session_state.logged_in:
         align-items: center !important;
         overflow: hidden !important;
         padding: 0 !important;
-        margin-bottom: 10px !important;
     }
     [data-testid="stTextInput"] > div:focus-within {
         border-color: rgba(255,138,216,0.55) !important;
@@ -481,6 +482,8 @@ if not st.session_state.logged_in:
         width: 0 !important;
     }
     [data-testid="stTextInput"] input::placeholder { color: rgba(255,255,255,0.28) !important; }
+
+    /* Tombol mata */
     [data-testid="stTextInput"] button {
         background: transparent !important;
         border: none !important;
@@ -496,6 +499,8 @@ if not st.session_state.logged_in:
     }
     [data-testid="stTextInput"] button:hover { color: #ff8ad8 !important; }
     [data-testid="stTextInput"] button svg { width: 14px !important; height: 14px !important; }
+
+    /* Tombol Masuk */
     [data-testid="stButton"] > button {
         background: #ffffff !important;
         color: #111111 !important;
@@ -509,6 +514,8 @@ if not st.session_state.logged_in:
         box-shadow: none !important;
     }
     [data-testid="stButton"] > button:hover { background: #f0f0f0 !important; color: #111 !important; }
+
+    /* Error */
     [data-testid="stAlert"] {
         background: rgba(255,70,70,0.08) !important;
         border: 1px solid rgba(255,70,70,0.2) !important;
@@ -517,33 +524,36 @@ if not st.session_state.logged_in:
         font-size: 13px !important;
         margin-top: 8px !important;
     }
-    /* Hilangkan padding kolom */
-    [data-testid="column"] { padding: 0 !important; }
+
+    /* Card via column styling */
+    [data-testid="column"]:nth-child(2) > div:first-child {
+        background: rgba(255,255,255,0.03) !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        border-radius: 20px !important;
+        padding: 28px 24px !important;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+        margin-top: 8px !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-    # Centering pakai columns: kiri flex, tengah 340px equiv, kanan flex
+    # Header di luar columns (full width, centered)
+    st.markdown("""
+    <div style="padding-top:60px; text-align:center; margin-bottom:28px;">
+        <div style="color:#ff8ad8; font-size:42px; font-weight:700; letter-spacing:-1px; margin-bottom:8px;">✦ Kei AI</div>
+        <div style="color:rgba(255,255,255,0.38); font-size:14px;">Teman AI Pintar Kamu</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Card login — pakai columns untuk centering
     _, col, _ = st.columns([1, 1.1, 1])
     with col:
-        st.markdown("""
-        <div style="padding-top:60px; text-align:center; margin-bottom:24px;">
-            <div style="color:#ff8ad8; font-size:42px; font-weight:700; letter-spacing:-1px; margin-bottom:8px;">✦ Kei AI</div>
-            <div style="color:rgba(255,255,255,0.38); font-size:14px;">Teman AI Pintar Kamu</div>
-        </div>
-        <div style="
-            background:rgba(255,255,255,0.03);
-            border:1px solid rgba(255,255,255,0.08);
-            border-radius:20px;
-            padding:28px 24px;
-            box-shadow:0 20px 60px rgba(0,0,0,0.5);
-        ">
-        """, unsafe_allow_html=True)
-
-        username = st.text_input("Username", placeholder="Username", key="login_username", label_visibility="collapsed")
-        password = st.text_input("Password", placeholder="Password", type="password", key="login_password", label_visibility="collapsed")
+        username = st.text_input("Username", placeholder="Username",
+                                  key="login_username", label_visibility="collapsed")
+        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+        password = st.text_input("Password", placeholder="Password", type="password",
+                                  key="login_password", label_visibility="collapsed")
         submitted = st.button("Masuk", use_container_width=True, key="login_btn")
-
-        st.markdown("</div>", unsafe_allow_html=True)
 
         if submitted:
             if not username or not password:
@@ -555,10 +565,11 @@ if not st.session_state.logged_in:
             else:
                 st.error("Username atau password salah.")
 
-        st.markdown('''
-        <div style="text-align:center;margin-top:20px;color:rgba(255,255,255,0.18);font-size:12px;">
-            Kei AI — Your AI Companion ✦
-        </div>''', unsafe_allow_html=True)
+    st.markdown("""
+    <div style="text-align:center;margin-top:20px;color:rgba(255,255,255,0.18);font-size:12px;">
+        Kei AI — Your AI Companion ✦
+    </div>
+    """, unsafe_allow_html=True)
 
     st.stop()
 
