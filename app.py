@@ -391,6 +391,13 @@ def render_dynamic_css():
     # tema terang terasa seperti "kebalikan warna" dari tema gelap, bukan layout baru.
     # Avatar chat (stChatMessageAvatarUser/Assistant) SENGAJA tidak disentuh sama
     # sekali — biarkan default Streamlit, supaya ikon/emoji-nya tidak rusak.
+    #
+    # PENTING — urutan CSS di bawah ini disengaja: aturan GENERIC (berlaku ke banyak
+    # elemen sekaligus, misal semua <h1>/<p> di dalam stMarkdownContainer) ditaruh
+    # DI ATAS, dan aturan SPESIFIK (.kei-header h1, .login-title, dst) ditaruh DI
+    # BAWAH. Saat dua selector punya spesifisitas CSS yang sama, browser memenangkan
+    # yang muncul terakhir — jadi spesifik harus selalu di bawah generic, atau warna
+    # custom (misal pink di judul) akan tertimpa balik jadi warna teks biasa.
     st.markdown(f"""
     <style>
     html, body, .stApp,
@@ -403,17 +410,26 @@ def render_dynamic_css():
         color: {text_main} !important;
     }}
 
-    .login-title {{ color: {accent} !important; }}
-    .login-sub {{ color: {text_dim} !important; }}
-    .login-footer {{ color: {text_dimmer} !important; }}
+    /* ===== GENERIC: teks markdown di seluruh app (ditimpa lagi oleh aturan spesifik di bawah) ===== */
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] li,
+    [data-testid="stMarkdownContainer"] strong,
+    [data-testid="stMarkdownContainer"] h1,
+    [data-testid="stMarkdownContainer"] h2,
+    [data-testid="stMarkdownContainer"] h3 {{
+        color: {text_main} !important;
+    }}
+
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p,
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li,
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] strong {{
+        color: {text_main} !important;
+    }}
 
     section[data-testid="stSidebar"] {{
         background: {bg_sidebar} !important;
         border-right: 1px solid {border_col} !important;
     }}
-
-    .kei-header h1 {{ color: {accent} !important; }}
-    .kei-header p {{ color: {text_dim} !important; }}
 
     .kei-input-area {{
         background: {bg_main} !important;
@@ -430,22 +446,6 @@ def render_dynamic_css():
     }}
     [data-testid="stChatInput"] textarea::placeholder {{ color: {text_dimmer} !important; }}
     [data-testid="stChatInput"] button {{ background: {accent} !important; }}
-
-    /* Teks isi pesan chat — TIDAK menyentuh avatar sama sekali */
-    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p,
-    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li,
-    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] strong {{
-        color: {text_main} !important;
-    }}
-
-    [data-testid="stMarkdownContainer"] p,
-    [data-testid="stMarkdownContainer"] li,
-    [data-testid="stMarkdownContainer"] strong,
-    [data-testid="stMarkdownContainer"] h1,
-    [data-testid="stMarkdownContainer"] h2,
-    [data-testid="stMarkdownContainer"] h3 {{
-        color: {text_main} !important;
-    }}
 
     /* ===== Sidebar: tombol ===== */
     .kei-sidebar-inner .stButton > button {{
@@ -478,7 +478,7 @@ def render_dynamic_css():
     }}
     .kei-sidebar-inner [data-testid="stTextInput"] label {{ color: {text_dim} !important; }}
 
-    /* ===== Sidebar: expander (sama struktur dengan CSS statis dark, cuma warnanya dibalik) ===== */
+    /* ===== Sidebar: expander ===== */
     .kei-sidebar-inner [data-testid="stExpander"] {{
         background: {input_bg} !important;
         border: 1px solid {border_col} !important;
@@ -558,6 +558,37 @@ def render_dynamic_css():
         color: {accent} !important;
         border: 1px solid rgba({r},{g},{b},0.3) !important;
     }}
+
+    /* ===== Halaman LOGIN: sebelumnya tidak tersentuh sama sekali karena di luar
+       .kei-sidebar-inner. Form login dirender di area utama (main), bukan sidebar. ===== */
+    [data-testid="stTextInput"] > div {{
+        background: {input_bg} !important;
+        border: 1px solid {border_col} !important;
+    }}
+    [data-testid="stTextInput"] input {{
+        background: transparent !important;
+        color: {text_main} !important;
+    }}
+    [data-testid="stTextInput"] label p {{ color: {text_dim} !important; }}
+    .stButton > button {{
+        background: {input_bg} !important;
+        color: {text_main} !important;
+        border: 1px solid {border_col} !important;
+    }}
+    .stButton > button p,
+    .stButton > button span {{ color: {text_main} !important; }}
+    .stButton > button:hover {{
+        border-color: rgba({r},{g},{b},0.4) !important;
+        color: {accent} !important;
+        background: rgba({r},{g},{b},0.08) !important;
+    }}
+
+    /* ===== SPESIFIK: ditaruh paling akhir agar menang melawan aturan generic di atas ===== */
+    .login-title {{ color: {accent} !important; }}
+    .login-sub {{ color: {text_dim} !important; }}
+    .login-footer {{ color: {text_dimmer} !important; }}
+    .kei-header h1 {{ color: {accent} !important; }}
+    .kei-header p {{ color: {text_dim} !important; }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -744,10 +775,12 @@ def t(key):
 # 6. LOGIN
 # =====================
 if not st.session_state.logged_in:
+    _login_text_dim = "rgba(0,0,0,0.55)" if st.session_state.theme == "light" else "rgba(255,255,255,0.5)"
+    _login_text_dimmer = "rgba(0,0,0,0.3)" if st.session_state.theme == "light" else "rgba(255,255,255,0.18)"
     st.markdown(f"""
     <div style="padding-top:35px; text-align:center; margin-bottom:12px;">
         <div style="color:{st.session_state.theme_color}; font-size:50px; font-weight:700; letter-spacing:-1px; margin-bottom:0px; line-height:1.1;">✦ Kei AI</div>
-        <div style="color:rgba(255,255,255,0.5); font-size:17px; margin-top:2px;">{t('app_tagline')}</div>
+        <div style="color:{_login_text_dim}; font-size:17px; margin-top:2px;">{t('app_tagline')}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -784,7 +817,7 @@ if not st.session_state.logged_in:
                 st.error(t("login_err_wrong"))
 
     st.markdown(f"""
-    <div style="text-align:center;margin-top:20px;color:rgba(255,255,255,0.18);font-size:12px;">
+    <div style="text-align:center;margin-top:20px;color:{_login_text_dimmer};font-size:12px;">
         Kei AI — {t('app_companion')} ✦
     </div>
     """, unsafe_allow_html=True)
