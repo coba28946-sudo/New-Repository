@@ -577,16 +577,16 @@ with st.sidebar:
 # =====================
 if st.session_state.mode == "diary":
     st.markdown("""
-    <div style="text-align:center;padding:24px 0 8px;">
-        <h1 style="color:#ff8ad8;margin:0;font-size:48px;">💌 Dear Diary</h1>
-        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:4px 0 0;">Ceritain semua ke Kei ya~ 🥺</p>
+    <div style="text-align:center;padding:4px 0 4px;">
+        <h1 style="color:#ff8ad8;margin:0;font-size:48px;line-height:1.1;">💌 Dear Diary</h1>
+        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">Ceritain semua ke Kei ya~ 🥺</p>
     </div>
     """, unsafe_allow_html=True)
 else:
     st.markdown("""
-    <div style="text-align:center;padding:24px 0 8px;">
-        <h1 style="color:#ff8ad8;margin:0;font-size:48px;">✦ Kei AI</h1>
-        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:4px 0 0;">Your AI Companion</p>
+    <div style="text-align:center;padding:4px 0 4px;">
+        <h1 style="color:#ff8ad8;margin:0;font-size:48px;line-height:1.1;">✦ Kei AI</h1>
+        <p style="color:rgba(255,255,255,0.4);font-size:20px;margin:2px 0 0;">Your AI Companion</p>
     </div>
     """, unsafe_allow_html=True)
 
