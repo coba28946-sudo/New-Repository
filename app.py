@@ -391,6 +391,8 @@ def render_dynamic_css():
     [data-testid="stAppViewContainer"],
     [data-testid="stMain"],
     [data-testid="stMainBlockContainer"],
+    [data-testid="stBottomBlockContainer"],
+    [data-testid="stBottom"],
     .main, .main .block-container,
     section.main {{
         background: {bg_main} !important;
@@ -407,49 +409,93 @@ def render_dynamic_css():
         background: {bg_sidebar} !important;
         border-right: 1px solid {border_col} !important;
     }}
+    section[data-testid="stSidebar"] * {{
+        color: {text_main};
+    }}
 
     .kei-header h1 {{ color: {accent} !important; }}
     .kei-header p {{ color: {text_dim} !important; }}
+
+    /* Area input bawah (di luar sidebar) — dulu selalu gelap solid, sekarang ikut tema */
+    .kei-input-area,
+    [data-testid="stBottom"] > div,
+    [data-testid="stBottomBlockContainer"] {{
+        background: {bg_main} !important;
+        border-top: 1px solid {border_col} !important;
+    }}
 
     [data-testid="stChatInput"] {{
         background: {chat_input_bg} !important;
         border: 1px solid {border_col} !important;
     }}
-    [data-testid="stChatInput"] textarea {{ color: {text_main} !important; }}
+    [data-testid="stChatInput"] textarea {{ background: transparent !important; color: {text_main} !important; }}
     [data-testid="stChatInput"] textarea::placeholder {{ color: {text_dimmer} !important; }}
     [data-testid="stChatInput"] button {{ background: {accent} !important; }}
 
-    .kei-sidebar-inner .stButton > button {{
+    .kei-sidebar-inner .stButton > button,
+    .kei-sidebar-inner [data-testid="stBaseButton-secondary"] {{
         background: {input_bg} !important;
-        color: {text_dim} !important;
+        color: {text_main} !important;
         border: 1px solid {border_col} !important;
+    }}
+    .kei-sidebar-inner .stButton > button p,
+    .kei-sidebar-inner .stButton > button span,
+    .kei-sidebar-inner .stButton > button div {{
+        color: {text_main} !important;
     }}
     .kei-sidebar-inner .stButton > button:hover {{
         border-color: rgba({r},{g},{b},0.4) !important;
         color: {accent} !important;
         background: rgba({r},{g},{b},0.08) !important;
     }}
+    .kei-sidebar-inner .stButton > button:hover p,
+    .kei-sidebar-inner .stButton > button:hover span {{
+        color: {accent} !important;
+    }}
 
     .kei-sidebar-inner [data-testid="stTextInput"] > div {{
         background: {input_bg} !important;
         border: 1px solid {border_col} !important;
     }}
-    .kei-sidebar-inner [data-testid="stTextInput"] input {{ color: {text_main} !important; }}
+    .kei-sidebar-inner [data-testid="stTextInput"] input {{
+        background: transparent !important;
+        color: {text_main} !important;
+    }}
     .kei-sidebar-inner [data-testid="stTextInput"] label {{ color: {text_dim} !important; }}
 
-    .kei-sidebar-inner [data-testid="stExpander"] {{
+    /* Expander: wrapper, header (judul + ikon panah), dan body konten — semua testid varian */
+    .kei-sidebar-inner [data-testid="stExpander"],
+    .kei-sidebar-inner details {{
         background: {input_bg} !important;
         border: 1px solid {border_col} !important;
+        border-radius: 10px !important;
     }}
-    .kei-sidebar-inner [data-testid="stExpander"] summary {{ color: {text_dim} !important; }}
-    .kei-sidebar-inner [data-testid="stExpander"] summary span,
-    .kei-sidebar-inner [data-testid="stExpander"] p,
+    .kei-sidebar-inner [data-testid="stExpander"] summary,
+    .kei-sidebar-inner [data-testid="stExpanderHeader"],
+    .kei-sidebar-inner summary {{
+        background: transparent !important;
+        color: {text_main} !important;
+        font-size: 13px !important;
+    }}
+    .kei-sidebar-inner [data-testid="stExpander"] summary *,
+    .kei-sidebar-inner [data-testid="stExpanderHeader"] *,
+    .kei-sidebar-inner summary * {{
+        color: {text_main} !important;
+        fill: {text_main} !important;
+    }}
+    .kei-sidebar-inner [data-testid="stExpanderDetails"],
+    .kei-sidebar-inner [data-testid="stExpander"] > div:not(summary) {{
+        background: transparent !important;
+    }}
+
     .kei-sidebar-inner label,
     .kei-sidebar-inner [data-testid="stCaptionContainer"],
+    .kei-sidebar-inner [data-testid="stCaptionContainer"] p,
     .kei-sidebar-inner [data-testid="stWidgetLabel"] p {{
         color: {text_dim} !important;
     }}
-    .kei-sidebar-inner [data-testid="stRadio"] label span {{ color: {text_main} !important; }}
+    .kei-sidebar-inner [data-testid="stRadio"] label span,
+    .kei-sidebar-inner [data-testid="stRadio"] label p {{ color: {text_main} !important; }}
     .kei-sidebar-inner [data-testid="stMarkdownContainer"] p,
     .kei-sidebar-inner [data-testid="stMarkdownContainer"] strong {{
         color: {text_main} !important;
@@ -467,6 +513,7 @@ def render_dynamic_css():
         border: 1px solid {border_col} !important;
         color: {text_dim} !important;
     }}
+    .status-online * {{ color: {text_dim} !important; }}
 
     .diary-box {{
         background: rgba({r},{g},{b},0.06) !important;
