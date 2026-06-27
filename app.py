@@ -812,7 +812,7 @@ if not st.session_state.logged_in:
 
     st.markdown(f"""
     <style>
-    .login-card {{
+    div[data-testid="stForm"] {{
         max-width: 380px;
         margin: 0 auto;
         background: {_login_card_bg};
@@ -829,12 +829,10 @@ if not st.session_state.logged_in:
 
     _, col, _ = st.columns([1, 1.1, 1])
     with col:
-        st.markdown('<div class="login-card">', unsafe_allow_html=True)
         with st.form(key="login_form", border=False):
             username = st.text_input(t("username"), key="login_username")
             password = st.text_input(t("password"), type="password", key="login_password")
             submitted = st.form_submit_button(t("login_btn"), use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
 
         if submitted:
             if not username or not password:
