@@ -287,13 +287,25 @@ section[data-testid="stSidebar"] > div:first-child {
 }
 .kei-sidebar-inner [data-testid="stExpander"] summary p::before {
     content: "";
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 26px;
     height: 26px;
     margin-right: 9px;
     border-radius: 8px;
     background: rgba(255,255,255,0.06);
     flex-shrink: 0;
+    font-size: 13px;
+}
+.kei-sidebar-inner [data-testid="stExpander"] summary,
+.kei-sidebar-inner [data-testid="stExpander"] summary *,
+.kei-sidebar-inner [data-testid="stExpander"] *:focus,
+.kei-sidebar-inner [data-testid="stExpander"] *:focus-visible,
+.kei-sidebar-inner [data-testid="stExpander"]:focus,
+.kei-sidebar-inner [data-testid="stExpander"]:focus-within {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 /* Logout - bobot visual lebih redup, beda dari aksi netral (New Chat / Clear Chat) */
@@ -1874,6 +1886,21 @@ PANEL_TITLES = {
     "export": "export_expander",
 }
 
+MENU_ICONS = {
+    "mood": "🎭",
+    "sticker": "😄",
+    "music": "🎵",
+    "convert": "🔄",
+    "settings": "⚙️",
+    "stats": "📊",
+    "search": "🔍",
+    "export": "💾",
+}
+
+def strip_emoji_prefix(label_text):
+    parts = label_text.split(" ", 1)
+    return parts[1] if len(parts) == 2 else label_text
+
 # =====================
 # 10b. SIDEBAR
 # =====================
@@ -1946,6 +1973,19 @@ with st.sidebar:
         color: {_accent} !important;
     }}
     ''' for key in PANEL_TITLES if st.session_state.get("active_panel") == key])}
+    /* Kotak ikon per menu + matikan total focus ring merah default Streamlit */
+    {''.join([f'''
+    .st-key-exp_{key} summary p::before {{ content: "{icon}"; }}
+    .st-key-exp_{key} [data-testid="stExpander"],
+    .st-key-exp_{key} summary,
+    .st-key-exp_{key} *,
+    .st-key-exp_{key} *:focus,
+    .st-key-exp_{key} *:focus-visible {{
+        outline: none !important;
+        box-shadow: none !important;
+        border-color: {_ms_border} !important;
+    }}
+    ''' for key, icon in MENU_ICONS.items()])}
     </style>
     """, unsafe_allow_html=True)
 
@@ -2045,7 +2085,7 @@ with st.sidebar:
             ("sticker", "sticker_expander"),
             ("music", "music_expander"),
         ]:
-            with st.expander(t(label_key)):
+            with st.expander(strip_emoji_prefix(t(label_key)), key=f"exp_{key}"):
                 if key == "mood":
                     render_mood_panel(_accent, _r, _g, _b)
                 elif key == "sticker":
@@ -2062,7 +2102,7 @@ with st.sidebar:
             ("search", "search_expander"),
             ("export", "export_expander"),
         ]:
-            with st.expander(t(label_key)):
+            with st.expander(strip_emoji_prefix(t(label_key)), key=f"exp_{key}"):
                 if key == "convert":
                     render_convert_panel(_accent, _r, _g, _b)
                 elif key == "settings":
