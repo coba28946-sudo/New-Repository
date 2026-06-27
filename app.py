@@ -79,7 +79,7 @@ datalist {
     display: none !important;
 }
 
-/* ===== FIX PASSWORD/USERNAME INPUT (simple & rapi) ===== */
+/* ===== FIX PASSWORD/USERNAME INPUT ===== */
 [data-testid="stTextInput"] {
     width: 100% !important;
 }
@@ -766,8 +766,8 @@ TEXTS = {
         "stats_expander": "📊 Chat Stats",
         "stats_total_msgs": "Total messages",
         "stats_user_msgs": "Your messages",
-        "stats_kei_msgs": "Kei's replies",
         "stats_active_days": "Active days",
+        "stats_kei_msgs": "Kei's replies",
         "new_chat": "🆕 New Chat",
         "clear_chat": "🗑️ Clear Chat",
         "logout": "🚪 Logout",
@@ -799,32 +799,33 @@ def t(key):
     return TEXTS.get(lang, TEXTS["id"]).get(key, key)
 
 # =====================
-# 6. LOGIN
-# =====================
-# =====================
-# 6. LOGIN
+# 6. LOGIN (SIMPLE)
 # =====================
 if not st.session_state.logged_in:
-    _login_text_dim = "rgba(0,0,0,0.55)" if st.session_state.theme == "light" else "rgba(255,255,255,0.5)"
+    _login_text_dim = "rgba(0,0,0,0.55)" if st.session_state.theme == "light" else "rgba(255,255,255,0.45)"
     _login_text_dimmer = "rgba(0,0,0,0.3)" if st.session_state.theme == "light" else "rgba(255,255,255,0.18)"
-    _login_card_bg = "#ffffff" if st.session_state.theme == "light" else "#11141f"
-    _login_card_border = "#d8d5e0" if st.session_state.theme == "light" else "rgba(255,255,255,0.08)"
 
     st.markdown(f"""
-    <div style="padding-top:40px; text-align:center; margin-bottom:24px;">
-        <div style="color:{st.session_state.theme_color}; font-size:46px; font-weight:700; letter-spacing:-1px; line-height:1.1;">✦ Kei AI</div>
-        <div style="color:{_login_text_dim}; font-size:16px; margin-top:4px;">{t('app_tagline')}</div>
+    <div style="padding-top:80px; text-align:center; margin-bottom:40px;">
+        <div style="color:{st.session_state.theme_color}; font-size:42px; font-weight:700; letter-spacing:-1px;">✦ Kei AI</div>
+        <div style="color:{_login_text_dim}; font-size:15px; margin-top:6px;">{t('app_tagline')}</div>
     </div>
     """, unsafe_allow_html=True)
 
-    _, col, _ = st.columns([1, 1.1, 1])
+    _, col, _ = st.columns([1.2, 1, 1.2])
     with col:
-        with st.form(key="login_form", border=False):
-            username = st.text_input(t("username"), key="login_username")
-            password = st.text_input(t("password"), type="password", key="login_password")
-            submitted = st.form_submit_button(t("login_btn"), use_container_width=True)
-
-        if submitted:
+        username = st.text_input(
+            t("username"), key="login_username",
+            label_visibility="collapsed",
+            placeholder=t("username"),
+        )
+        password = st.text_input(
+            t("password"), type="password", key="login_password",
+            label_visibility="collapsed",
+            placeholder=t("password"),
+        )
+        st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
+        if st.button(t("login_btn"), use_container_width=True, key="login_btn"):
             if not username or not password:
                 st.error(t("login_err_empty"))
             elif username == "ryuu" and password == "12345":
@@ -835,7 +836,7 @@ if not st.session_state.logged_in:
                 st.error(t("login_err_wrong"))
 
     st.markdown(f"""
-    <div style="text-align:center;margin-top:20px;color:{_login_text_dimmer};font-size:12px;">
+    <div style="text-align:center;margin-top:32px;color:{_login_text_dimmer};font-size:12px;">
         Kei AI — {t('app_companion')} ✦
     </div>
     """, unsafe_allow_html=True)
@@ -1053,7 +1054,6 @@ def record_active_day_and_get_stats(messages):
 MILESTONE_STREAKS = [7, 30, 100, 365]
 
 def check_and_generate_milestone_letter(streak):
-    """Cek apakah streak ini milestone, kalau iya generate surat dari Kei."""
     if streak not in MILESTONE_STREAKS:
         return None
 
@@ -1102,7 +1102,6 @@ Tulis suratnya:
 DAILY_MSG_FILE = "daily_message.json"
 
 def get_daily_greeting_context():
-    """Tentukan konteks sapaan berdasarkan jam."""
     hour = datetime.now().hour
     if 5 <= hour < 11:
         return "pagi", "🌅", "semangat memulai hari"
@@ -1116,10 +1115,6 @@ def get_daily_greeting_context():
         return "larut malam", "🌃", "istirahat yang cukup"
 
 def get_or_generate_daily_message():
-    """
-    Ambil pesan harian dari cache kalau sudah ada hari ini,
-    kalau belum generate baru via Gemini.
-    """
     today_str = datetime.now().strftime("%Y-%m-%d")
 
     if os.path.exists(DAILY_MSG_FILE):
@@ -1499,7 +1494,6 @@ with st.sidebar:
             st.metric(t("stats_active_days"), chat_stats["active_days"])
             st.metric(t("stats_kei_msgs"), chat_stats["kei_msgs"])
 
-        # Lihat surat lama
         if os.path.exists(LETTER_FILE):
             try:
                 with open(LETTER_FILE, "r") as f:
@@ -1616,7 +1610,6 @@ with st.sidebar:
                     use_container_width=True,
                 )
 
-            # Preview 3 pesan terakhir
             st.markdown(
                 f"<div style='font-size:11px;color:{_text_dimmer};margin-top:8px;'>{t('export_preview_label')}</div>",
                 unsafe_allow_html=True
