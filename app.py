@@ -197,6 +197,11 @@ section[data-testid="stSidebar"] > div:first-child {
     margin: 4px 0 0;
 }
 
+/* Force pink color on main title */
+[data-testid="stMarkdownContainer"] h1 {
+    color: #ff8ad8 !important;
+}
+
 .kei-chat-area {
     flex: 1;
     overflow-y: auto;
@@ -1759,7 +1764,7 @@ if st.session_state.mode == "diary":
 else:
     st.markdown(f"""
     <div style="text-align:center;padding:4px 0 4px;">
-        <h1 style="color:{st.session_state.theme_color};margin:0;font-size:48px;line-height:1.1;">✦ Kei AI</h1>
+        <h1 style="color:{st.session_state.get('theme_color', '#ff8ad8')};margin:0;font-size:48px;line-height:1.1;">✦ Kei AI</h1>
         <p style="color:{_header_tagline_color};font-size:20px;margin:2px 0 0;">{t('app_companion')} {header_mood_emoji}</p>
     </div>
     """, unsafe_allow_html=True)
