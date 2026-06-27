@@ -1953,6 +1953,17 @@ with st.sidebar:
     .st-key-kei_mode_switch [data-testid="stButton"] button:hover {{
         color: {_accent} !important;
     }}
+    /* Matikan focus ring merah default Streamlit di SELURUH sidebar */
+    .kei-sidebar-inner button,
+    .kei-sidebar-inner button:focus,
+    .kei-sidebar-inner button:focus-visible,
+    .kei-sidebar-inner [data-testid="stButton"] button:focus,
+    .kei-sidebar-inner [data-testid="stButton"] button:focus-visible,
+    .kei-sidebar-inner [data-testid^="stBaseButton"]:focus,
+    .kei-sidebar-inner [data-testid^="stBaseButton"]:focus-visible {{
+        outline: none !important;
+        box-shadow: none !important;
+    }}
     .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button {{
         color: #ffffff !important;
         background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
