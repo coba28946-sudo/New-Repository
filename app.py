@@ -848,17 +848,8 @@ if not st.session_state.logged_in:
         }
         </style>
         """, unsafe_allow_html=True)
-        username = st.text_input(
-            t("username"), key="login_username",
-            label_visibility="collapsed",
-            placeholder=t("username"),
-        )
-        st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
-        password = st.text_input(
-            t("password"), type="password", key="login_password",
-            label_visibility="collapsed",
-            placeholder=t("password"),
-        )
+        username = st.text_input(t("username"), key="login_username")
+        password = st.text_input(t("password"), type="password", key="login_password")
         st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
         if st.button(t("login_btn"), use_container_width=True, key="login_btn"):
             if not username or not password:
