@@ -1930,28 +1930,47 @@ with st.sidebar:
         _text_dimmer = "rgba(255,255,255,0.25)"
 
     active_index = 1 if current_mode == "chat" else 2
+    _chat_active = current_mode == "chat"
     st.markdown(f"""
     <style>
     .st-key-kei_mode_switch {{
         background: {_ms_bg} !important;
         border: 1px solid {_ms_border} !important;
-        border-radius: 14px !important;
+        border-radius: 16px !important;
         padding: 4px !important;
         margin-bottom: 4px !important;
     }}
-    .st-key-kei_mode_switch [data-testid="stButton"] button {{
-        border-radius: 10px !important;
+    .st-key-mode_chat_wrap button,
+    .st-key-mode_diary_wrap button {{
+        border-radius: 12px !important;
         font-weight: 600 !important;
         font-size: 13px !important;
         background: transparent !important;
         color: {_text_dim} !important;
         border: none !important;
         text-align: center !important;
-        transition: all 0.18s ease !important;
-        height: 36px !important;
+        transition: all 0.2s ease !important;
+        height: 38px !important;
+        width: 100% !important;
     }}
-    .st-key-kei_mode_switch [data-testid="stButton"] button:hover {{
+    .st-key-mode_chat_wrap button:hover,
+    .st-key-mode_diary_wrap button:hover {{
         color: {_accent} !important;
+    }}
+    .st-key-mode_chat_wrap button p,
+    .st-key-mode_diary_wrap button p {{
+        color: inherit !important;
+    }}
+    .st-key-{"mode_chat_wrap" if _chat_active else "mode_diary_wrap"} button {{
+        color: #ffffff !important;
+        background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
+        box-shadow: 0 4px 14px -4px rgba(255,63,164,0.55) !important;
+    }}
+    .st-key-{"mode_chat_wrap" if _chat_active else "mode_diary_wrap"} button:hover {{
+        color: #ffffff !important;
+    }}
+    .st-key-{"mode_chat_wrap" if _chat_active else "mode_diary_wrap"} button p {{
+        color: #ffffff !important;
     }}
     /* Matikan focus ring merah default Streamlit di SELURUH sidebar */
     .kei-sidebar-inner button,
@@ -1963,18 +1982,6 @@ with st.sidebar:
     .kei-sidebar-inner [data-testid^="stBaseButton"]:focus-visible {{
         outline: none !important;
         box-shadow: none !important;
-    }}
-    .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button {{
-        color: #ffffff !important;
-        background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
-        box-shadow: 0 4px 14px -4px rgba(255,63,164,0.55) !important;
-    }}
-    .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button p,
-    .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button span {{
-        color: #ffffff !important;
-    }}
-    .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button:hover {{
-        color: #ffffff !important;
     }}
     /* Menu list rows aktif */
     {''.join([f'''
@@ -2004,15 +2011,17 @@ with st.sidebar:
     with mode_switch:
         mcol1, mcol2 = st.columns(2)
         with mcol1:
-            if st.button(t("chat_btn"), key="mode_chat_btn", use_container_width=True):
-                if st.session_state.mode != "chat":
-                    st.session_state.mode = "chat"
-                    st.rerun()
+            with st.container(key="mode_chat_wrap"):
+                if st.button(t("chat_btn"), key="mode_chat_btn", use_container_width=True):
+                    if st.session_state.mode != "chat":
+                        st.session_state.mode = "chat"
+                        st.rerun()
         with mcol2:
-            if st.button(t("diary_btn"), key="mode_diary_btn", use_container_width=True):
-                if st.session_state.mode != "diary":
-                    st.session_state.mode = "diary"
-                    st.rerun()
+            with st.container(key="mode_diary_wrap"):
+                if st.button(t("diary_btn"), key="mode_diary_btn", use_container_width=True):
+                    if st.session_state.mode != "diary":
+                        st.session_state.mode = "diary"
+                        st.rerun()
 
     st.markdown('<div style="height:14px;"></div>', unsafe_allow_html=True)
 
