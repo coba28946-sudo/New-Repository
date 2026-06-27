@@ -801,37 +801,40 @@ def t(key):
 # =====================
 # 6. LOGIN
 # =====================
+# =====================
+# 6. LOGIN
+# =====================
 if not st.session_state.logged_in:
     _login_text_dim = "rgba(0,0,0,0.55)" if st.session_state.theme == "light" else "rgba(255,255,255,0.5)"
     _login_text_dimmer = "rgba(0,0,0,0.3)" if st.session_state.theme == "light" else "rgba(255,255,255,0.18)"
+    _login_card_bg = "#ffffff" if st.session_state.theme == "light" else "#11141f"
+    _login_card_border = "#d8d5e0" if st.session_state.theme == "light" else "rgba(255,255,255,0.08)"
+
     st.markdown(f"""
-    <div style="padding-top:35px; text-align:center; margin-bottom:12px;">
-        <div style="color:{st.session_state.theme_color}; font-size:50px; font-weight:700; letter-spacing:-1px; margin-bottom:0px; line-height:1.1;">✦ Kei AI</div>
-        <div style="color:{_login_text_dim}; font-size:17px; margin-top:2px;">{t('app_tagline')}</div>
+    <style>
+    .login-card {{
+        max-width: 380px;
+        margin: 0 auto;
+        background: {_login_card_bg};
+        border: 1px solid {_login_card_border};
+        border-radius: 16px;
+        padding: 28px 28px 8px;
+    }}
+    </style>
+    <div style="padding-top:40px; text-align:center; margin-bottom:24px;">
+        <div style="color:{st.session_state.theme_color}; font-size:46px; font-weight:700; letter-spacing:-1px; line-height:1.1;">✦ Kei AI</div>
+        <div style="color:{_login_text_dim}; font-size:16px; margin-top:4px;">{t('app_tagline')}</div>
     </div>
     """, unsafe_allow_html=True)
 
     _, col, _ = st.columns([1, 1.1, 1])
     with col:
-        username = st.text_input(t("username"), key="login_username")
-        password = st.text_input(t("password"), type="password", key="login_password")
-        submitted = st.button(t("login_btn"), key="login_btn")
-
-        st.components.v1.html("""
-        <script>
-        (function fixInputs() {
-            const doc = window.parent.document;
-            const inputs = doc.querySelectorAll('[data-testid="stTextInput"] input');
-            inputs.forEach(function(el) {
-                if (el.type === 'password') {
-                    el.setAttribute('autocomplete', 'current-password');
-                } else {
-                    el.setAttribute('autocomplete', 'username');
-                }
-            });
-        })();
-        </script>
-        """, height=0, width=0)
+        st.markdown('<div class="login-card">', unsafe_allow_html=True)
+        with st.form(key="login_form", border=False):
+            username = st.text_input(t("username"), key="login_username")
+            password = st.text_input(t("password"), type="password", key="login_password")
+            submitted = st.form_submit_button(t("login_btn"), use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
         if submitted:
             if not username or not password:
