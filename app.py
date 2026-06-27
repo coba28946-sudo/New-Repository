@@ -829,7 +829,7 @@ if not st.session_state.logged_in:
     _login_text_dimmer = "rgba(0,0,0,0.3)" if st.session_state.theme == "light" else "rgba(255,255,255,0.18)"
 
     st.markdown(f"""
-    <div style="padding-top:80px; text-align:center; margin-bottom:48px;">
+    <div style="padding-top:40px; text-align:center; margin-bottom:20px;">
         <div style="color:{st.session_state.theme_color}; font-size:48px; font-weight:700; letter-spacing:-1px;">✦ Kei AI</div>
         <div style="color:{_login_text_dim}; font-size:16px; margin-top:8px;">{t('app_tagline')}</div>
     </div>
