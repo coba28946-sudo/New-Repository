@@ -61,6 +61,7 @@ header[data-testid="stHeader"] { background: transparent !important; box-shadow:
     color: rgba(255,255,255,0.5);
     font-size: 16px;
     text-align: center;
+    letter-spacing: 2.5px;
     margin-bottom: 32px;
 }
 .login-footer {
@@ -98,7 +99,6 @@ datalist {
     overflow: hidden !important;
     border-radius: 12px !important;
 }
-/* Fix sudut kanan password input */
 [data-testid="stTextInput"] [data-baseweb="input"] > div:last-child {
     border-radius: 0 12px 12px 0 !important;
     overflow: hidden !important;
@@ -847,10 +847,17 @@ if not st.session_state.logged_in:
     _login_text_dim = "rgba(0,0,0,0.55)" if st.session_state.theme == "light" else "rgba(255,255,255,0.45)"
     _login_text_dimmer = "rgba(0,0,0,0.3)" if st.session_state.theme == "light" else "rgba(255,255,255,0.18)"
 
+    _accent_login = st.session_state.get("theme_color", "#ff8ad8")
+
     st.markdown(f"""
     <div style="padding-top:40px; text-align:center; margin-bottom:10px;">
-        <div style="color:{st.session_state.theme_color}; font-size:48px; font-weight:700; letter-spacing:-1px;">✦ Kei AI</div>
-        <div style="color:{_login_text_dim}; font-size:16px; margin-top:8px;">{t('app_tagline')}</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 36 36">
+                <polygon points="18,0 21,15 36,18 21,21 18,36 15,21 0,18 15,15" fill="{_accent_login}"/>
+            </svg>
+            <span style="color:{_accent_login}; font-size:56px; font-weight:700; letter-spacing:-1px; line-height:1;">Kei AI</span>
+        </div>
+        <div style="color:{_login_text_dim}; font-size:16px; margin-top:0; letter-spacing:2.5px;">{t('app_tagline')}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1764,8 +1771,13 @@ if st.session_state.mode == "diary":
 else:
     st.markdown(f"""
     <div style="text-align:center;padding:4px 0 4px;">
-        <h1 style="color:{st.session_state.get('theme_color', '#ff8ad8')};margin:0;font-size:48px;line-height:1.1;">✦ Kei AI</h1>
-        <p style="color:{_header_tagline_color};font-size:20px;margin:2px 0 0;">{t('app_companion')} {header_mood_emoji}</p>
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 36 36">
+                <polygon points="18,0 21,15 36,18 21,21 18,36 15,21 0,18 15,15" fill="{st.session_state.get('theme_color', '#ff8ad8')}"/>
+            </svg>
+            <span style="color:{st.session_state.get('theme_color', '#ff8ad8')};font-size:48px;font-weight:700;line-height:1.1;">Kei AI</span>
+        </div>
+        <p style="color:{_header_tagline_color};font-size:20px;margin:0;">{t('app_companion')} {header_mood_emoji}</p>
     </div>
     """, unsafe_allow_html=True)
 
