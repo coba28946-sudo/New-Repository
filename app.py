@@ -86,10 +86,11 @@ datalist {
 [data-testid="stTextInput"] input {
     width: 100% !important;
     box-sizing: border-box !important;
-    padding-right: 40px !important;
+    padding: 0 40px 0 16px !important;
     font-size: 15px !important;
-    height: 52px !important;
-    padding-left: 16px !important;
+    height: 48px !important;
+    line-height: 48px !important;
+    vertical-align: middle !important;
 }
 [data-testid="stTextInput"] div[data-baseweb="input"] {
     overflow: hidden !important;
