@@ -79,6 +79,35 @@ datalist {
     display: none !important;
 }
 
+/* ===== FIX PASSWORD INPUT FULL WIDTH ===== */
+[data-testid="stTextInput"] {
+    width: 100% !important;
+}
+[data-testid="stTextInput"] > div {
+    width: 100% !important;
+}
+[data-testid="stTextInput"] input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+[data-testid="stTextInput"] div[data-baseweb="input"] {
+    width: 100% !important;
+}
+[data-testid="stTextInput"] div[data-baseweb="input"] input {
+    width: 100% !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+div[data-baseweb="base-input"] {
+    width: 100% !important;
+}
+div[data-baseweb="base-input"] input {
+    width: 100% !important;
+    flex: 1 1 auto !important;
+}
+
 .kei-layout {
     display: flex;
     height: 100vh;
@@ -1090,6 +1119,71 @@ Tulis suratnya:
     save_json(LETTER_FILE, letters)
 
     return entry
+
+# =====================
+# 9f. PESAN HARIAN KEI
+# =====================
+DAILY_MSG_FILE = "daily_message.json"
+
+def get_daily_greeting_context():
+    """Tentukan konteks sapaan berdasarkan jam."""
+    hour = datetime.now().hour
+    if 5 <= hour < 11:
+        return "pagi", "🌅", "semangat memulai hari"
+    elif 11 <= hour < 15:
+        return "siang", "☀️", "istirahat sejenak dan makan siang"
+    elif 15 <= hour < 18:
+        return "sore", "🌤️", "bersantai setelah aktivitas"
+    elif 18 <= hour < 21:
+        return "malam", "🌙", "bersantai dan me-time"
+    else:
+        return "larut malam", "🌃", "istirahat yang cukup"
+
+def get_or_generate_daily_message():
+    """
+    Ambil pesan harian dari cache kalau sudah ada hari ini,
+    kalau belum generate baru via Gemini.
+    """
+    today_str = datetime.now().strftime("%Y-%m-%d")
+
+    if os.path.exists(DAILY_MSG_FILE):
+        try:
+            with open(DAILY_MSG_FILE, "r") as f:
+                cached = json.load(f)
+            if cached.get("date") == today_str:
+                return cached.get("message", ""), cached.get("time_label", ""), cached.get("time_emoji", "🌸")
+        except Exception:
+            pass
+
+    mood_emoji, mood_label = get_current_mood()
+    time_label, time_emoji, activity_hint = get_daily_greeting_context()
+    streak = update_and_get_streak()
+
+    prompt = f"""
+Kamu adalah Kei, AI companion yang imut dan penuh kasih sayang.
+Sekarang {time_label} hari ini. Mood Kei: {mood_emoji} {mood_label}.
+User sudah {streak} hari berturut-turut ngobrol sama Kei!
+
+Tulis sapaan harian yang hangat dan personal (2-3 kalimat saja):
+- Sesuai waktu ({time_label}) dan mood Kei hari ini
+- Ingatkan user untuk {activity_hint}
+- Imut, natural, dan terasa personal
+- Pakai emoji yang sesuai
+- Jangan terlalu panjang, cukup 2-3 kalimat hangat
+Kei menyapa:
+"""
+    message = generate_content_with_retry(prompt)
+
+    cache = {
+        "date": today_str,
+        "message": message,
+        "time_label": time_label,
+        "time_emoji": time_emoji,
+    }
+    with open(DAILY_MSG_FILE, "w") as f:
+        json.dump(cache, f, ensure_ascii=False)
+
+    return message, time_label, time_emoji
 
 # =====================
 # 10. SIDEBAR
