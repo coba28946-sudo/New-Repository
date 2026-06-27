@@ -88,6 +88,8 @@ datalist {
 }
 [data-testid="stTextInput"] div[data-baseweb="input"] {
     width: 100% !important;
+    overflow: hidden !important;
+    border-radius: 8px !important;
 }
 div[data-baseweb="base-input"] {
     width: 100% !important;
