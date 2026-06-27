@@ -87,9 +87,11 @@ datalist {
     width: 100% !important;
     box-sizing: border-box !important;
     padding: 0 40px 0 16px !important;
+    padding-bottom: 8px !important;
     font-size: 15px !important;
     height: 48px !important;
-    line-height: 48px !important;
+    line-height: normal !important;
+    margin-top: -4px !important;
     vertical-align: middle !important;
 }
 [data-testid="stTextInput"] div[data-baseweb="input"] {
