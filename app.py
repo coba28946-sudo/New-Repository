@@ -374,7 +374,8 @@ div[data-testid="stTextArea"] label p {
     font-size: 16px !important;
 }
 
-small[data-testid="InputInstructions"] {
+small[data-testid="InputInstructions"],
+[data-testid="InputInstructions"] {
     display: none !important;
 }
 
@@ -618,6 +619,16 @@ def render_dynamic_css():
     .login-footer {{ color: {text_dimmer} !important; }}
     .kei-header h1 {{ color: {accent} !important; }}
     .kei-header p {{ color: {text_dim} !important; }}
+
+    small[data-testid="InputInstructions"],
+    [data-testid="InputInstructions"],
+    [class*="InputInstructions"] {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
