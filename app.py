@@ -499,6 +499,43 @@ small[data-testid="InputInstructions"],
     box-shadow: 0 0 0 3px rgba(255,63,164,0.12) !important;
 }
 
+/* ===== LOGIN CARD WRAPPER ===== */
+.stApp {
+    background:
+        radial-gradient(560px 420px at 50% 18%, rgba(255,63,164,0.10), transparent 70%),
+        radial-gradient(640px 480px at 80% 85%, rgba(110,107,255,0.07), transparent 70%),
+        radial-gradient(640px 480px at 10% 90%, rgba(177,78,255,0.06), transparent 70%),
+        #0a0e1a !important;
+}
+.st-key-login_card_wrap {
+    max-width: 460px;
+    margin: 40px auto 0 !important;
+    background: linear-gradient(180deg, #181a24, #13141c);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 36px 36px 28px;
+    box-shadow:
+        0 24px 60px -20px rgba(0,0,0,0.6),
+        0 0 80px -20px rgba(255,63,164,0.08);
+}
+.login-signup-row {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+}
+.login-signup-row a {
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+.login-signup-row a:hover {
+    color: #FF3FA4;
+    border-color: #FF3FA4;
+}
+
 @media (max-width: 768px) {
     .kei-sidebar { width: 220px; min-width: 220px; }
     .kei-main { padding-left: 46px; }
@@ -837,6 +874,8 @@ TEXTS = {
         "forgot_password_back": "← Kembali ke login",
         "forgot_password_sent": "Kalau username terdaftar, instruksi reset sudah Kei kirimkan ya~ 💕",
         "forgot_password_empty": "Isi username dulu ya Kak 🥺",
+        "signup_prompt": "Belum punya akun?",
+        "signup_cta": "Daftar sekarang",
         "chat_btn": "💬 Chat",
         "diary_btn": "💌 Diary",
         "online_status": "Online",
@@ -908,6 +947,8 @@ TEXTS = {
         "forgot_password_back": "← Back to login",
         "forgot_password_sent": "If that username exists, Kei has sent reset instructions~ 💕",
         "forgot_password_empty": "Enter your username first 🥺",
+        "signup_prompt": "Don't have an account?",
+        "signup_cta": "Sign up now",
         "chat_btn": "💬 Chat",
         "diary_btn": "💌 Diary",
         "online_status": "Online",
@@ -978,29 +1019,29 @@ if not st.session_state.logged_in:
 
     _accent_login = st.session_state.get("theme_color", "#ff8ad8")
 
-    st.markdown(f"""
-    <div style="padding-top:40px; text-align:center; margin-bottom:10px;">
-        <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
-            <div class="login-spark-wrap">
-                <div class="login-spark-glow"></div>
-                <svg class="login-spark-svg" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 0 L14.2 9.8 L24 12 L14.2 14.2 L12 24 L9.8 14.2 L0 12 L9.8 9.8 Z" fill="url(#loginSparkGrad)"/>
-                    <defs>
-                        <linearGradient id="loginSparkGrad" x1="0" y1="0" x2="24" y2="24">
-                            <stop offset="0%" stop-color="#FF3FA4"/>
-                            <stop offset="100%" stop-color="#B14EFF"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
+    login_card = st.container(key="login_card_wrap")
+    with login_card:
+        st.markdown(f"""
+        <div style="padding-top:8px; text-align:center; margin-bottom:10px;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
+                <div class="login-spark-wrap">
+                    <div class="login-spark-glow"></div>
+                    <svg class="login-spark-svg" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 0 L14.2 9.8 L24 12 L14.2 14.2 L12 24 L9.8 14.2 L0 12 L9.8 9.8 Z" fill="url(#loginSparkGrad)"/>
+                        <defs>
+                            <linearGradient id="loginSparkGrad" x1="0" y1="0" x2="24" y2="24">
+                                <stop offset="0%" stop-color="#FF3FA4"/>
+                                <stop offset="100%" stop-color="#B14EFF"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="login-brand-name">Kei AI</span>
             </div>
-            <span class="login-brand-name">Kei AI</span>
+            <div style="color:{_login_text_dim}; font-size:16px; margin-top:0; letter-spacing:2.5px;">{t('app_tagline')}</div>
         </div>
-        <div style="color:{_login_text_dim}; font-size:16px; margin-top:0; letter-spacing:2.5px;">{t('app_tagline')}</div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
-    _, col, _ = st.columns([1.4, 1, 1.4])
-    with col:
         st.markdown("""
         <style>
         /* Login button lebih besar */
@@ -1048,8 +1089,8 @@ if not st.session_state.logged_in:
 
         # ===== MODE: FORM LOGIN NORMAL =====
         else:
-            username = st.text_input(t("username"), key="login_username")
-            password = st.text_input(t("password"), type="password", key="login_password")
+            username = st.text_input(t("username"), key="login_username", placeholder="Masukkan username kamu")
+            password = st.text_input(t("password"), type="password", key="login_password", placeholder="Masukkan password kamu")
 
             st.markdown(f"""
             <div class="login-forgot-row">
@@ -1079,8 +1120,14 @@ if not st.session_state.logged_in:
                 else:
                     st.error(t("login_err_wrong"))
 
+            st.markdown(f"""
+            <div class="login-signup-row">
+                {t('signup_prompt')} <a href="#">{t('signup_cta')}</a>
+            </div>
+            """, unsafe_allow_html=True)
+
     st.markdown(f"""
-    <div style="text-align:center;margin-top:32px;color:{_login_text_dimmer};font-size:12px;">
+    <div style="text-align:center;margin-top:24px;color:{_login_text_dimmer};font-size:12px;">
         Kei AI — {t('app_companion')} ✦
     </div>
     """, unsafe_allow_html=True)
