@@ -1935,7 +1935,7 @@ with st.sidebar:
     <style>
     .st-key-kei_mode_switch {{
         background: {_ms_bg} !important;
-        border: 1.5px solid rgba({_r},{_g},{_b},0.4) !important;
+        border: 1px solid {_ms_border} !important;
         border-radius: 16px !important;
         padding: 4px !important;
         margin-bottom: 4px !important;
@@ -2066,8 +2066,8 @@ with st.sidebar:
 
     st.markdown(f"""
     <div style="
-        background: linear-gradient(160deg, rgba({_r},{_g},{_b},0.12), rgba({_r},{_g},{_b},0.03));
-        border: 1.5px solid rgba({_r},{_g},{_b},0.45);
+        background: linear-gradient(160deg, rgba({_r},{_g},{_b},0.07), rgba({_r},{_g},{_b},0.02));
+        border: 1px solid rgba({_r},{_g},{_b},0.18);
         border-radius: 16px;
         padding: 16px;
         text-align: center;
