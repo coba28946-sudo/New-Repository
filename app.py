@@ -401,6 +401,104 @@ small[data-testid="InputInstructions"],
     text-decoration: underline;
 }
 
+/* ===== LOGIN PAGE - GRADIENT & GLOW ===== */
+.login-spark-wrap {
+    position: relative;
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-spark-glow {
+    position: absolute;
+    inset: -16px;
+    background: radial-gradient(circle, rgba(255,63,164,0.35), transparent 70%);
+    filter: blur(8px);
+    animation: login-pulse-glow 2.8s ease-in-out infinite;
+}
+@keyframes login-pulse-glow {
+    0%, 100% { opacity: 0.55; transform: scale(0.92); }
+    50% { opacity: 1; transform: scale(1.08); }
+}
+.login-spark-svg {
+    position: relative;
+    z-index: 1;
+    width: 34px;
+    height: 34px;
+    animation: login-spark-spin 7s linear infinite;
+    transform-origin: center;
+}
+@keyframes login-spark-spin {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.08); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+.login-brand-name {
+    font-weight: 800;
+    font-size: 52px;
+    letter-spacing: -1px;
+    background: linear-gradient(95deg, #FFFFFF 5%, #FF3FA4 45%, #B14EFF 75%, #6E6BFF 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: login-shine 5s linear infinite;
+    line-height: 1;
+}
+@keyframes login-shine {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* Target spesifik tombol login via key - gradient + teks putih dipaksa */
+.st-key-login_btn button {
+    background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 8px 24px -8px rgba(255,63,164,0.45) !important;
+    transition: box-shadow 0.2s ease, transform 0.15s ease !important;
+}
+.st-key-login_btn button:hover {
+    box-shadow: 0 10px 28px -6px rgba(255,63,164,0.6) !important;
+}
+.st-key-login_btn button:active {
+    transform: scale(0.985) !important;
+}
+.st-key-login_btn button p,
+.st-key-login_btn button span,
+.st-key-login_btn button div {
+    color: #ffffff !important;
+}
+
+/* Tombol kirim reset password - gradient sama */
+.st-key-send_reset_btn button {
+    background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 8px 24px -8px rgba(255,63,164,0.45) !important;
+}
+.st-key-send_reset_btn button p,
+.st-key-send_reset_btn button span,
+.st-key-send_reset_btn button div {
+    color: #ffffff !important;
+}
+
+/* Input login - sedikit glow saat fokus */
+.st-key-login_username input,
+.st-key-login_password input,
+.st-key-reset_username input {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+.st-key-login_username input:focus,
+.st-key-login_password input:focus,
+.st-key-reset_username input:focus {
+    border-color: rgba(255,63,164,0.5) !important;
+    box-shadow: 0 0 0 3px rgba(255,63,164,0.12) !important;
+}
+
 @media (max-width: 768px) {
     .kei-sidebar { width: 220px; min-width: 220px; }
     .kei-main { padding-left: 46px; }
@@ -883,10 +981,19 @@ if not st.session_state.logged_in:
     st.markdown(f"""
     <div style="padding-top:40px; text-align:center; margin-bottom:10px;">
         <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 36 36">
-                <polygon points="18,0 21,15 36,18 21,21 18,36 15,21 0,18 15,15" fill="{_accent_login}"/>
-            </svg>
-            <span style="color:{_accent_login}; font-size:56px; font-weight:700; letter-spacing:-1px; line-height:1;">Kei AI</span>
+            <div class="login-spark-wrap">
+                <div class="login-spark-glow"></div>
+                <svg class="login-spark-svg" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 0 L14.2 9.8 L24 12 L14.2 14.2 L12 24 L9.8 14.2 L0 12 L9.8 9.8 Z" fill="url(#loginSparkGrad)"/>
+                    <defs>
+                        <linearGradient id="loginSparkGrad" x1="0" y1="0" x2="24" y2="24">
+                            <stop offset="0%" stop-color="#FF3FA4"/>
+                            <stop offset="100%" stop-color="#B14EFF"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <span class="login-brand-name">Kei AI</span>
         </div>
         <div style="color:{_login_text_dim}; font-size:16px; margin-top:0; letter-spacing:2.5px;">{t('app_tagline')}</div>
     </div>
