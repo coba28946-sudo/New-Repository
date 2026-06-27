@@ -490,7 +490,6 @@ small[data-testid="InputInstructions"],
     100% { background-position: 200% 50%; }
 }
 
-/* Target spesifik tombol login via key - gradient + teks putih dipaksa */
 .st-key-login_btn button {
     background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
     border: none !important;
@@ -511,7 +510,6 @@ small[data-testid="InputInstructions"],
     color: #ffffff !important;
 }
 
-/* Tombol kirim reset password - gradient sama */
 .st-key-send_reset_btn button {
     background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
     border: none !important;
@@ -525,7 +523,6 @@ small[data-testid="InputInstructions"],
     color: #ffffff !important;
 }
 
-/* Input login - sedikit glow saat fokus */
 .st-key-login_username input,
 .st-key-login_password input,
 .st-key-reset_username input {
@@ -538,7 +535,6 @@ small[data-testid="InputInstructions"],
     box-shadow: 0 0 0 3px rgba(255,63,164,0.12) !important;
 }
 
-/* ===== LOGIN CARD WRAPPER ===== */
 .stApp {
     background:
         radial-gradient(560px 420px at 50% 18%, rgba(255,63,164,0.10), transparent 70%),
@@ -573,6 +569,19 @@ small[data-testid="InputInstructions"],
 .login-signup-row a:hover {
     color: #FF3FA4;
     border-color: #FF3FA4;
+}
+
+/* ===== MENU LIST (KEI SIDEBAR v2) ===== */
+.kei-menu-group-label {
+    font-size: 10.5px;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.32);
+    margin: 14px 4px 6px;
+    text-transform: uppercase;
+}
+.st-key-kei_menu_list .stButton > button {
+    text-align: left !important;
+    justify-content: flex-start !important;
 }
 
 @media (max-width: 768px) {
@@ -858,6 +867,7 @@ for key, val in {
     "current_mood_index": None,
     "show_milestone_letter": None,
     "show_forgot_password": False,
+    "active_panel": None,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = val
@@ -941,6 +951,8 @@ TEXTS = {
         "mode_label": "Mode",
         "mode_chat": "💬 Chat",
         "mode_diary": "💌 Dear Diary",
+        "menu_group_interaksi": "Interaksi",
+        "menu_group_alat": "Alat",
         "sticker_expander": "😄 Kirim Stiker",
         "music_expander": "🎵 Putar Musik",
         "music_input_label": "Nama lagu / artis",
@@ -1014,6 +1026,8 @@ TEXTS = {
         "mode_label": "Mode",
         "mode_chat": "💬 Chat",
         "mode_diary": "💌 Dear Diary",
+        "menu_group_interaksi": "Interaction",
+        "menu_group_alat": "Tools",
         "sticker_expander": "😄 Send Sticker",
         "music_expander": "🎵 Play Music",
         "music_input_label": "Song / artist name",
@@ -1100,7 +1114,6 @@ if not st.session_state.logged_in:
 
         st.markdown("""
         <style>
-        /* Login button lebih besar */
         .stButton > button {
             height: 52px !important;
             font-size: 16px !important;
@@ -1110,7 +1123,6 @@ if not st.session_state.logged_in:
         </style>
         """, unsafe_allow_html=True)
 
-        # ===== MODE: FORM RESET PASSWORD =====
         if st.session_state.show_forgot_password:
             st.markdown(f"""
             <div style="margin-bottom:14px;">
@@ -1131,8 +1143,6 @@ if not st.session_state.logged_in:
                 if not reset_username:
                     st.warning(t("forgot_password_empty"))
                 else:
-                    # NOTE: di sini belum ada sistem email/reset sungguhan.
-                    # Tempatkan logika kirim email reset password kamu sendiri di sini.
                     st.success(t("forgot_password_sent"))
 
             st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
@@ -1143,7 +1153,6 @@ if not st.session_state.logged_in:
                     st.session_state.show_forgot_password = False
                     st.rerun()
 
-        # ===== MODE: FORM LOGIN NORMAL =====
         else:
             username = st.text_input(t("username"), key="login_username", placeholder="Masukkan username kamu")
             password = st.text_input(t("password"), type="password", key="login_password", placeholder="Masukkan password kamu")
@@ -1504,7 +1513,344 @@ Kei menyapa:
     return message, time_label, time_emoji
 
 # =====================
-# 10. SIDEBAR
+# 10. SIDEBAR PANEL RENDERERS (Opsi 2 — panel terpisah)
+# =====================
+def render_mood_panel(accent, r, g, b):
+    st.caption(t("mood_pick_label"))
+    mood_cols = st.columns(4)
+    current_idx = st.session_state.get("current_mood_index")
+    for i, (m_emoji, m_label_id) in enumerate(KEI_MOODS):
+        m_label = KEI_MOODS_EN_LABELS[i] if st.session_state.get("lang") == "en" else m_label_id
+        with mood_cols[i % 4]:
+            btn_wrap = st.container(key=f"mood_wrap_{i}")
+            with btn_wrap:
+                if i == current_idx:
+                    st.markdown(f"""
+                    <style>
+                    .st-key-mood_wrap_{i} [data-testid="stButton"] button {{
+                        border: 2px solid {accent} !important;
+                        background: rgba({r},{g},{b},0.15) !important;
+                    }}
+                    </style>
+                    """, unsafe_allow_html=True)
+                if st.button(m_emoji, key=f"mood_pick_{i}", help=m_label, use_container_width=True):
+                    st.session_state.current_mood_index = i
+                    st.rerun()
+    st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
+    is_auto_active = current_idx is None
+    status_text = t("mood_auto_active") if is_auto_active else t("mood_auto_inactive")
+    status_color = "#4ade80" if is_auto_active else "var(--text-secondary)"
+    st.markdown(f"<div style='font-size:12px;color:{status_color};margin-bottom:6px;'>{'●' if is_auto_active else '○'} {status_text}</div>", unsafe_allow_html=True)
+    if st.button(t("mood_auto_btn"), key="mood_auto_btn", use_container_width=True):
+        st.session_state.current_mood_index = None
+        st.rerun()
+
+def render_sticker_panel(accent, r, g, b):
+    sticker_row = st.container(key="kei_sticker_row")
+    with sticker_row:
+        all_moods  = ["happy", "love", "sad", "cool", "shy", "excited", "sleepy", "angry", "hungry", "sparkle"]
+        all_emojis = ["😄",   "💕",   "😢",  "😎",   "🌸",  "🎉",      "😴",     "😤",    "🍜",     "✨"]
+        cols1 = st.columns(5)
+        for i in range(5):
+            with cols1[i]:
+                if st.button(all_emojis[i], key=f"sticker_{all_moods[i]}"):
+                    sticker = get_sticker(all_moods[i])
+                    st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
+                    st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
+                    save_json(CHAT_FILE, st.session_state.messages)
+                    st.rerun()
+        cols2 = st.columns(5)
+        for i in range(5, 10):
+            with cols2[i - 5]:
+                if st.button(all_emojis[i], key=f"sticker_{all_moods[i]}"):
+                    sticker = get_sticker(all_moods[i])
+                    st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
+                    st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
+                    save_json(CHAT_FILE, st.session_state.messages)
+                    st.rerun()
+
+def render_music_panel(accent, r, g, b):
+    music_query = st.text_input(t("music_input_label"), key="music_input")
+    if st.button(t("music_search_btn"), key="music_search"):
+        if music_query:
+            search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
+            st.markdown(f"""
+            <div class="music-result">
+                🎵 <b>{music_query}</b><br>
+                <a href="{search_url}" target="_blank" style="color:{accent};">Buka di YouTube ↗</a>
+            </div>
+            """, unsafe_allow_html=True)
+
+def render_convert_panel(accent, r, g, b):
+    conv_type = st.radio(
+        "Pilih konversi:",
+        ["PDF → Word (.docx)", "Word (.docx) → PDF"],
+        key="conv_type",
+    )
+    if conv_type == "PDF → Word (.docx)":
+        conv_file = st.file_uploader("Upload file PDF", type=["pdf"], key="conv_pdf_upload")
+        if st.button("Konversi ✨", key="conv_pdf_btn"):
+            if conv_file:
+                with st.spinner("Kei lagi konversi filenya... 🥺"):
+                    try:
+                        import tempfile
+                        from pdf2docx import Converter
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
+                            tmp_pdf.write(conv_file.read())
+                            tmp_pdf_path = tmp_pdf.name
+                        out_path = tmp_pdf_path.replace(".pdf", ".docx")
+                        cv = Converter(tmp_pdf_path)
+                        cv.convert(out_path, start=0, end=None)
+                        cv.close()
+                        with open(out_path, "rb") as f:
+                            docx_bytes = f.read()
+                        os.remove(tmp_pdf_path)
+                        os.remove(out_path)
+                        st.success("Berhasil dikonversi! ✨")
+                        st.download_button(
+                            "⬇️ Download .docx",
+                            data=docx_bytes,
+                            file_name=conv_file.name.replace(".pdf", ".docx"),
+                            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            key="dl_docx",
+                        )
+                    except Exception as e:
+                        st.error(f"Gagal konversi: {e}")
+            else:
+                st.warning("Upload file PDF dulu ya Kak! 🥺")
+    else:
+        conv_file = st.file_uploader("Upload file Word (.docx)", type=["docx"], key="conv_docx_upload")
+        if st.button("Konversi ✨", key="conv_docx_btn"):
+            if conv_file:
+                with st.spinner("Kei lagi konversi filenya... 🥺"):
+                    try:
+                        import tempfile, subprocess
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp_docx:
+                            tmp_docx.write(conv_file.read())
+                            tmp_docx_path = tmp_docx.name
+                        out_dir = tempfile.mkdtemp()
+                        result = subprocess.run(
+                            ["libreoffice", "--headless", "--convert-to", "pdf",
+                             "--outdir", out_dir, tmp_docx_path],
+                            capture_output=True, text=True, timeout=60
+                        )
+                        base_name = os.path.splitext(os.path.basename(tmp_docx_path))[0]
+                        out_pdf = os.path.join(out_dir, base_name + ".pdf")
+                        if os.path.exists(out_pdf):
+                            with open(out_pdf, "rb") as f:
+                                pdf_bytes = f.read()
+                            os.remove(tmp_docx_path)
+                            os.remove(out_pdf)
+                            st.success("Berhasil dikonversi! ✨")
+                            st.download_button(
+                                "⬇️ Download .pdf",
+                                data=pdf_bytes,
+                                file_name=conv_file.name.replace(".docx", ".pdf"),
+                                mime="application/pdf",
+                                key="dl_pdf",
+                            )
+                        else:
+                            st.error(f"LibreOffice gagal: {result.stderr}")
+                    except FileNotFoundError:
+                        st.error("LibreOffice tidak terinstall. Tambahkan 'libreoffice' ke packages.txt ya Kak!")
+                    except Exception as e:
+                        st.error(f"Gagal konversi: {e}")
+            else:
+                st.warning("Upload file .docx dulu ya Kak! 🥺")
+
+def render_settings_panel(accent, r, g, b):
+    st.markdown(f"**{t('theme_label')}**")
+    theme_choice = st.radio(
+        t("theme_label"),
+        options=["dark", "light"],
+        format_func=lambda x: t("theme_dark") if x == "dark" else t("theme_light"),
+        index=0 if st.session_state.theme == "dark" else 1,
+        key="theme_radio",
+        label_visibility="collapsed",
+        horizontal=True,
+    )
+    if theme_choice != st.session_state.theme:
+        st.session_state.theme = theme_choice
+        save_prefs()
+        st.rerun()
+
+    st.markdown(f"**{t('lang_label')}**")
+    lang_choice = st.radio(
+        t("lang_label"),
+        options=["id", "en"],
+        format_func=lambda x: t("lang_id") if x == "id" else t("lang_en"),
+        index=0 if st.session_state.lang == "id" else 1,
+        key="lang_radio",
+        label_visibility="collapsed",
+        horizontal=True,
+    )
+    if lang_choice != st.session_state.lang:
+        st.session_state.lang = lang_choice
+        save_prefs()
+        st.rerun()
+
+def render_stats_panel(accent, r, g, b):
+    chat_stats = record_active_day_and_get_stats(st.session_state.messages)
+    stat_col1, stat_col2 = st.columns(2)
+    with stat_col1:
+        st.metric(t("stats_total_msgs"), chat_stats["total_msgs"])
+        st.metric(t("stats_user_msgs"), chat_stats["user_msgs"])
+    with stat_col2:
+        st.metric(t("stats_active_days"), chat_stats["active_days"])
+        st.metric(t("stats_kei_msgs"), chat_stats["kei_msgs"])
+
+    if os.path.exists(LETTER_FILE):
+        try:
+            with open(LETTER_FILE, "r") as f:
+                all_letters = json.load(f)
+            if all_letters:
+                st.markdown('<div style="height:8px;"></div>', unsafe_allow_html=True)
+                with st.expander(f"💌 {t('letters_expander')} ({len(all_letters)})"):
+                    for ltr in reversed(all_letters):
+                        st.markdown(f"""
+                        <div class="diary-box">
+                            <small style="color:{accent};">🔥 Streak {ltr['streak']} hari · {ltr['date']}</small><br><br>
+                            {ltr['letter']}
+                        </div>
+                        """, unsafe_allow_html=True)
+        except Exception:
+            pass
+
+def render_search_panel(accent, r, g, b, ms_bg, ms_border, ms_text):
+    search_query = st.text_input(
+        "Kata kunci:",
+        key="search_input",
+        placeholder=t("search_placeholder"),
+    )
+    if search_query:
+        results = [
+            m for m in st.session_state.messages
+            if search_query.lower() in m["content"].lower()
+        ]
+        if results:
+            st.markdown(
+                f"<div style='font-size:12px;color:{accent};margin-bottom:8px;'>"
+                f"{t('search_found').format(n=len(results))}</div>",
+                unsafe_allow_html=True
+            )
+            for msg in results[-10:]:
+                role_label = "Kamu" if msg["role"] == "user" else "Kei"
+                role_color = accent if msg["role"] == "assistant" else ms_text
+                highlighted = msg["content"].replace(
+                    search_query,
+                    f"<mark style='background:rgba({r},{g},{b},0.3);"
+                    f"color:inherit;border-radius:3px;padding:0 2px;'>{search_query}</mark>"
+                )
+                st.markdown(
+                    f"""<div style='
+                        background:{ms_bg};
+                        border:1px solid {ms_border};
+                        border-radius:10px;
+                        padding:10px 12px;
+                        margin-bottom:6px;
+                        font-size:13px;
+                    '>
+                        <span style='color:{role_color};font-weight:600;'>{role_label}</span><br>
+                        <span style='color:{ms_text};'>{highlighted}</span>
+                    </div>""",
+                    unsafe_allow_html=True
+                )
+        else:
+            st.markdown(
+                f"<div style='font-size:13px;'>{t('search_empty')}</div>",
+                unsafe_allow_html=True
+            )
+
+def render_export_panel(accent, r, g, b, text_dim, text_dimmer):
+    if st.session_state.messages:
+        export_format = st.radio(
+            t("export_format_label"),
+            ["📄 TXT", "📋 Markdown"],
+            key="export_format",
+            horizontal=True,
+        )
+
+        if export_format == "📄 TXT":
+            lines = [
+                "═══════════════════════════════",
+                "   CHAT BERSAMA KEI AI 💕",
+                f"   Diekspor: {datetime.now().strftime('%d %B %Y, %H:%M')}",
+                f"   Total pesan: {len(st.session_state.messages)}",
+                "═══════════════════════════════\n",
+            ]
+            for msg in st.session_state.messages:
+                role = "Kamu" if msg["role"] == "user" else "Kei"
+                lines.append(f"[{role}]\n{msg['content']}\n")
+            export_text = "\n".join(lines)
+            st.download_button(
+                label="⬇️ Download .txt",
+                data=export_text.encode("utf-8"),
+                file_name=f"chat_kei_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
+                mime="text/plain",
+                key="dl_export_txt",
+                use_container_width=True,
+            )
+        else:
+            lines = [
+                "# 💕 Chat Bersama Kei AI",
+                f"> Diekspor: {datetime.now().strftime('%d %B %Y, %H:%M')}  ",
+                f"> Total pesan: {len(st.session_state.messages)}\n",
+                "---\n",
+            ]
+            for msg in st.session_state.messages:
+                if msg["role"] == "user":
+                    lines.append(f"**🧑 Kamu:**  \n{msg['content']}\n")
+                else:
+                    lines.append(f"**✨ Kei:**  \n{msg['content']}\n")
+                lines.append("---\n")
+            export_md = "\n".join(lines)
+            st.download_button(
+                label="⬇️ Download .md",
+                data=export_md.encode("utf-8"),
+                file_name=f"chat_kei_{datetime.now().strftime('%Y%m%d_%H%M')}.md",
+                mime="text/markdown",
+                key="dl_export_md",
+                use_container_width=True,
+            )
+
+        st.markdown(
+            f"<div style='font-size:11px;color:{text_dimmer};margin-top:8px;'>{t('export_preview_label')}</div>",
+            unsafe_allow_html=True
+        )
+        for msg in st.session_state.messages[-3:]:
+            role = "Kamu" if msg["role"] == "user" else "Kei"
+            preview_text = msg["content"][:60] + "..." if len(msg["content"]) > 60 else msg["content"]
+            st.markdown(
+                f"""<div style='
+                    font-size:12px;
+                    color:{text_dim};
+                    padding:4px 8px;
+                    border-left:2px solid rgba({r},{g},{b},0.4);
+                    margin:3px 0;
+                '>
+                    <b style="color:{accent};">{role}:</b> {preview_text}
+                </div>""",
+                unsafe_allow_html=True
+            )
+    else:
+        st.markdown(
+            f"<div style='font-size:13px;color:{text_dimmer};'>{t('export_empty')}</div>",
+            unsafe_allow_html=True
+        )
+
+PANEL_TITLES = {
+    "mood": "mood_expander",
+    "sticker": "sticker_expander",
+    "music": "music_expander",
+    "convert": "convert_expander",
+    "settings": "settings_expander",
+    "stats": "stats_expander",
+    "search": "search_expander",
+    "export": "export_expander",
+}
+
+# =====================
+# 10b. SIDEBAR
 # =====================
 with st.sidebar:
     st.markdown('<div class="kei-sidebar-inner">', unsafe_allow_html=True)
@@ -1567,6 +1913,14 @@ with st.sidebar:
     .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button:hover {{
         color: #ffffff !important;
     }}
+    /* Menu list rows aktif */
+    {''.join([f'''
+    .st-key-menu_{key} button {{
+        border-color: {_accent} !important;
+        background: rgba({_r},{_g},{_b},0.1) !important;
+        color: {_accent} !important;
+    }}
+    ''' for key in PANEL_TITLES if st.session_state.get("active_panel") == key])}
     </style>
     """, unsafe_allow_html=True)
 
@@ -1628,378 +1982,48 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown(f"<div style='font-size:12px;color:{_text_dim};margin-bottom:12px;'>{t('mode_label')}: {t('mode_chat') if st.session_state.mode == 'chat' else t('mode_diary')}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='font-size:12px;color:{_text_dim};margin-bottom:6px;'>{t('mode_label')}: {t('mode_chat') if st.session_state.mode == 'chat' else t('mode_diary')}</div>", unsafe_allow_html=True)
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
-    # ── Ubah Mood Kei ──
-    with st.expander(t("mood_expander")):
-        st.caption(t("mood_pick_label"))
+    # ── DAFTAR MENU (Opsi 1 — klik = expand di tempat) ──
+    menu_list = st.container(key="kei_menu_list")
+    with menu_list:
+        st.markdown(f"<div class='kei-menu-group-label'>{t('menu_group_interaksi')}</div>", unsafe_allow_html=True)
 
-        current_idx = st.session_state.get("current_mood_index")
+        for key, label_key in [
+            ("mood", "mood_expander"),
+            ("sticker", "sticker_expander"),
+            ("music", "music_expander"),
+        ]:
+            with st.expander(t(label_key)):
+                if key == "mood":
+                    render_mood_panel(_accent, _r, _g, _b)
+                elif key == "sticker":
+                    render_sticker_panel(_accent, _r, _g, _b)
+                elif key == "music":
+                    render_music_panel(_accent, _r, _g, _b)
 
-        mood_btn_css = "<style>"
-        for i in range(len(KEI_MOODS)):
-            if i == current_idx:
-                mood_btn_css += f"""
-                .st-key-mood_wrap_{i} [data-testid="stButton"] button {{
-                    border: 2px solid {_accent} !important;
-                    background: rgba({_r},{_g},{_b},0.15) !important;
-                    box-shadow: 0 0 0 1px rgba({_r},{_g},{_b},0.3) !important;
-                }}
-                """
-        mood_btn_css += "</style>"
-        st.markdown(mood_btn_css, unsafe_allow_html=True)
+        st.markdown(f"<div class='kei-menu-group-label'>{t('menu_group_alat')}</div>", unsafe_allow_html=True)
 
-        mood_cols = st.columns(4)
-        for i, (m_emoji, m_label_id) in enumerate(KEI_MOODS):
-            m_label = KEI_MOODS_EN_LABELS[i] if st.session_state.get("lang") == "en" else m_label_id
-            with mood_cols[i % 4]:
-                mood_btn_wrap = st.container(key=f"mood_wrap_{i}")
-                with mood_btn_wrap:
-                    if st.button(f"{m_emoji}", key=f"mood_pick_{i}", help=m_label, use_container_width=True):
-                        st.session_state.current_mood_index = i
-                        st.rerun()
-
-        st.markdown('<div style="height:6px;"></div>', unsafe_allow_html=True)
-
-        is_auto_active = current_idx is None
-        if is_auto_active:
-            status_text  = t("mood_auto_active")
-            status_color = "#4ade80"
-            status_dot   = "●"
-        else:
-            status_text  = t("mood_auto_inactive")
-            status_color = _text_dim
-            status_dot   = "○"
-
-        st.markdown(f"""
-        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:{status_color};margin-bottom:6px;">
-            <span>{status_dot}</span><span>{status_text}</span>
-        </div>
-        """, unsafe_allow_html=True)
-
-        auto_btn_wrap = st.container(key="mood_auto_btn_wrap")
-        with auto_btn_wrap:
-            if is_auto_active:
-                st.markdown(f"""
-                <style>
-                .st-key-mood_auto_btn_wrap [data-testid="stButton"] button {{
-                    border: 2px solid {_accent} !important;
-                    background: rgba({_r},{_g},{_b},0.15) !important;
-                    color: {_accent} !important;
-                }}
-                </style>
-                """, unsafe_allow_html=True)
-            if st.button(t("mood_auto_btn"), key="mood_auto_btn", use_container_width=True):
-                st.session_state.current_mood_index = None
-                st.rerun()
-
-    st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
-
-    # ── Kirim Stiker ──
-    with st.expander(t("sticker_expander")):
-        sticker_row = st.container(key="kei_sticker_row")
-        with sticker_row:
-            all_moods  = ["happy", "love", "sad", "cool", "shy", "excited", "sleepy", "angry", "hungry", "sparkle"]
-            all_emojis = ["😄",   "💕",   "😢",  "😎",   "🌸",  "🎉",      "😴",     "😤",    "🍜",     "✨"]
-
-            cols1 = st.columns(5)
-            for i in range(5):
-                with cols1[i]:
-                    if st.button(all_emojis[i], key=f"sticker_{all_moods[i]}"):
-                        sticker = get_sticker(all_moods[i])
-                        st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
-                        st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
-                        save_json(CHAT_FILE, st.session_state.messages)
-                        st.rerun()
-
-            cols2 = st.columns(5)
-            for i in range(5, 10):
-                with cols2[i - 5]:
-                    if st.button(all_emojis[i], key=f"sticker_{all_moods[i]}"):
-                        sticker = get_sticker(all_moods[i])
-                        st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
-                        st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
-                        save_json(CHAT_FILE, st.session_state.messages)
-                        st.rerun()
-
-    # ── Putar Musik ──
-    with st.expander(t("music_expander")):
-        music_query = st.text_input(t("music_input_label"), key="music_input")
-        if st.button(t("music_search_btn"), key="music_search"):
-            if music_query:
-                search_url = f"https://www.youtube.com/results?search_query={music_query.replace(' ', '+')}"
-                st.markdown(f"""
-                <div class="music-result">
-                    🎵 <b>{music_query}</b><br>
-                    <a href="{search_url}" target="_blank" style="color:{_accent};">Buka di YouTube ↗</a>
-                </div>
-                """, unsafe_allow_html=True)
-
-    # ── Konversi File ──
-    with st.expander(t("convert_expander")):
-        conv_type = st.radio(
-            "Pilih konversi:",
-            ["PDF → Word (.docx)", "Word (.docx) → PDF"],
-            key="conv_type",
-        )
-        if conv_type == "PDF → Word (.docx)":
-            conv_file = st.file_uploader("Upload file PDF", type=["pdf"], key="conv_pdf_upload")
-            if st.button("Konversi ✨", key="conv_pdf_btn"):
-                if conv_file:
-                    with st.spinner("Kei lagi konversi filenya... 🥺"):
-                        try:
-                            import tempfile
-                            from pdf2docx import Converter
-                            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
-                                tmp_pdf.write(conv_file.read())
-                                tmp_pdf_path = tmp_pdf.name
-                            out_path = tmp_pdf_path.replace(".pdf", ".docx")
-                            cv = Converter(tmp_pdf_path)
-                            cv.convert(out_path, start=0, end=None)
-                            cv.close()
-                            with open(out_path, "rb") as f:
-                                docx_bytes = f.read()
-                            os.remove(tmp_pdf_path)
-                            os.remove(out_path)
-                            st.success("Berhasil dikonversi! ✨")
-                            st.download_button(
-                                "⬇️ Download .docx",
-                                data=docx_bytes,
-                                file_name=conv_file.name.replace(".pdf", ".docx"),
-                                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                                key="dl_docx",
-                            )
-                        except Exception as e:
-                            st.error(f"Gagal konversi: {e}")
-                else:
-                    st.warning("Upload file PDF dulu ya Kak! 🥺")
-        else:
-            conv_file = st.file_uploader("Upload file Word (.docx)", type=["docx"], key="conv_docx_upload")
-            if st.button("Konversi ✨", key="conv_docx_btn"):
-                if conv_file:
-                    with st.spinner("Kei lagi konversi filenya... 🥺"):
-                        try:
-                            import tempfile, subprocess
-                            with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp_docx:
-                                tmp_docx.write(conv_file.read())
-                                tmp_docx_path = tmp_docx.name
-                            out_dir = tempfile.mkdtemp()
-                            result = subprocess.run(
-                                ["libreoffice", "--headless", "--convert-to", "pdf",
-                                 "--outdir", out_dir, tmp_docx_path],
-                                capture_output=True, text=True, timeout=60
-                            )
-                            base_name = os.path.splitext(os.path.basename(tmp_docx_path))[0]
-                            out_pdf = os.path.join(out_dir, base_name + ".pdf")
-                            if os.path.exists(out_pdf):
-                                with open(out_pdf, "rb") as f:
-                                    pdf_bytes = f.read()
-                                os.remove(tmp_docx_path)
-                                os.remove(out_pdf)
-                                st.success("Berhasil dikonversi! ✨")
-                                st.download_button(
-                                    "⬇️ Download .pdf",
-                                    data=pdf_bytes,
-                                    file_name=conv_file.name.replace(".docx", ".pdf"),
-                                    mime="application/pdf",
-                                    key="dl_pdf",
-                                )
-                            else:
-                                st.error(f"LibreOffice gagal: {result.stderr}")
-                        except FileNotFoundError:
-                            st.error("LibreOffice tidak terinstall. Tambahkan 'libreoffice' ke packages.txt ya Kak!")
-                        except Exception as e:
-                            st.error(f"Gagal konversi: {e}")
-                else:
-                    st.warning("Upload file .docx dulu ya Kak! 🥺")
-
-    st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
-
-    # ── Pengaturan ──
-    with st.expander(t("settings_expander")):
-        st.markdown(f"**{t('theme_label')}**")
-        theme_choice = st.radio(
-            t("theme_label"),
-            options=["dark", "light"],
-            format_func=lambda x: t("theme_dark") if x == "dark" else t("theme_light"),
-            index=0 if st.session_state.theme == "dark" else 1,
-            key="theme_radio",
-            label_visibility="collapsed",
-            horizontal=True,
-        )
-        if theme_choice != st.session_state.theme:
-            st.session_state.theme = theme_choice
-            save_prefs()
-            st.rerun()
-
-        st.markdown(f"**{t('lang_label')}**")
-        lang_choice = st.radio(
-            t("lang_label"),
-            options=["id", "en"],
-            format_func=lambda x: t("lang_id") if x == "id" else t("lang_en"),
-            index=0 if st.session_state.lang == "id" else 1,
-            key="lang_radio",
-            label_visibility="collapsed",
-            horizontal=True,
-        )
-        if lang_choice != st.session_state.lang:
-            st.session_state.lang = lang_choice
-            save_prefs()
-            st.rerun()
-
-    # ── Statistik Chat ──
-    chat_stats = record_active_day_and_get_stats(st.session_state.messages)
-    with st.expander(t("stats_expander")):
-        stat_col1, stat_col2 = st.columns(2)
-        with stat_col1:
-            st.metric(t("stats_total_msgs"), chat_stats["total_msgs"])
-            st.metric(t("stats_user_msgs"), chat_stats["user_msgs"])
-        with stat_col2:
-            st.metric(t("stats_active_days"), chat_stats["active_days"])
-            st.metric(t("stats_kei_msgs"), chat_stats["kei_msgs"])
-
-        if os.path.exists(LETTER_FILE):
-            try:
-                with open(LETTER_FILE, "r") as f:
-                    all_letters = json.load(f)
-                if all_letters:
-                    st.markdown('<div style="height:8px;"></div>', unsafe_allow_html=True)
-                    with st.expander(f"💌 {t('letters_expander')} ({len(all_letters)})"):
-                        for ltr in reversed(all_letters):
-                            st.markdown(f"""
-                            <div class="diary-box">
-                                <small style="color:{_accent};">🔥 Streak {ltr['streak']} hari · {ltr['date']}</small><br><br>
-                                {ltr['letter']}
-                            </div>
-                            """, unsafe_allow_html=True)
-            except Exception:
-                pass
-
-    # ── Search Chat ──
-    with st.expander(t("search_expander")):
-        search_query = st.text_input(
-            "Kata kunci:",
-            key="search_input",
-            placeholder=t("search_placeholder"),
-        )
-        if search_query:
-            results = [
-                m for m in st.session_state.messages
-                if search_query.lower() in m["content"].lower()
-            ]
-            if results:
-                st.markdown(
-                    f"<div style='font-size:12px;color:{_accent};margin-bottom:8px;'>"
-                    f"{t('search_found').format(n=len(results))}</div>",
-                    unsafe_allow_html=True
-                )
-                for msg in results[-10:]:
-                    role_label = "Kamu" if msg["role"] == "user" else "Kei"
-                    role_color = _accent if msg["role"] == "assistant" else _ms_text
-                    highlighted = msg["content"].replace(
-                        search_query,
-                        f"<mark style='background:rgba({_r},{_g},{_b},0.3);"
-                        f"color:inherit;border-radius:3px;padding:0 2px;'>{search_query}</mark>"
-                    )
-                    st.markdown(
-                        f"""<div style='
-                            background:{_ms_bg};
-                            border:1px solid {_ms_border};
-                            border-radius:10px;
-                            padding:10px 12px;
-                            margin-bottom:6px;
-                            font-size:13px;
-                        '>
-                            <span style='color:{role_color};font-weight:600;'>{role_label}</span><br>
-                            <span style='color:{_ms_text};'>{highlighted}</span>
-                        </div>""",
-                        unsafe_allow_html=True
-                    )
-            else:
-                st.markdown(
-                    f"<div style='font-size:13px;color:{_text_dimmer};'>{t('search_empty')}</div>",
-                    unsafe_allow_html=True
-                )
-
-    # ── Export Chat ──
-    with st.expander(t("export_expander")):
-        if st.session_state.messages:
-            export_format = st.radio(
-                t("export_format_label"),
-                ["📄 TXT", "📋 Markdown"],
-                key="export_format",
-                horizontal=True,
-            )
-
-            if export_format == "📄 TXT":
-                lines = [
-                    "═══════════════════════════════",
-                    "   CHAT BERSAMA KEI AI 💕",
-                    f"   Diekspor: {datetime.now().strftime('%d %B %Y, %H:%M')}",
-                    f"   Total pesan: {len(st.session_state.messages)}",
-                    "═══════════════════════════════\n",
-                ]
-                for msg in st.session_state.messages:
-                    role = "Kamu" if msg["role"] == "user" else "Kei"
-                    lines.append(f"[{role}]\n{msg['content']}\n")
-                export_text = "\n".join(lines)
-                st.download_button(
-                    label="⬇️ Download .txt",
-                    data=export_text.encode("utf-8"),
-                    file_name=f"chat_kei_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
-                    mime="text/plain",
-                    key="dl_export_txt",
-                    use_container_width=True,
-                )
-            else:
-                lines = [
-                    "# 💕 Chat Bersama Kei AI",
-                    f"> Diekspor: {datetime.now().strftime('%d %B %Y, %H:%M')}  ",
-                    f"> Total pesan: {len(st.session_state.messages)}\n",
-                    "---\n",
-                ]
-                for msg in st.session_state.messages:
-                    if msg["role"] == "user":
-                        lines.append(f"**🧑 Kamu:**  \n{msg['content']}\n")
-                    else:
-                        lines.append(f"**✨ Kei:**  \n{msg['content']}\n")
-                    lines.append("---\n")
-                export_md = "\n".join(lines)
-                st.download_button(
-                    label="⬇️ Download .md",
-                    data=export_md.encode("utf-8"),
-                    file_name=f"chat_kei_{datetime.now().strftime('%Y%m%d_%H%M')}.md",
-                    mime="text/markdown",
-                    key="dl_export_md",
-                    use_container_width=True,
-                )
-
-            st.markdown(
-                f"<div style='font-size:11px;color:{_text_dimmer};margin-top:8px;'>{t('export_preview_label')}</div>",
-                unsafe_allow_html=True
-            )
-            for msg in st.session_state.messages[-3:]:
-                role = "Kamu" if msg["role"] == "user" else "Kei"
-                preview_text = msg["content"][:60] + "..." if len(msg["content"]) > 60 else msg["content"]
-                st.markdown(
-                    f"""<div style='
-                        font-size:12px;
-                        color:{_text_dim};
-                        padding:4px 8px;
-                        border-left:2px solid rgba({_r},{_g},{_b},0.4);
-                        margin:3px 0;
-                    '>
-                        <b style="color:{_accent};">{role}:</b> {preview_text}
-                    </div>""",
-                    unsafe_allow_html=True
-                )
-        else:
-            st.markdown(
-                f"<div style='font-size:13px;color:{_text_dimmer};'>{t('export_empty')}</div>",
-                unsafe_allow_html=True
-            )
+        for key, label_key in [
+            ("convert", "convert_expander"),
+            ("settings", "settings_expander"),
+            ("stats", "stats_expander"),
+            ("search", "search_expander"),
+            ("export", "export_expander"),
+        ]:
+            with st.expander(t(label_key)):
+                if key == "convert":
+                    render_convert_panel(_accent, _r, _g, _b)
+                elif key == "settings":
+                    render_settings_panel(_accent, _r, _g, _b)
+                elif key == "stats":
+                    render_stats_panel(_accent, _r, _g, _b)
+                elif key == "search":
+                    render_search_panel(_accent, _r, _g, _b, _ms_bg, _ms_border, _ms_text)
+                elif key == "export":
+                    render_export_panel(_accent, _r, _g, _b, _text_dim, _text_dimmer)
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
@@ -2028,7 +2052,6 @@ with st.sidebar:
 header_mood_emoji, _header_mood_label = get_current_mood()
 _header_tagline_color = "rgba(0,0,0,0.45)" if st.session_state.theme == "light" else "rgba(255,255,255,0.4)"
 
-# Cek & tampilkan surat milestone
 milestone_letter = check_and_generate_milestone_letter(streak_count)
 if milestone_letter:
     st.session_state["show_milestone_letter"] = milestone_letter
