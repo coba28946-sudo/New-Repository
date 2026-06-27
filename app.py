@@ -279,6 +279,21 @@ section[data-testid="stSidebar"] > div:first-child {
 .kei-sidebar-inner [data-testid="stExpander"] summary {
     color: rgba(255,255,255,0.6) !important;
     font-size: 13px !important;
+    padding: 9px 12px !important;
+}
+.kei-sidebar-inner [data-testid="stExpander"] summary p {
+    display: flex !important;
+    align-items: center !important;
+}
+.kei-sidebar-inner [data-testid="stExpander"] summary p::before {
+    content: "";
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    margin-right: 9px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    flex-shrink: 0;
 }
 
 /* Logout - bobot visual lebih redup, beda dari aksi netral (New Chat / Clear Chat) */
@@ -1954,9 +1969,37 @@ with st.sidebar:
     streak_count = update_and_get_streak()
 
     avatar_exists = os.path.exists("kei_avatar.png")
+
     if avatar_exists:
-        st.image("kei_avatar.png", width=200)
-        with st.expander("Ganti / Hapus Foto"):
+        avatar_b64 = base64.b64encode(open("kei_avatar.png", "rb").read()).decode("utf-8")
+        avatar_img_html = f'<img src="data:image/png;base64,{avatar_b64}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;display:block;" />'
+    else:
+        avatar_img_html = f'''<div style="width:64px;height:64px;border-radius:50%;
+            background:linear-gradient(135deg,{_accent},#B14EFF);
+            display:flex;align-items:center;justify-content:center;
+            color:#fff;font-weight:700;font-size:24px;">K</div>'''
+
+    st.markdown(f"""
+    <div style="
+        background: linear-gradient(160deg, rgba({_r},{_g},{_b},0.07), rgba({_r},{_g},{_b},0.02));
+        border: 1px solid rgba({_r},{_g},{_b},0.18);
+        border-radius: 16px;
+        padding: 16px;
+        text-align: center;
+        margin-bottom: 12px;
+    ">
+        <div style="position:relative;width:64px;height:64px;margin:0 auto 8px;">
+            {avatar_img_html}
+            <span style="position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;
+                border-radius:50%;background:#4ade80;border:2px solid #111111;"></span>
+        </div>
+        <div style="color:{_ms_text if _theme=='light' else '#ffffff'};font-size:13.5px;font-weight:600;">Kei AI</div>
+        <div style="color:#4ade80;font-size:11px;margin-top:2px;">● {t('online_status')}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    with st.expander("Ganti / Hapus Foto"):
+        if avatar_exists:
             uploaded_avatar = st.file_uploader("Upload foto baru", type=["png","jpg","jpeg"], key="ganti_foto")
             if uploaded_avatar:
                 with open("kei_avatar.png", "wb") as f:
@@ -1966,28 +2009,24 @@ with st.sidebar:
             if st.button("🗑 Hapus Foto"):
                 os.remove("kei_avatar.png")
                 st.rerun()
-    else:
-        uploaded_avatar = st.file_uploader("Upload Foto Kei", type=["png","jpg","jpeg"])
-        if uploaded_avatar:
-            with open("kei_avatar.png", "wb") as f:
-                f.write(uploaded_avatar.getbuffer())
-            st.rerun()
+        else:
+            uploaded_avatar = st.file_uploader("Upload Foto Kei", type=["png","jpg","jpeg"], key="upload_foto_baru")
+            if uploaded_avatar:
+                with open("kei_avatar.png", "wb") as f:
+                    f.write(uploaded_avatar.getbuffer())
+                st.rerun()
 
     st.markdown(f"""
-    <div class="status-panel">
-        <div class="status-row">
-            <div class="dot-online"></div>
-            <span>{t('online_status')} &nbsp;·&nbsp; KEI AI</span>
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+        <div style="flex:1;background:{_ms_bg};border:1px solid {_ms_border};border-radius:10px;padding:9px 0;text-align:center;">
+            <div style="font-size:16px;">{mood_emoji}</div>
+            <div style="color:{_text_dim};font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('mood_today').upper()}</div>
+            <div style="color:{_accent};font-size:11.5px;font-weight:600;">{mood_label}</div>
         </div>
-        <div class="status-row-divider"></div>
-        <div class="status-row">
-            <span style="font-size:15px;">{mood_emoji}</span>
-            <span>{t('mood_today')}: <b style="color:{_accent};">{mood_label}</b></span>
-        </div>
-        <div class="status-row-divider"></div>
-        <div class="status-row">
-            <span style="font-size:15px;">🔥</span>
-            <span>{t('streak')}: <b style="color:{_accent};">{streak_count} {t('streak_unit')}</b></span>
+        <div style="flex:1;background:{_ms_bg};border:1px solid {_ms_border};border-radius:10px;padding:9px 0;text-align:center;">
+            <div style="font-size:16px;">🔥</div>
+            <div style="color:{_text_dim};font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('streak').upper()}</div>
+            <div style="color:{_accent};font-size:11.5px;font-weight:600;">{streak_count} {t('streak_unit')}</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
