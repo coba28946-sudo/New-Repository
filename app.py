@@ -87,10 +87,33 @@ datalist {
     width: 100% !important;
     box-sizing: border-box !important;
     padding-right: 40px !important;
+    font-size: 15px !important;
+    height: 52px !important;
+    padding-left: 16px !important;
 }
 [data-testid="stTextInput"] div[data-baseweb="input"] {
     overflow: hidden !important;
-    border-radius: 8px !important;
+    border-radius: 12px !important;
+}
+/* Fix sudut kanan password input */
+[data-testid="stTextInput"] [data-baseweb="input"] > div:last-child {
+    border-radius: 0 12px 12px 0 !important;
+    overflow: hidden !important;
+    background: transparent !important;
+    border: none !important;
+}
+[data-testid="stTextInput"] [data-baseweb="input"] button {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0 14px !important;
+}
+[data-testid="stTextInput"] [data-baseweb="input"] button svg {
+    fill: rgba(255,255,255,0.45) !important;
+}
+[data-testid="stTextInput"] [data-baseweb="input"] button:hover svg {
+    fill: rgba(255,255,255,0.85) !important;
 }
 
 .kei-layout {
@@ -806,25 +829,37 @@ if not st.session_state.logged_in:
     _login_text_dimmer = "rgba(0,0,0,0.3)" if st.session_state.theme == "light" else "rgba(255,255,255,0.18)"
 
     st.markdown(f"""
-    <div style="padding-top:80px; text-align:center; margin-bottom:40px;">
-        <div style="color:{st.session_state.theme_color}; font-size:42px; font-weight:700; letter-spacing:-1px;">✦ Kei AI</div>
-        <div style="color:{_login_text_dim}; font-size:15px; margin-top:6px;">{t('app_tagline')}</div>
+    <div style="padding-top:80px; text-align:center; margin-bottom:48px;">
+        <div style="color:{st.session_state.theme_color}; font-size:48px; font-weight:700; letter-spacing:-1px;">✦ Kei AI</div>
+        <div style="color:{_login_text_dim}; font-size:16px; margin-top:8px;">{t('app_tagline')}</div>
     </div>
     """, unsafe_allow_html=True)
 
-    _, col, _ = st.columns([1.2, 1, 1.2])
+    _, col, _ = st.columns([1.4, 1, 1.4])
     with col:
+        st.markdown("""
+        <style>
+        /* Login button lebih besar */
+        .stButton > button {
+            height: 52px !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            border-radius: 12px !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
         username = st.text_input(
             t("username"), key="login_username",
             label_visibility="collapsed",
             placeholder=t("username"),
         )
+        st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
         password = st.text_input(
             t("password"), type="password", key="login_password",
             label_visibility="collapsed",
             placeholder=t("password"),
         )
-        st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
         if st.button(t("login_btn"), use_container_width=True, key="login_btn"):
             if not username or not password:
                 st.error(t("login_err_empty"))
