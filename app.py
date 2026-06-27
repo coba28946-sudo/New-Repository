@@ -88,13 +88,11 @@ datalist {
 }
 [data-testid="stTextInput"] div[data-baseweb="input"] {
     width: 100% !important;
-    overflow: visible !important;
 }
 div[data-baseweb="base-input"] {
     width: 100% !important;
     display: flex !important;
     align-items: center !important;
-    overflow: visible !important;
 }
 [data-testid="stTextInput"] input,
 [data-testid="stTextInput"] div[data-baseweb="input"] input,
@@ -109,8 +107,6 @@ div[data-baseweb="base-input"] input {
 [data-testid="stTextInput"] button[aria-label*="assword" i],
 div[data-baseweb="base-input"] button {
     flex: 0 0 auto !important;
-    position: relative !important;
-    z-index: 2 !important;
 }
 
 .kei-layout {
