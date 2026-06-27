@@ -811,16 +811,6 @@ if not st.session_state.logged_in:
     _login_card_border = "#d8d5e0" if st.session_state.theme == "light" else "rgba(255,255,255,0.08)"
 
     st.markdown(f"""
-    <style>
-    div[data-testid="stForm"] {{
-        max-width: 380px;
-        margin: 0 auto;
-        background: {_login_card_bg};
-        border: 1px solid {_login_card_border};
-        border-radius: 16px;
-        padding: 28px 28px 8px;
-    }}
-    </style>
     <div style="padding-top:40px; text-align:center; margin-bottom:24px;">
         <div style="color:{st.session_state.theme_color}; font-size:46px; font-weight:700; letter-spacing:-1px; line-height:1.1;">✦ Kei AI</div>
         <div style="color:{_login_text_dim}; font-size:16px; margin-top:4px;">{t('app_tagline')}</div>
