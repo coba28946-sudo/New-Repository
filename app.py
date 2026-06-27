@@ -79,33 +79,38 @@ datalist {
     display: none !important;
 }
 
-/* ===== FIX PASSWORD INPUT FULL WIDTH ===== */
+/* ===== FIX PASSWORD INPUT FULL WIDTH (tidak terpotong ikon mata) ===== */
 [data-testid="stTextInput"] {
     width: 100% !important;
 }
 [data-testid="stTextInput"] > div {
     width: 100% !important;
 }
-[data-testid="stTextInput"] input {
-    width: 100% !important;
-    box-sizing: border-box !important;
-    flex: 1 !important;
-    min-width: 0 !important;
-}
 [data-testid="stTextInput"] div[data-baseweb="input"] {
     width: 100% !important;
-}
-[data-testid="stTextInput"] div[data-baseweb="input"] input {
-    width: 100% !important;
-    flex: 1 !important;
-    min-width: 0 !important;
+    overflow: visible !important;
 }
 div[data-baseweb="base-input"] {
     width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    overflow: visible !important;
 }
+[data-testid="stTextInput"] input,
+[data-testid="stTextInput"] div[data-baseweb="input"] input,
 div[data-baseweb="base-input"] input {
     width: 100% !important;
+    box-sizing: border-box !important;
     flex: 1 1 auto !important;
+    min-width: 0 !important;
+    padding-right: 40px !important;
+}
+/* Tombol show/hide password tetap di posisinya, tidak terpotong */
+[data-testid="stTextInput"] button[aria-label*="assword" i],
+div[data-baseweb="base-input"] button {
+    flex: 0 0 auto !important;
+    position: relative !important;
+    z-index: 2 !important;
 }
 
 .kei-layout {
