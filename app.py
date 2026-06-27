@@ -88,6 +88,10 @@ datalist {
     box-sizing: border-box !important;
     padding-right: 40px !important;
 }
+[data-testid="stTextInput"] div[data-baseweb="input"] {
+    overflow: hidden !important;
+    border-radius: 8px !important;
+}
 
 .kei-layout {
     display: flex;
