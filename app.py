@@ -2004,6 +2004,31 @@ with st.sidebar:
         border-color: {_ms_border} !important;
     }}
     ''' for key, icon in MENU_ICONS.items()])}
+    /* Kotak ikon untuk New Chat / Clear Chat / Logout */
+    .st-key-new_chat_btn button p,
+    .st-key-clear_chat_btn button p,
+    .st-key-logout_btn button p {{
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }}
+    .st-key-new_chat_btn button p::before,
+    .st-key-clear_chat_btn button p::before,
+    .st-key-logout_btn button p::before {{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+        border-radius: 7px;
+        background: rgba(255,255,255,0.07);
+        flex-shrink: 0;
+        font-size: 12px;
+    }}
+    .st-key-new_chat_btn button p::before {{ content: "🆕"; }}
+    .st-key-clear_chat_btn button p::before {{ content: "🗑️"; }}
+    .st-key-logout_btn button p::before {{ content: "🚪"; }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -2136,19 +2161,19 @@ with st.sidebar:
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
-    if st.button(t("new_chat"), use_container_width=True):
+    if st.button(strip_emoji_prefix(t("new_chat")), use_container_width=True, key="new_chat_btn"):
         st.session_state.messages = []
         save_json(CHAT_FILE, [])
         st.rerun()
 
-    if st.button(t("clear_chat"), use_container_width=True):
+    if st.button(strip_emoji_prefix(t("clear_chat")), use_container_width=True, key="clear_chat_btn"):
         st.session_state.messages = []
         save_json(CHAT_FILE, [])
         st.rerun()
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
-    if st.button(t("logout"), use_container_width=True, key="logout_btn"):
+    if st.button(strip_emoji_prefix(t("logout")), use_container_width=True, key="logout_btn"):
         st.session_state.logged_in = False
         st.session_state.messages  = []
         st.rerun()
