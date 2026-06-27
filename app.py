@@ -736,6 +736,16 @@ def render_dynamic_css():
         border-color: rgba({r},{g},{b},0.35) !important;
         background: rgba({r},{g},{b},0.04) !important;
     }}
+    .kei-sidebar-inner [data-testid="stExpander"] summary:focus,
+    .kei-sidebar-inner [data-testid="stExpander"] summary:focus-visible,
+    .kei-sidebar-inner [data-testid="stExpander"]:focus,
+    .kei-sidebar-inner [data-testid="stExpander"]:focus-within,
+    .kei-sidebar-inner [data-testid="stExpander"] *:focus,
+    .kei-sidebar-inner [data-testid="stExpander"] *:focus-visible {{
+        outline: none !important;
+        box-shadow: none !important;
+        border-color: rgba({r},{g},{b},0.35) !important;
+    }}
     .kei-sidebar-inner [data-testid="stExpander"] summary:hover p,
     .kei-sidebar-inner [data-testid="stExpander"] summary:hover span {{
         color: {accent} !important;
