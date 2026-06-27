@@ -387,6 +387,20 @@ small[data-testid="InputInstructions"],
     display: none !important;
 }
 
+/* ===== LUPA PASSWORD LINK ===== */
+.login-forgot-row {
+    text-align: right;
+    margin: 10px 0 18px;
+}
+.login-forgot-row a {
+    font-size: 12.5px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.login-forgot-row a:hover {
+    text-decoration: underline;
+}
+
 @media (max-width: 768px) {
     .kei-sidebar { width: 220px; min-width: 220px; }
     .kei-main { padding-left: 46px; }
@@ -652,6 +666,7 @@ for key, val in {
     "theme_color": "#ff8ad8",
     "current_mood_index": None,
     "show_milestone_letter": None,
+    "show_forgot_password": False,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = val
@@ -716,6 +731,14 @@ TEXTS = {
         "login_btn": "Masuk",
         "login_err_empty": "Username dan password tidak boleh kosong.",
         "login_err_wrong": "Username atau password salah.",
+        "forgot_password": "Lupa password?",
+        "forgot_password_title": "🔑 Reset Password",
+        "forgot_password_desc": "Masukkan username kamu, Kei akan bantu kirim instruksi reset password.",
+        "forgot_password_input_label": "Username",
+        "forgot_password_send": "Kirim instruksi reset",
+        "forgot_password_back": "← Kembali ke login",
+        "forgot_password_sent": "Kalau username terdaftar, instruksi reset sudah Kei kirimkan ya~ 💕",
+        "forgot_password_empty": "Isi username dulu ya Kak 🥺",
         "chat_btn": "💬 Chat",
         "diary_btn": "💌 Diary",
         "online_status": "Online",
@@ -779,6 +802,14 @@ TEXTS = {
         "login_btn": "Log In",
         "login_err_empty": "Username and password cannot be empty.",
         "login_err_wrong": "Wrong username or password.",
+        "forgot_password": "Forgot password?",
+        "forgot_password_title": "🔑 Reset password",
+        "forgot_password_desc": "Enter your username and Kei will help send reset instructions.",
+        "forgot_password_input_label": "Username",
+        "forgot_password_send": "Send reset instructions",
+        "forgot_password_back": "← Back to login",
+        "forgot_password_sent": "If that username exists, Kei has sent reset instructions~ 💕",
+        "forgot_password_empty": "Enter your username first 🥺",
         "chat_btn": "💬 Chat",
         "diary_btn": "💌 Diary",
         "online_status": "Online",
@@ -874,18 +905,72 @@ if not st.session_state.logged_in:
         }
         </style>
         """, unsafe_allow_html=True)
-        username = st.text_input(t("username"), key="login_username")
-        password = st.text_input(t("password"), type="password", key="login_password")
-        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
-        if st.button(t("login_btn"), use_container_width=True, key="login_btn"):
-            if not username or not password:
-                st.error(t("login_err_empty"))
-            elif username == "ryuu" and password == "12345":
-                st.session_state.logged_in = True
-                st.session_state.messages = load_json(CHAT_FILE)
+
+        # ===== MODE: FORM RESET PASSWORD =====
+        if st.session_state.show_forgot_password:
+            st.markdown(f"""
+            <div style="margin-bottom:14px;">
+                <div style="color:{_accent_login}; font-size:19px; font-weight:700; margin-bottom:4px;">
+                    {t('forgot_password_title')}
+                </div>
+                <div style="color:{_login_text_dim}; font-size:13.5px; line-height:1.5;">
+                    {t('forgot_password_desc')}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            reset_username = st.text_input(t("forgot_password_input_label"), key="reset_username")
+
+            st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+
+            if st.button(t("forgot_password_send"), use_container_width=True, key="send_reset_btn"):
+                if not reset_username:
+                    st.warning(t("forgot_password_empty"))
+                else:
+                    # NOTE: di sini belum ada sistem email/reset sungguhan.
+                    # Tempatkan logika kirim email reset password kamu sendiri di sini.
+                    st.success(t("forgot_password_sent"))
+
+            st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
+
+            back_col1, back_col2, back_col3 = st.columns([1, 2, 1])
+            with back_col2:
+                if st.button(t("forgot_password_back"), key="back_to_login_btn", use_container_width=True):
+                    st.session_state.show_forgot_password = False
+                    st.rerun()
+
+        # ===== MODE: FORM LOGIN NORMAL =====
+        else:
+            username = st.text_input(t("username"), key="login_username")
+            password = st.text_input(t("password"), type="password", key="login_password")
+
+            st.markdown(f"""
+            <div class="login-forgot-row">
+                <a href="#" id="forgot-pw-link" style="color:{_login_text_dim};">
+                    {t('forgot_password')}
+                </a>
+            </div>
+            """, unsafe_allow_html=True)
+
+            forgot_clicked = st.button(t("forgot_password"), key="forgot_pw_btn")
+            st.markdown("""
+            <style>
+            .st-key-forgot_pw_btn { display:none !important; }
+            </style>
+            """, unsafe_allow_html=True)
+            if forgot_clicked:
+                st.session_state.show_forgot_password = True
                 st.rerun()
-            else:
-                st.error(t("login_err_wrong"))
+
+            if st.button(t("login_btn"), use_container_width=True, key="login_btn"):
+                if not username or not password:
+                    st.error(t("login_err_empty"))
+                elif username == "ryuu" and password == "12345":
+                    st.session_state.logged_in = True
+                    st.session_state.messages = load_json(CHAT_FILE)
+                    st.rerun()
+                else:
+                    st.error(t("login_err_wrong"))
 
     st.markdown(f"""
     <div style="text-align:center;margin-top:32px;color:{_login_text_dimmer};font-size:12px;">
