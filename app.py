@@ -281,6 +281,25 @@ section[data-testid="stSidebar"] > div:first-child {
     font-size: 13px !important;
 }
 
+/* Logout - bobot visual lebih redup, beda dari aksi netral (New Chat / Clear Chat) */
+.st-key-logout_btn button {
+    background: transparent !important;
+    color: rgba(255,255,255,0.35) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+}
+.st-key-logout_btn button p,
+.st-key-logout_btn button span {
+    color: rgba(255,255,255,0.35) !important;
+}
+.st-key-logout_btn button:hover {
+    border-color: rgba(239,68,68,0.4) !important;
+    background: rgba(239,68,68,0.06) !important;
+}
+.st-key-logout_btn button:hover p,
+.st-key-logout_btn button:hover span {
+    color: #f87171 !important;
+}
+
 .mode-btn-wrap {
     display: flex;
     gap: 8px;
@@ -321,6 +340,26 @@ section[data-testid="stSidebar"] > div:first-child {
     margin-bottom: 12px;
 }
 .dot-online { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+
+.status-panel {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 4px 14px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+}
+.status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 0;
+}
+.status-row-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+}
 
 .diary-box {
     background: rgba(255,182,230,0.05);
@@ -684,6 +723,14 @@ def render_dynamic_css():
     .kei-sidebar-inner [data-testid="stExpander"] [data-testid="stMarkdownContainer"] strong {{
         color: {text_main} !important;
     }}
+    .kei-sidebar-inner [data-testid="stExpander"]:hover {{
+        border-color: rgba({r},{g},{b},0.35) !important;
+        background: rgba({r},{g},{b},0.04) !important;
+    }}
+    .kei-sidebar-inner [data-testid="stExpander"] summary:hover p,
+    .kei-sidebar-inner [data-testid="stExpander"] summary:hover span {{
+        color: {accent} !important;
+    }}
 
     .kei-sidebar-inner label,
     .kei-sidebar-inner [data-testid="stCaptionContainer"] p,
@@ -707,6 +754,15 @@ def render_dynamic_css():
     }}
     .status-online span {{ color: {text_dim} !important; }}
     .status-online b {{ color: {accent} !important; }}
+
+    .status-panel {{
+        background: {input_bg} !important;
+        border: 1px solid {border_col} !important;
+        color: {text_dim} !important;
+    }}
+    .status-panel span {{ color: {text_dim} !important; }}
+    .status-panel b {{ color: {accent} !important; }}
+    .status-row-divider {{ background: {border_col} !important; }}
 
     .diary-box {{
         background: rgba({r},{g},{b},0.06) !important;
@@ -1478,22 +1534,38 @@ with st.sidebar:
     active_index = 1 if current_mode == "chat" else 2
     st.markdown(f"""
     <style>
-    .st-key-kei_mode_switch [data-testid="stButton"] button {{
-        border-radius: 12px !important;
-        font-weight: 600 !important;
+    .st-key-kei_mode_switch {{
         background: {_ms_bg} !important;
-        color: {_ms_text} !important;
         border: 1px solid {_ms_border} !important;
+        border-radius: 14px !important;
+        padding: 4px !important;
+        margin-bottom: 4px !important;
+    }}
+    .st-key-kei_mode_switch [data-testid="stButton"] button {{
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        font-size: 13px !important;
+        background: transparent !important;
+        color: {_text_dim} !important;
+        border: none !important;
         text-align: center !important;
+        transition: all 0.18s ease !important;
+        height: 36px !important;
     }}
     .st-key-kei_mode_switch [data-testid="stButton"] button:hover {{
-        border-color: rgba({_r},{_g},{_b},0.4) !important;
         color: {_accent} !important;
     }}
     .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button {{
-        border-color: {_accent} !important;
-        color: {_accent} !important;
-        background: rgba({_r},{_g},{_b},0.08) !important;
+        color: #ffffff !important;
+        background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
+        box-shadow: 0 4px 14px -4px rgba(255,63,164,0.55) !important;
+    }}
+    .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button p,
+    .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button span {{
+        color: #ffffff !important;
+    }}
+    .st-key-kei_mode_switch div[data-testid^="column"]:nth-of-type({active_index}) button:hover {{
+        color: #ffffff !important;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -1511,6 +1583,11 @@ with st.sidebar:
                 if st.session_state.mode != "diary":
                     st.session_state.mode = "diary"
                     st.rerun()
+
+    st.markdown('<div style="height:14px;"></div>', unsafe_allow_html=True)
+
+    mood_emoji, mood_label = get_current_mood()
+    streak_count = update_and_get_streak()
 
     avatar_exists = os.path.exists("kei_avatar.png")
     if avatar_exists:
@@ -1533,23 +1610,21 @@ with st.sidebar:
             st.rerun()
 
     st.markdown(f"""
-    <div class="status-online">
-        <div class="dot-online"></div>
-        <span>{t('online_status')} &nbsp;·&nbsp; KEI AI</span>
-    </div>
-    """, unsafe_allow_html=True)
-
-    mood_emoji, mood_label = get_current_mood()
-    streak_count = update_and_get_streak()
-
-    st.markdown(f"""
-    <div class="status-online">
-        <span style="font-size:16px;">{mood_emoji}</span>
-        <span>{t('mood_today')}: <b style="color:{_accent};">{mood_label}</b></span>
-    </div>
-    <div class="status-online">
-        <span style="font-size:16px;">🔥</span>
-        <span>{t('streak')}: <b style="color:{_accent};">{streak_count} {t('streak_unit')}</b></span>
+    <div class="status-panel">
+        <div class="status-row">
+            <div class="dot-online"></div>
+            <span>{t('online_status')} &nbsp;·&nbsp; KEI AI</span>
+        </div>
+        <div class="status-row-divider"></div>
+        <div class="status-row">
+            <span style="font-size:15px;">{mood_emoji}</span>
+            <span>{t('mood_today')}: <b style="color:{_accent};">{mood_label}</b></span>
+        </div>
+        <div class="status-row-divider"></div>
+        <div class="status-row">
+            <span style="font-size:15px;">🔥</span>
+            <span>{t('streak')}: <b style="color:{_accent};">{streak_count} {t('streak_unit')}</b></span>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1940,7 +2015,7 @@ with st.sidebar:
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
-    if st.button(t("logout"), use_container_width=True):
+    if st.button(t("logout"), use_container_width=True, key="logout_btn"):
         st.session_state.logged_in = False
         st.session_state.messages  = []
         st.rerun()
