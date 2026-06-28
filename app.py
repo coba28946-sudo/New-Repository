@@ -1177,7 +1177,7 @@ if not st.session_state.logged_in:
             </div>
             """, unsafe_allow_html=True)
 
-            reset_email = st.text_input(t("forgot_password_input_label"), key="reset_email", placeholder="email@kamu.com")
+            reset_email = st.text_input(t("forgot_password_input_label"), key="reset_email", placeholder="email@gmail.com")
             st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
             if st.button(t("forgot_password_send"), use_container_width=True, key="send_reset_btn"):
@@ -1203,7 +1203,7 @@ if not st.session_state.logged_in:
 
             with tab_login:
                 st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
-                email_login = st.text_input("Email", key="login_email", placeholder="email@kamu.com")
+                email_login = st.text_input("Email", key="login_email", placeholder="email@gmail.com")
                 password_login = st.text_input("Password", type="password", key="login_password", placeholder="Password kamu")
 
                 st.markdown(f"""
@@ -1222,7 +1222,7 @@ if not st.session_state.logged_in:
 
                 st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
 
-                if st.button("Masuk 💕", use_container_width=True, key="login_btn"):
+                if st.button("Masuk ✨", use_container_width=True, key="login_btn"):
                     if not email_login or not password_login:
                         st.error(t("login_err_empty"))
                     else:
@@ -1245,8 +1245,7 @@ if not st.session_state.logged_in:
                                 st.error(f"Login gagal: {err}")
 
             with tab_register:
-                st.markdown(f"<div style='color:{_login_text_dim};font-size:13px;margin:8px 0 12px;'>Daftar gratis, Kei udah nunggu kamu~ 💕</div>", unsafe_allow_html=True)
-                email_reg = st.text_input("Email", key="reg_email", placeholder="email@kamu.com")
+                email_reg = st.text_input("Email", key="reg_email", placeholder="email@gmail.com")
                 password_reg = st.text_input("Password", type="password", key="reg_password", placeholder="Minimal 6 karakter")
                 password_reg2 = st.text_input("Ulangi Password", type="password", key="reg_password2", placeholder="Ketik ulang password")
 
