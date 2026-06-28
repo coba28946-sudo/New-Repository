@@ -945,11 +945,39 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # =====================
 # 5. FILE HELPERS
 # =====================
-CHAT_FILE        = "chat_history.json"
-DIARY_FILE       = "dear_diary.json"
-STREAK_FILE      = "streak.json"
-LETTER_FILE      = "kei_letters.json"
-ACTIVE_DAYS_FILE = "active_days.json"
+def get_user_id():
+    """Bikin id unik & aman buat nama file, berdasarkan email user yang login."""
+    email = st.session_state.get("user_email") or "guest"
+    safe_id = "".join(c if c.isalnum() else "_" for c in email.lower())
+    return safe_id
+
+def get_user_data_dir():
+    """Folder data khusus untuk user ini, dibuat otomatis kalau belum ada."""
+    user_dir = os.path.join("user_data", get_user_id())
+    os.makedirs(user_dir, exist_ok=True)
+    return user_dir
+
+def user_file(filename):
+    """Path file storage yang unik per user (chat, diary, streak, dll)."""
+    return os.path.join(get_user_data_dir(), filename)
+
+# Properti dinamis: dievaluasi ulang tiap dipanggil, supaya selalu cocok
+# dengan user yang sedang login (user_email bisa berubah antar sesi).
+class _UserFilePath:
+    def __init__(self, filename):
+        self.filename = filename
+    def __fspath__(self):
+        return user_file(self.filename)
+    def __str__(self):
+        return user_file(self.filename)
+    def __repr__(self):
+        return user_file(self.filename)
+
+CHAT_FILE        = _UserFilePath("chat_history.json")
+DIARY_FILE       = _UserFilePath("dear_diary.json")
+STREAK_FILE      = _UserFilePath("streak.json")
+LETTER_FILE      = _UserFilePath("kei_letters.json")
+ACTIVE_DAYS_FILE = _UserFilePath("active_days.json")
 
 def load_json(path):
     if os.path.exists(path):
@@ -1536,7 +1564,7 @@ Tulis suratnya:
 # =====================
 # 9f. PESAN HARIAN KEI
 # =====================
-DAILY_MSG_FILE = "daily_message.json"
+DAILY_MSG_FILE = _UserFilePath("daily_message.json")
 
 def get_daily_greeting_context():
     hour = datetime.now().hour
@@ -2092,10 +2120,11 @@ with st.sidebar:
     mood_emoji, mood_label = get_current_mood()
     streak_count = update_and_get_streak()
 
-    avatar_exists = os.path.exists("kei_avatar.png")
+    _avatar_path = user_file("kei_avatar.png")
+    avatar_exists = os.path.exists(_avatar_path)
 
     if avatar_exists:
-        avatar_b64 = base64.b64encode(open("kei_avatar.png", "rb").read()).decode("utf-8")
+        avatar_b64 = base64.b64encode(open(_avatar_path, "rb").read()).decode("utf-8")
         avatar_img_html = f'<img src="data:image/png;base64,{avatar_b64}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;display:block;" />'
     else:
         avatar_img_html = f'''<div style="width:64px;height:64px;border-radius:50%;
@@ -2131,17 +2160,17 @@ with st.sidebar:
         if avatar_exists:
             uploaded_avatar = st.file_uploader("Upload foto baru", type=["png","jpg","jpeg"], key="ganti_foto")
             if uploaded_avatar:
-                with open("kei_avatar.png", "wb") as f:
+                with open(_avatar_path, "wb") as f:
                     f.write(uploaded_avatar.getbuffer())
                 st.success("Foto berhasil diganti!")
                 st.rerun()
             if st.button("🗑 Hapus Foto"):
-                os.remove("kei_avatar.png")
+                os.remove(_avatar_path)
                 st.rerun()
         else:
             uploaded_avatar = st.file_uploader("Upload Foto Kei", type=["png","jpg","jpeg"], key="upload_foto_baru")
             if uploaded_avatar:
-                with open("kei_avatar.png", "wb") as f:
+                with open(_avatar_path, "wb") as f:
                     f.write(uploaded_avatar.getbuffer())
                 st.rerun()
 
