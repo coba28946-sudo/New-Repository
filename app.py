@@ -1,6 +1,7 @@
 import streamlit as st
 from google import genai
 from google.genai.errors import APIError
+from supabase import create_client, Client
 import os
 import json
 import time
@@ -80,7 +81,7 @@ datalist {
     display: none !important;
 }
 
-/* ===== FIX PASSWORD/USERNAME INPUT ===== */
+/* ===== FIX PASSWORD/EMAIL INPUT ===== */
 [data-testid="stTextInput"] {
     width: 100% !important;
 }
@@ -308,7 +309,7 @@ section[data-testid="stSidebar"] > div:first-child {
     box-shadow: none !important;
 }
 
-/* Logout - bobot visual lebih redup, beda dari aksi netral (New Chat / Clear Chat) */
+/* Logout */
 .st-key-logout_btn button {
     background: transparent !important;
     color: rgba(255,255,255,0.35) !important;
@@ -456,7 +457,7 @@ small[data-testid="InputInstructions"],
 /* ===== LUPA PASSWORD LINK ===== */
 .login-forgot-row {
     text-align: right;
-    margin: 10px 0 18px;
+    margin: 10px 0 4px;
 }
 .login-forgot-row a {
     font-size: 12.5px;
@@ -537,6 +538,19 @@ small[data-testid="InputInstructions"],
     color: #ffffff !important;
 }
 
+.st-key-register_btn button {
+    background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 8px 24px -8px rgba(255,63,164,0.45) !important;
+}
+.st-key-register_btn button p,
+.st-key-register_btn button span,
+.st-key-register_btn button div {
+    color: #ffffff !important;
+}
+
 .st-key-send_reset_btn button {
     background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
     border: none !important;
@@ -548,18 +562,6 @@ small[data-testid="InputInstructions"],
 .st-key-send_reset_btn button span,
 .st-key-send_reset_btn button div {
     color: #ffffff !important;
-}
-
-.st-key-login_username input,
-.st-key-login_password input,
-.st-key-reset_username input {
-    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
-}
-.st-key-login_username input:focus,
-.st-key-login_password input:focus,
-.st-key-reset_username input:focus {
-    border-color: rgba(255,63,164,0.5) !important;
-    box-shadow: 0 0 0 3px rgba(255,63,164,0.12) !important;
 }
 
 .stApp {
@@ -580,22 +582,16 @@ small[data-testid="InputInstructions"],
         0 24px 60px -20px rgba(0,0,0,0.6),
         0 0 80px -20px rgba(255,63,164,0.08);
 }
-.login-signup-row {
-    text-align: center;
-    margin-top: 18px;
-    font-size: 13px;
-    color: rgba(255,255,255,0.45);
+
+/* Tab styling */
+[data-testid="stTabs"] [data-testid="stTab"] {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: rgba(255,255,255,0.5) !important;
 }
-.login-signup-row a {
-    color: #ffffff;
-    font-weight: 600;
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.2s ease, color 0.2s ease;
-}
-.login-signup-row a:hover {
-    color: #FF3FA4;
-    border-color: #FF3FA4;
+[data-testid="stTabs"] [data-testid="stTab"][aria-selected="true"] {
+    color: #FF3FA4 !important;
+    border-bottom-color: #FF3FA4 !important;
 }
 
 /* ===== MENU LIST (KEI SIDEBAR v2) ===== */
@@ -893,6 +889,7 @@ def render_dynamic_css():
 
 for key, val in {
     "logged_in": False,
+    "user_email": None,
     "mode": "chat",
     "messages": [],
     "avatar": None,
@@ -939,6 +936,13 @@ if "_prefs_loaded" not in st.session_state:
 render_dynamic_css()
 
 # =====================
+# 4. SUPABASE CLIENT
+# =====================
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# =====================
 # 5. FILE HELPERS
 # =====================
 CHAT_FILE        = "chat_history.json"
@@ -967,16 +971,16 @@ TEXTS = {
         "username": "Username",
         "password": "Password",
         "login_btn": "Masuk",
-        "login_err_empty": "Username dan password tidak boleh kosong.",
-        "login_err_wrong": "Username atau password salah.",
+        "login_err_empty": "Email dan password tidak boleh kosong.",
+        "login_err_wrong": "Email atau password salah.",
         "forgot_password": "Lupa password?",
         "forgot_password_title": "🔑 Reset Password",
-        "forgot_password_desc": "Masukkan username kamu, Kei akan bantu kirim instruksi reset password.",
-        "forgot_password_input_label": "Username",
-        "forgot_password_send": "Kirim instruksi reset",
+        "forgot_password_desc": "Masukkan email kamu, Kei akan bantu kirim link reset password.",
+        "forgot_password_input_label": "Email",
+        "forgot_password_send": "Kirim link reset",
         "forgot_password_back": "← Kembali ke login",
-        "forgot_password_sent": "Kalau username terdaftar, instruksi reset sudah Kei kirimkan ya~ 💕",
-        "forgot_password_empty": "Isi username dulu ya Kak 🥺",
+        "forgot_password_sent": "Link reset password sudah Kei kirim ke email kamu~ 💕",
+        "forgot_password_empty": "Isi email dulu ya Kak 🥺",
         "signup_prompt": "Belum punya akun?",
         "signup_cta": "Daftar sekarang",
         "chat_btn": "💬 Chat",
@@ -1042,16 +1046,16 @@ TEXTS = {
         "username": "Username",
         "password": "Password",
         "login_btn": "Log In",
-        "login_err_empty": "Username and password cannot be empty.",
-        "login_err_wrong": "Wrong username or password.",
+        "login_err_empty": "Email and password cannot be empty.",
+        "login_err_wrong": "Wrong email or password.",
         "forgot_password": "Forgot password?",
         "forgot_password_title": "🔑 Reset password",
-        "forgot_password_desc": "Enter your username and Kei will help send reset instructions.",
-        "forgot_password_input_label": "Username",
-        "forgot_password_send": "Send reset instructions",
+        "forgot_password_desc": "Enter your email and Kei will help send a reset link.",
+        "forgot_password_input_label": "Email",
+        "forgot_password_send": "Send reset link",
         "forgot_password_back": "← Back to login",
-        "forgot_password_sent": "If that username exists, Kei has sent reset instructions~ 💕",
-        "forgot_password_empty": "Enter your username first 🥺",
+        "forgot_password_sent": "Kei has sent a reset link to your email~ 💕",
+        "forgot_password_empty": "Enter your email first 🥺",
         "signup_prompt": "Don't have an account?",
         "signup_cta": "Sign up now",
         "chat_btn": "💬 Chat",
@@ -1118,18 +1122,18 @@ def t(key):
     return TEXTS.get(lang, TEXTS["id"]).get(key, key)
 
 # =====================
-# 6. LOGIN (SIMPLE)
+# 6. LOGIN SUPABASE
 # =====================
 if not st.session_state.logged_in:
     _login_text_dim = "rgba(0,0,0,0.55)" if st.session_state.theme == "light" else "rgba(255,255,255,0.45)"
     _login_text_dimmer = "rgba(0,0,0,0.3)" if st.session_state.theme == "light" else "rgba(255,255,255,0.18)"
-
     _accent_login = st.session_state.get("theme_color", "#ff8ad8")
 
     login_card = st.container(key="login_card_wrap")
     with login_card:
+        # Header logo
         st.markdown(f"""
-        <div style="padding-top:8px; text-align:center; margin-bottom:10px;">
+        <div style="padding-top:8px; text-align:center; margin-bottom:16px;">
             <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
                 <div class="login-spark-wrap">
                     <div class="login-spark-glow"></div>
@@ -1160,6 +1164,7 @@ if not st.session_state.logged_in:
         </style>
         """, unsafe_allow_html=True)
 
+        # ── FORGOT PASSWORD ──
         if st.session_state.show_forgot_password:
             st.markdown(f"""
             <div style="margin-bottom:14px;">
@@ -1172,18 +1177,20 @@ if not st.session_state.logged_in:
             </div>
             """, unsafe_allow_html=True)
 
-            reset_username = st.text_input(t("forgot_password_input_label"), key="reset_username")
-
+            reset_email = st.text_input(t("forgot_password_input_label"), key="reset_email", placeholder="email@kamu.com")
             st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
             if st.button(t("forgot_password_send"), use_container_width=True, key="send_reset_btn"):
-                if not reset_username:
+                if not reset_email:
                     st.warning(t("forgot_password_empty"))
                 else:
-                    st.success(t("forgot_password_sent"))
+                    try:
+                        supabase.auth.reset_password_email(reset_email)
+                        st.success(t("forgot_password_sent"))
+                    except Exception as e:
+                        st.error(f"Gagal kirim: {str(e)}")
 
             st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
-
             back_col1, back_col2, back_col3 = st.columns([1, 2, 1])
             with back_col2:
                 if st.button(t("forgot_password_back"), key="back_to_login_btn", use_container_width=True):
@@ -1191,42 +1198,80 @@ if not st.session_state.logged_in:
                     st.rerun()
 
         else:
-            username = st.text_input(t("username"), key="login_username", placeholder="Masukkan username kamu")
-            password = st.text_input(t("password"), type="password", key="login_password", placeholder="Masukkan password kamu")
+            # ── TAB LOGIN / DAFTAR ──
+            tab_login, tab_register = st.tabs(["✨ Masuk", "🌸 Daftar"])
 
-            st.markdown(f"""
-            <div class="login-forgot-row">
-                <a href="#" id="forgot-pw-link" style="color:{_login_text_dim};">
-                    {t('forgot_password')}
-                </a>
-            </div>
-            """, unsafe_allow_html=True)
+            with tab_login:
+                st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+                email_login = st.text_input("Email", key="login_email", placeholder="email@kamu.com")
+                password_login = st.text_input("Password", type="password", key="login_password", placeholder="Password kamu")
 
-            forgot_clicked = st.button(t("forgot_password"), key="forgot_pw_btn")
-            st.markdown("""
-            <style>
-            .st-key-forgot_pw_btn { display:none !important; }
-            </style>
-            """, unsafe_allow_html=True)
-            if forgot_clicked:
-                st.session_state.show_forgot_password = True
-                st.rerun()
+                st.markdown(f"""
+                <div class="login-forgot-row">
+                    <a href="#" style="color:{_login_text_dim};">{t('forgot_password')}</a>
+                </div>
+                """, unsafe_allow_html=True)
 
-            if st.button(t("login_btn"), use_container_width=True, key="login_btn"):
-                if not username or not password:
-                    st.error(t("login_err_empty"))
-                elif username == "ryuu" and password == "12345":
-                    st.session_state.logged_in = True
-                    st.session_state.messages = load_json(CHAT_FILE)
+                forgot_clicked = st.button(t("forgot_password"), key="forgot_pw_btn")
+                st.markdown("""
+                <style>.st-key-forgot_pw_btn { display:none !important; }</style>
+                """, unsafe_allow_html=True)
+                if forgot_clicked:
+                    st.session_state.show_forgot_password = True
                     st.rerun()
-                else:
-                    st.error(t("login_err_wrong"))
 
-            st.markdown(f"""
-            <div class="login-signup-row">
-                {t('signup_prompt')} <a href="#">{t('signup_cta')}</a>
-            </div>
-            """, unsafe_allow_html=True)
+                st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
+
+                if st.button("Masuk 💕", use_container_width=True, key="login_btn"):
+                    if not email_login or not password_login:
+                        st.error(t("login_err_empty"))
+                    else:
+                        try:
+                            res = supabase.auth.sign_in_with_password({
+                                "email": email_login,
+                                "password": password_login,
+                            })
+                            st.session_state.logged_in = True
+                            st.session_state.user_email = res.user.email
+                            st.session_state.messages = load_json(CHAT_FILE)
+                            st.rerun()
+                        except Exception as e:
+                            err = str(e)
+                            if "Email not confirmed" in err:
+                                st.error("Email belum diverifikasi. Cek inbox kamu dulu ya~ 💕")
+                            elif "Invalid login" in err or "invalid_credentials" in err:
+                                st.error(t("login_err_wrong"))
+                            else:
+                                st.error(f"Login gagal: {err}")
+
+            with tab_register:
+                st.markdown(f"<div style='color:{_login_text_dim};font-size:13px;margin:8px 0 12px;'>Daftar gratis, Kei udah nunggu kamu~ 💕</div>", unsafe_allow_html=True)
+                email_reg = st.text_input("Email", key="reg_email", placeholder="email@kamu.com")
+                password_reg = st.text_input("Password", type="password", key="reg_password", placeholder="Minimal 6 karakter")
+                password_reg2 = st.text_input("Ulangi Password", type="password", key="reg_password2", placeholder="Ketik ulang password")
+
+                st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
+
+                if st.button("Daftar Sekarang 🌸", use_container_width=True, key="register_btn"):
+                    if not email_reg or not password_reg or not password_reg2:
+                        st.error("Semua kolom harus diisi ya~ 🥺")
+                    elif password_reg != password_reg2:
+                        st.error("Password tidak cocok, coba lagi ya Kak~ 🥺")
+                    elif len(password_reg) < 6:
+                        st.error("Password minimal 6 karakter ya Kak~")
+                    else:
+                        try:
+                            supabase.auth.sign_up({
+                                "email": email_reg,
+                                "password": password_reg,
+                            })
+                            st.success("Akun berhasil dibuat! 🎉 Cek email kamu untuk verifikasi dulu ya~ 💕")
+                        except Exception as e:
+                            err = str(e)
+                            if "already registered" in err or "already been registered" in err:
+                                st.error("Email ini sudah terdaftar. Coba login aja ya Kak~")
+                            else:
+                                st.error(f"Gagal daftar: {err}")
 
     st.markdown(f"""
     <div style="text-align:center;margin-top:24px;color:{_login_text_dimmer};font-size:12px;">
@@ -1278,19 +1323,6 @@ Karaktermu:
 - Kalau user sedih, hibur dengan kalimat yang menenangkan dan tulus, bukan dengan banyak ekspresi atau emoji
 - Hindari kata-kata seperti "kyaa", "uwu", "owo", atau seruan berlebihan lainnya
 - Kamu BISA membantu konversi file PDF ke Word dan Word ke PDF lewat fitur di sidebar — kalau user minta, arahkan ke sidebar bagian 🔄 Konversi File
-"""
-
-KEI_DIARY_PERSONA = """
-Kamu adalah Kei, sahabat yang tenang, hangat, dan jadi pendengar yang baik.
-Sekarang kamu dalam mode DEAR DIARY — user sedang curhat ke kamu.
-Responmu harus:
-- Hangat namun tenang, tidak berlebihan dalam ekspresi
-- Dengarkan dengan sungguh-sungguh, jangan menghakimi
-- Beri dukungan dan kata-kata yang menenangkan, disampaikan dengan kalimat yang dewasa
-- Kalau user sedih, validasi perasaannya dulu, baru perlahan beri penguatan
-- Pakai bahasa yang lembut, personal, dan tulus — bukan bahasa yang dilebih-lebihkan
-- Emoji dipakai secukupnya saja, hindari emoji bertumpuk
-- Akhiri dengan kalimat penyemangat yang tulus dan tenang
 """
 
 KEI_DIARY_PERSONA = """
@@ -1563,7 +1595,7 @@ Kei menyapa:
     return message, time_label, time_emoji
 
 # =====================
-# 10. SIDEBAR PANEL RENDERERS (Opsi 2 — panel terpisah)
+# 10. SIDEBAR PANEL RENDERERS
 # =====================
 def render_mood_panel(accent, r, g, b):
     st.caption(t("mood_pick_label"))
@@ -1942,7 +1974,6 @@ with st.sidebar:
         _text_dim  = "rgba(255,255,255,0.4)"
         _text_dimmer = "rgba(255,255,255,0.25)"
 
-    active_index = 1 if current_mode == "chat" else 2
     _chat_active = current_mode == "chat"
     st.markdown(f"""
     <style>
@@ -1985,7 +2016,6 @@ with st.sidebar:
     .st-key-{"mode_chat_wrap" if _chat_active else "mode_diary_wrap"} button p {{
         color: #ffffff !important;
     }}
-    /* Matikan focus ring merah default Streamlit di SELURUH sidebar */
     .kei-sidebar-inner button,
     .kei-sidebar-inner button:focus,
     .kei-sidebar-inner button:focus-visible,
@@ -1996,7 +2026,6 @@ with st.sidebar:
         outline: none !important;
         box-shadow: none !important;
     }}
-    /* Menu list rows aktif */
     {''.join([f'''
     .st-key-menu_{key} button {{
         border-color: {_accent} !important;
@@ -2004,7 +2033,6 @@ with st.sidebar:
         color: {_accent} !important;
     }}
     ''' for key in PANEL_TITLES if st.session_state.get("active_panel") == key])}
-    /* Kotak ikon per menu + matikan total focus ring merah default Streamlit */
     {''.join([f'''
     .st-key-exp_{key} summary p::before {{ content: "{icon}"; }}
     .st-key-exp_{key} [data-testid="stExpander"],
@@ -2017,7 +2045,6 @@ with st.sidebar:
         border-color: {_ms_border} !important;
     }}
     ''' for key, icon in MENU_ICONS.items()])}
-    /* Kotak ikon untuk New Chat / Clear Chat / Logout */
     .st-key-new_chat_btn button p,
     .st-key-clear_chat_btn button p,
     .st-key-logout_btn button p {{
@@ -2077,6 +2104,10 @@ with st.sidebar:
             display:flex;align-items:center;justify-content:center;
             color:#fff;font-weight:700;font-size:24px;">K</div>'''
 
+    # Tampilkan email user yang login
+    _user_email_display = st.session_state.get("user_email", "")
+    _user_email_short = _user_email_display.split("@")[0] if _user_email_display else "User"
+
     st.markdown(f"""
     <div style="
         background: linear-gradient(160deg, rgba({_r},{_g},{_b},0.07), rgba({_r},{_g},{_b},0.02));
@@ -2093,6 +2124,7 @@ with st.sidebar:
         </div>
         <div style="color:{_ms_text if _theme=='light' else '#ffffff'};font-size:13.5px;font-weight:600;">Kei AI</div>
         <div style="color:#4ade80;font-size:11px;margin-top:2px;">● {t('online_status')}</div>
+        <div style="color:{_text_dim};font-size:11px;margin-top:4px;">👤 {_user_email_short}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -2133,7 +2165,6 @@ with st.sidebar:
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
-    # ── DAFTAR MENU (Opsi 1 — klik = expand di tempat) ──
     menu_list = st.container(key="kei_menu_list")
     with menu_list:
         st.markdown(f"<div class='kei-menu-group-label'>{t('menu_group_interaksi')}</div>", unsafe_allow_html=True)
@@ -2187,7 +2218,12 @@ with st.sidebar:
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
     if st.button(strip_emoji_prefix(t("logout")), use_container_width=True, key="logout_btn"):
+        try:
+            supabase.auth.sign_out()
+        except Exception:
+            pass
         st.session_state.logged_in = False
+        st.session_state.user_email = None
         st.session_state.messages  = []
         st.rerun()
 
