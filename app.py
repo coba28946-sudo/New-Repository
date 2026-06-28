@@ -1256,7 +1256,7 @@ def generate_content_with_retry(full_prompt):
             if e.code == 429 and attempt < 2:
                 time.sleep(5)
             elif e.code == 429:
-                return "return "Maaf Kak, kuota Kei sedang penuh. Coba lagi sebentar ya."
+               return "Maaf Kak, kuota Kei sedang penuh. Coba lagi sebentar ya."
             else:
                 return f"Terjadi kesalahan API: {e.message}"
         except Exception as e:
