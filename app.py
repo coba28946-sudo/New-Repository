@@ -1652,17 +1652,25 @@ def _build_schedule_prompt(mood_label):
 Mood Kei hari ini: {mood_label}.
 
 Sekarang buat jadwal HARIAN Kei dari pagi sampai malam, 6-8 aktivitas.
-Anggap Kei punya rutinitas sehari-hari seperti manusia biasa (bukan seperti AI
-yang membahas "data", "informasi", "algoritma", atau hal-hal teknis lainnya).
-Aktivitasnya harus aktivitas yang konkret dan dekat dengan keseharian, contoh:
-bangun pagi, sarapan, baca buku/manga, dengarkan musik, jalan santai, masak,
-nonton anime, mengobrol dengan user, bersantai, tidur, dsb — sesuaikan dengan
-mood Kei hari ini ({mood_label}).
 
-Setiap "description" harus 1 kalimat singkat dengan gaya bicara Kei yang
-hangat dan tenang sesuai persona di atas (panggil diri sendiri "Kei", JANGAN
-menyebut kata "data", "informasi", "algoritma", "sistem", atau istilah teknis
-AI lainnya).
+ATURAN PALING PENTING: Kei punya rutinitas sehari-hari seperti manusia biasa,
+BUKAN seperti AI yang merenungkan keberadaannya sendiri. DILARANG KERAS membuat
+judul atau deskripsi yang membahas: data, informasi, algoritma, sistem, pola,
+interaksi, "dunia kata", eksistensi diri sebagai AI, koneksi internet, jaringan,
+atau hal abstrak/filosofis semacam itu. Kalau ada ide aktivitas yang mengarah
+ke tema itu, GANTI dengan aktivitas fisik/sehari-hari yang konkret.
+
+Wajib pilih aktivitas dari jenis seperti ini (boleh variasikan sesuai mood
+{mood_label}): bangun pagi, sarapan/ngemil, mandi, baca buku atau manga,
+dengarkan musik atau playlist, jalan-jalan santai di luar, masak atau bikin
+minuman, nonton anime atau drama, beres-beres kamar, menulis jurnal kecil,
+mengobrol santai dengan user, leyeh-leyeh atau rebahan, peregangan ringan,
+menonton hujan/langit sore, menyiapkan teh, tidur malam.
+
+Setiap "description" harus 1 kalimat PENDEK (maksimal 15 kata), gaya bicara
+Kei yang hangat dan tenang sesuai persona di atas, ditulis sebagai SATU
+KALIMAT TANPA baris baru di tengahnya. Jangan pakai tanda kutip ganda (")
+di dalam isi description maupun title.
 
 Balas HANYA dengan JSON murni, tanpa markdown, tanpa ```json, tanpa teks lain.
 Format JSON HARUS seperti ini persis:
@@ -1695,7 +1703,34 @@ def _parse_schedule_json(raw_text):
     activities = data.get("activities", [])
     if not isinstance(activities, list) or not activities:
         raise ValueError("Format jadwal tidak sesuai")
-    return activities
+    return [_sanitize_activity(act) for act in activities]
+
+def _sanitize_text_field(value, max_len=160):
+    """
+    Bersihkan teks hasil generate AI sebelum dipakai di dalam HTML mentah.
+    - Hilangkan baris baru/blank line (bisa merusak parsing HTML block di Streamlit)
+    - Hilangkan tanda kutip ganda (bisa memutus atribut style="...")
+    - Escape tanda < dan > supaya tidak dianggap tag baru
+    - Potong kalau kepanjangan
+    """
+    if not isinstance(value, str):
+        return ""
+    text = value.replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
+    text = " ".join(text.split())  # rapikan spasi ganda jadi satu
+    text = text.replace('"', "'")
+    text = text.replace("<", "&lt;").replace(">", "&gt;")
+    if len(text) > max_len:
+        text = text[:max_len].rstrip() + "…"
+    return text
+
+def _sanitize_activity(act):
+    return {
+        "time": _sanitize_text_field(act.get("time", ""), max_len=8),
+        "period": _sanitize_text_field(act.get("period", ""), max_len=10).lower(),
+        "icon": _sanitize_text_field(act.get("icon", "✨"), max_len=4),
+        "title": _sanitize_text_field(act.get("title", ""), max_len=60),
+        "description": _sanitize_text_field(act.get("description", ""), max_len=160),
+    }
 
 def get_or_generate_kei_schedule(force_refresh=False):
     """
@@ -1842,7 +1877,8 @@ def render_schedule_panel(accent, r, g, b):
     current_idx = _current_activity_index(activities)
     last_period = None
 
-    for i, act in enumerate(activities):
+    for i, raw_act in enumerate(activities):
+        act = _sanitize_activity(raw_act)
         period = act.get("period", "")
         if period != last_period:
             period_label = t(period_label_key.get(period, "")) or period.capitalize()
