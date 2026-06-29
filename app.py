@@ -1647,11 +1647,22 @@ SCHEDULE_FILE = _UserFilePath("kei_schedule.json")
 def _build_schedule_prompt(mood_label):
     """Prompt yang minta Gemini balas HANYA dalam JSON murni (tanpa markdown)."""
     return f"""
-Kamu adalah Kei, AI companion yang lembut dan hangat (lihat persona di bawah).
+{KEI_PERSONA}
+
 Mood Kei hari ini: {mood_label}.
 
-Buat jadwal harian Kei (sebagai karakter virtual) dari pagi sampai malam,
-6-8 aktivitas, masing-masing singkat dan personal sesuai mood Kei hari ini.
+Sekarang buat jadwal HARIAN Kei dari pagi sampai malam, 6-8 aktivitas.
+Anggap Kei punya rutinitas sehari-hari seperti manusia biasa (bukan seperti AI
+yang membahas "data", "informasi", "algoritma", atau hal-hal teknis lainnya).
+Aktivitasnya harus aktivitas yang konkret dan dekat dengan keseharian, contoh:
+bangun pagi, sarapan, baca buku/manga, dengarkan musik, jalan santai, masak,
+nonton anime, mengobrol dengan user, bersantai, tidur, dsb — sesuaikan dengan
+mood Kei hari ini ({mood_label}).
+
+Setiap "description" harus 1 kalimat singkat dengan gaya bicara Kei yang
+hangat dan tenang sesuai persona di atas (panggil diri sendiri "Kei", JANGAN
+menyebut kata "data", "informasi", "algoritma", "sistem", atau istilah teknis
+AI lainnya).
 
 Balas HANYA dengan JSON murni, tanpa markdown, tanpa ```json, tanpa teks lain.
 Format JSON HARUS seperti ini persis:
@@ -1663,7 +1674,7 @@ Format JSON HARUS seperti ini persis:
       "period": "pagi",
       "icon": "☀️",
       "title": "Judul singkat aktivitas",
-      "description": "Satu kalimat deskripsi dengan gaya Kei yang hangat."
+      "description": "Satu kalimat deskripsi dengan gaya Kei yang hangat dan natural."
     }}
   ]
 }}
