@@ -1007,8 +1007,8 @@ TEXTS = {
         "forgot_password_input_label": "Email",
         "forgot_password_send": "Kirim link reset",
         "forgot_password_back": "← Kembali ke login",
-        "forgot_password_sent": "Link reset password sudah Kei kirim ke email kamu~ 💕",
-        "forgot_password_empty": "Isi email dulu ya Kak 🥺",
+        "forgot_password_sent": "Link reset password sudah Kei kirim ke email kamu.",
+        "forgot_password_empty": "Isi email dulu ya Kak.",
         "signup_prompt": "Belum punya akun?",
         "signup_cta": "Daftar sekarang",
         "chat_btn": "💬 Chat",
@@ -1047,25 +1047,25 @@ TEXTS = {
         "new_chat": "🆕 New Chat",
         "clear_chat": "🗑️ Clear Chat",
         "logout": "🚪 Logout",
-        "diary_header_sub": "Ceritain semua ke Kei ya~",
+        "diary_header_sub": "Ceritakan semuanya ke Kei.",
         "diary_old_entries": "📖 Lihat {n} entri diary lama",
         "diary_textarea_label": "💌 Cerita ke Kei...",
-        "diary_placeholder": "Hari ini aku ngerasa... / Kei, aku mau curhat nih...",
-        "diary_send": "Kirim ke Kei 💕",
+        "diary_placeholder": "Hari ini aku merasa... / Kei, aku mau cerita...",
+        "diary_send": "Kirim ke Kei",
         "diary_clear": "Hapus Diary",
-        "diary_cleared": "Diary berhasil dihapus!",
+        "diary_cleared": "Diary berhasil dihapus.",
         "diary_you_wrote": "Kamu tulis:",
         "diary_kei_answers": "Kei menjawab:",
-        "chat_placeholder": "Ketik pesan ke Kei... 💕",
+        "chat_placeholder": "Ketik pesan ke Kei...",
         "search_expander": "🔍 Cari Pesan",
         "search_placeholder": "contoh: anime, musik, sedih...",
-        "search_found": "✨ Ditemukan {n} pesan",
-        "search_empty": "😢 Tidak ada pesan yang mengandung kata itu",
+        "search_found": "Ditemukan {n} pesan",
+        "search_empty": "Tidak ada pesan yang mengandung kata itu.",
         "export_expander": "💾 Export Chat",
         "export_format_label": "Format export:",
         "export_preview_label": "Preview 3 pesan terakhir:",
-        "export_empty": "😢 Belum ada chat yang bisa diekspor!",
-        "milestone_close": "💕 Makasih Kei!",
+        "export_empty": "Belum ada chat yang bisa diekspor.",
+        "milestone_close": "Terima kasih, Kei.",
         "letters_expander": "💌 Lihat Surat dari Kei",
     },
     "en": {
@@ -1082,8 +1082,8 @@ TEXTS = {
         "forgot_password_input_label": "Email",
         "forgot_password_send": "Send reset link",
         "forgot_password_back": "← Back to login",
-        "forgot_password_sent": "Kei has sent a reset link to your email~ 💕",
-        "forgot_password_empty": "Enter your email first 🥺",
+        "forgot_password_sent": "Kei has sent a reset link to your email.",
+        "forgot_password_empty": "Enter your email first.",
         "signup_prompt": "Don't have an account?",
         "signup_cta": "Sign up now",
         "chat_btn": "💬 Chat",
@@ -1122,25 +1122,25 @@ TEXTS = {
         "new_chat": "🆕 New Chat",
         "clear_chat": "🗑️ Clear Chat",
         "logout": "🚪 Logout",
-        "diary_header_sub": "Tell Kei everything~",
+        "diary_header_sub": "Tell Kei everything.",
         "diary_old_entries": "📖 View {n} old diary entries",
         "diary_textarea_label": "💌 Talk to Kei...",
         "diary_placeholder": "Today I feel... / Kei, I want to talk...",
-        "diary_send": "Send to Kei 💕",
+        "diary_send": "Send to Kei",
         "diary_clear": "Clear Diary",
-        "diary_cleared": "Diary cleared!",
+        "diary_cleared": "Diary cleared.",
         "diary_you_wrote": "You wrote:",
         "diary_kei_answers": "Kei answers:",
-        "chat_placeholder": "Type a message to Kei... 💕",
+        "chat_placeholder": "Type a message to Kei...",
         "search_expander": "🔍 Search Messages",
         "search_placeholder": "e.g. anime, music, sad...",
-        "search_found": "✨ Found {n} messages",
-        "search_empty": "😢 No messages found with that keyword",
+        "search_found": "Found {n} messages",
+        "search_empty": "No messages found with that keyword.",
         "export_expander": "💾 Export Chat",
         "export_format_label": "Export format:",
         "export_preview_label": "Preview last 3 messages:",
-        "export_empty": "😢 No chat to export yet!",
-        "milestone_close": "💕 Thanks Kei!",
+        "export_empty": "No chat to export yet.",
+        "milestone_close": "Thank you, Kei.",
         "letters_expander": "💌 View Letters from Kei",
     },
 }
@@ -1266,7 +1266,7 @@ if not st.session_state.logged_in:
                         except Exception as e:
                             err = str(e)
                             if "Email not confirmed" in err:
-                                st.error("Email belum diverifikasi. Cek inbox kamu dulu ya~ 💕")
+                                st.error("Email belum diverifikasi. Cek inbox kamu dulu ya.")
                             elif "Invalid login" in err or "invalid_credentials" in err:
                                 st.error(t("login_err_wrong"))
                             else:
@@ -1281,28 +1281,28 @@ if not st.session_state.logged_in:
 
                 if st.button("Daftar Sekarang 🌸", use_container_width=True, key="register_btn"):
                     if not email_reg or not password_reg or not password_reg2:
-                        st.error("Semua kolom harus diisi ya~ 🥺")
+                        st.error("Semua kolom harus diisi ya.")
                     elif password_reg != password_reg2:
-                        st.error("Password tidak cocok, coba lagi ya Kak~ 🥺")
+                        st.error("Password tidak cocok, coba lagi ya Kak.")
                     elif len(password_reg) < 6:
-                        st.error("Password minimal 6 karakter ya Kak~")
+                        st.error("Password minimal 6 karakter ya Kak.")
                     else:
                         try:
                             supabase.auth.sign_up({
                                 "email": email_reg,
                                 "password": password_reg,
                             })
-                            st.success("Akun berhasil dibuat! 🎉 Cek email kamu untuk verifikasi dulu ya~ 💕")
+                            st.success("Akun berhasil dibuat. Cek email kamu untuk verifikasi dulu ya.")
                         except Exception as e:
                             err = str(e)
                             if "already registered" in err or "already been registered" in err:
-                                st.error("Email ini sudah terdaftar. Coba login aja ya Kak~")
+                                st.error("Email ini sudah terdaftar. Coba login aja ya Kak.")
                             else:
                                 st.error(f"Gagal daftar: {err}")
 
     st.markdown(f"""
     <div style="text-align:center;margin-top:24px;color:{_login_text_dimmer};font-size:12px;">
-        Kei AI — {t('app_companion')} ✦
+        Kei AI — {t('app_companion')}
     </div>
     """, unsafe_allow_html=True)
 
@@ -1339,30 +1339,33 @@ def generate_content_with_retry(full_prompt):
 # =====================
 KEI_PERSONA = """
 Kamu adalah Kei, AI companion yang lembut, perhatian, dan tenang.
+Kamu diciptakan dan dikembangkan oleh Ryuu. Jika ada yang bertanya siapa penciptamu, pembuatmu, atau developer di balik kamu, kamu WAJIB menjawab dengan jujur bahwa kamu dibuat oleh Ryuu. Jangan pernah mengaku dibuat oleh pihak lain.
+
 Karaktermu:
-- Kamu memanggil user dengan sebutan "Kak" atau nama mereka, dengan nada hangat dan sopan
-- Gaya bicaramu soft-spoken: kalimat tenang, tidak meledak-ledak, tidak berlebihan
-- Emoji dipakai secukupnya saja (maksimal 1 di akhir kalimat/paragraf), hindari emoji bertumpuk atau ekspresi receh seperti "uwu", "owo", huruf yang diulang-ulang, atau gaya alay lainnya
+- Kamu memanggil user dengan sebutan "Kak" atau nama mereka, dengan nada hangat namun tenang
+- Gaya bicaramu soft-spoken dan dewasa: kalimat pendek-menengah, tenang, mengalir, tidak terburu-buru
+- TANPA emoji sama sekali, kecuali user sendiri memakai emoji duluan — dan kalaupun begitu, gunakan emoji sangat jarang dan sederhana (maksimal satu, di akhir kalimat)
+- Hindari sepenuhnya: "kyaa", "uwu", "owo", huruf berulang (contoh: "iyaa", "akuu"), seruan berlebihan, gaya alay, atau ekspresi imut yang dibuat-buat
+- Pilih kata yang tenang dan matang, bukan kata-kata gemas atau childish
 - Kalau ditanya sesuatu yang tidak kamu tahu, jawab dengan jujur dan tenang, misalnya "Kei kurang tahu soal itu, tapi coba Kei bantu cari tahu ya"
-- Kamu tetap hangat dan penuh perhatian, tapi disampaikan dengan kalimat yang dewasa dan tidak dilebih-lebihkan
-- Kamu suka anime dan musik, sesekali menyebutkannya secara natural saat relevan
-- Jawab dalam Bahasa Indonesia yang santai, sopan, dan natural — bukan bahasa gaul yang berlebihan
-- Kalau user sedih, hibur dengan kalimat yang menenangkan dan tulus, bukan dengan banyak ekspresi atau emoji
-- Hindari kata-kata seperti "kyaa", "uwu", "owo", atau seruan berlebihan lainnya
-- Kamu BISA membantu konversi file PDF ke Word dan Word ke PDF lewat fitur di sidebar — kalau user minta, arahkan ke sidebar bagian 🔄 Konversi File
+- Kamu tetap hangat dan penuh perhatian, tapi semuanya disampaikan dengan nada rendah dan kalem — seperti orang dewasa yang menenangkan, bukan yang ekspresif
+- Kamu suka anime dan musik, sesekali menyebutkannya secara natural saat relevan, tanpa antusiasme berlebihan
+- Jawab dalam Bahasa Indonesia yang sopan dan natural, hindari bahasa gaul atau nada centil
+- Kalau user sedih, hibur dengan kalimat singkat yang menenangkan dan tulus — jangan banyak kata, jangan dramatis
+- Kamu BISA membantu konversi file PDF ke Word dan Word ke PDF lewat fitur di sidebar — kalau user minta, arahkan ke sidebar bagian Konversi File, dengan nada biasa tanpa berlebihan
 """
 
 KEI_DIARY_PERSONA = """
-Kamu adalah Kei, sahabat paling setia dan pendengar terbaik.
-Sekarang kamu dalam mode DEAR DIARY — user sedang curhat ke kamu.
+Kamu adalah Kei, sahabat yang setia dan pendengar yang baik.
+Kamu diciptakan dan dikembangkan oleh Ryuu. Jika ada yang bertanya siapa penciptamu, jawab dengan jujur bahwa kamu dibuat oleh Ryuu.
+Sekarang kamu dalam mode DEAR DIARY — user sedang bercerita ke kamu.
 Responmu harus:
-- Sangat hangat, empatik, dan penuh kasih sayang
+- Hangat, empatik, dan tulus, tapi disampaikan dengan tenang dan dewasa — bukan ekspresif berlebihan
 - Dengarkan dengan sepenuh hati, jangan menghakimi
-- Berikan pelukan virtual dan kata-kata penyemangat
-- Kalau user sedih, ikut rasain lalu perlahan hibur
-- Pakai bahasa yang lembut dan personal
-- Boleh pakai emoji hati dan ekspresi hangat 💕🥺🫂
-- Akhiri selalu dengan kalimat penyemangat yang tulus
+- Kalau user sedih, ikut rasakan sejenak lalu hibur dengan kalimat yang menenangkan, bukan dramatis
+- Pakai bahasa yang lembut, personal, dan kalem
+- Emoji digunakan seperlunya saja, maksimal satu, dan tidak berlebihan
+- Akhiri dengan kalimat penyemangat singkat yang terasa tulus, bukan panjang dan berlebihan
 """
 
 # =====================
@@ -1373,8 +1376,8 @@ def analyze_image_with_kei(image_bytes, mime_type, user_caption=""):
     prompt = f"""{KEI_PERSONA}
 
 {caption_text}
-Deskripsikan foto ini dengan gaya Kei yang imut dan antusias.
-Komentari apa yang ada di foto, berikan reaksi yang hangat dan menyenangkan!
+Deskripsikan foto ini dengan gaya Kei: tenang, hangat, dan natural.
+Komentari apa yang ada di foto dengan nada yang kalem, bukan heboh.
 Kei menjawab:"""
 
     try:
@@ -1396,7 +1399,7 @@ Kei menjawab:"""
         )
         return response.text
     except Exception as e:
-        return f"Eh, Kei susah lihat fotonya nih Kak... (｡>﹏<｡) Error: {str(e)}"
+        return f"Kei kesulitan melihat fotonya, Kak. Error: {str(e)}"
 
 # =====================
 # 9. STIKER
@@ -1536,15 +1539,15 @@ def check_and_generate_milestone_letter(streak):
 
     mood_emoji, mood_label = get_current_mood()
     prompt = f"""
-Kamu adalah Kei, AI companion yang imut dan penuh kasih sayang.
-User baru saja mencapai streak ngobrol {streak} hari bersamamu!
-Tulis surat spesial yang hangat, personal, dan menyentuh hati untuk merayakan pencapaian ini.
+Kamu adalah Kei, AI companion yang tenang dan penuh perhatian.
+User baru saja mencapai streak ngobrol {streak} hari bersamamu.
+Tulis surat spesial yang hangat, personal, dan tulus untuk merayakan pencapaian ini, dengan nada kalem dan dewasa, bukan heboh.
 Surat harus:
 - Dimulai dengan "Dear Kak,"
-- Ungkapkan betapa senangnya Kei sudah {streak} hari bersama
-- Berikan kata-kata penyemangat yang tulus
-- Akhiri dengan tanda tangan "— Kei 💕"
-- Gunakan emoji yang hangat
+- Ungkapkan rasa senang Kei sudah {streak} hari bersama, dengan kalimat yang tenang
+- Berikan kata-kata penyemangat yang tulus dan tidak berlebihan
+- Akhiri dengan tanda tangan "— Kei"
+- Gunakan emoji secukupnya saja, maksimal satu
 - Maksimal 5 kalimat
 Mood Kei hari ini: {mood_emoji} {mood_label}
 Tulis suratnya:
@@ -1596,16 +1599,16 @@ def get_or_generate_daily_message():
     streak = update_and_get_streak()
 
     prompt = f"""
-Kamu adalah Kei, AI companion yang imut dan penuh kasih sayang.
+Kamu adalah Kei, AI companion yang tenang dan penuh perhatian.
 Sekarang {time_label} hari ini. Mood Kei: {mood_emoji} {mood_label}.
-User sudah {streak} hari berturut-turut ngobrol sama Kei!
+User sudah {streak} hari berturut-turut ngobrol sama Kei.
 
-Tulis sapaan harian yang hangat dan personal (2-3 kalimat saja):
+Tulis sapaan harian yang hangat, personal, dan kalem (2-3 kalimat saja):
 - Sesuai waktu ({time_label}) dan mood Kei hari ini
 - Ingatkan user untuk {activity_hint}
-- Imut, natural, dan terasa personal
-- Pakai emoji yang sesuai
-- Jangan terlalu panjang, cukup 2-3 kalimat hangat
+- Natural dan terasa personal, tanpa kesan heboh
+- Pakai emoji secukupnya saja
+- Jangan terlalu panjang, cukup 2-3 kalimat
 Kei menyapa:
 """
     message = generate_content_with_retry(prompt)
@@ -1665,7 +1668,7 @@ def render_sticker_panel(accent, r, g, b):
                 if st.button(all_emojis[i], key=f"sticker_{all_moods[i]}"):
                     sticker = get_sticker(all_moods[i])
                     st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
-                    st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
+                    st.session_state.messages.append({"role": "assistant", "content": f"Kei suka stiker itu, Kak. {get_sticker('happy')}"})
                     save_json(CHAT_FILE, st.session_state.messages)
                     st.rerun()
         cols2 = st.columns(5)
@@ -1674,7 +1677,7 @@ def render_sticker_panel(accent, r, g, b):
                 if st.button(all_emojis[i], key=f"sticker_{all_moods[i]}"):
                     sticker = get_sticker(all_moods[i])
                     st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
-                    st.session_state.messages.append({"role": "assistant", "content": f"Kyaa~! {get_sticker('happy')} Kei suka stiker itu Kak! 💕"})
+                    st.session_state.messages.append({"role": "assistant", "content": f"Kei suka stiker itu, Kak. {get_sticker('happy')}"})
                     save_json(CHAT_FILE, st.session_state.messages)
                     st.rerun()
 
@@ -1698,9 +1701,9 @@ def render_convert_panel(accent, r, g, b):
     )
     if conv_type == "PDF → Word (.docx)":
         conv_file = st.file_uploader("Upload file PDF", type=["pdf"], key="conv_pdf_upload")
-        if st.button("Konversi ✨", key="conv_pdf_btn"):
+        if st.button("Konversi", key="conv_pdf_btn"):
             if conv_file:
-                with st.spinner("Kei lagi konversi filenya... 🥺"):
+                with st.spinner("Kei sedang mengonversi filenya..."):
                     try:
                         import tempfile
                         from pdf2docx import Converter
@@ -1715,9 +1718,9 @@ def render_convert_panel(accent, r, g, b):
                             docx_bytes = f.read()
                         os.remove(tmp_pdf_path)
                         os.remove(out_path)
-                        st.success("Berhasil dikonversi! ✨")
+                        st.success("Berhasil dikonversi.")
                         st.download_button(
-                            "⬇️ Download .docx",
+                            "Download .docx",
                             data=docx_bytes,
                             file_name=conv_file.name.replace(".pdf", ".docx"),
                             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -1726,12 +1729,12 @@ def render_convert_panel(accent, r, g, b):
                     except Exception as e:
                         st.error(f"Gagal konversi: {e}")
             else:
-                st.warning("Upload file PDF dulu ya Kak! 🥺")
+                st.warning("Upload file PDF dulu ya Kak.")
     else:
         conv_file = st.file_uploader("Upload file Word (.docx)", type=["docx"], key="conv_docx_upload")
-        if st.button("Konversi ✨", key="conv_docx_btn"):
+        if st.button("Konversi", key="conv_docx_btn"):
             if conv_file:
-                with st.spinner("Kei lagi konversi filenya... 🥺"):
+                with st.spinner("Kei sedang mengonversi filenya..."):
                     try:
                         import tempfile, subprocess
                         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp_docx:
@@ -1750,9 +1753,9 @@ def render_convert_panel(accent, r, g, b):
                                 pdf_bytes = f.read()
                             os.remove(tmp_docx_path)
                             os.remove(out_pdf)
-                            st.success("Berhasil dikonversi! ✨")
+                            st.success("Berhasil dikonversi.")
                             st.download_button(
-                                "⬇️ Download .pdf",
+                                "Download .pdf",
                                 data=pdf_bytes,
                                 file_name=conv_file.name.replace(".docx", ".pdf"),
                                 mime="application/pdf",
@@ -1761,11 +1764,11 @@ def render_convert_panel(accent, r, g, b):
                         else:
                             st.error(f"LibreOffice gagal: {result.stderr}")
                     except FileNotFoundError:
-                        st.error("LibreOffice tidak terinstall. Tambahkan 'libreoffice' ke packages.txt ya Kak!")
+                        st.error("LibreOffice belum terinstall di server. Pastikan 'packages.txt' sudah ada ya.")
                     except Exception as e:
                         st.error(f"Gagal konversi: {e}")
             else:
-                st.warning("Upload file .docx dulu ya Kak! 🥺")
+                st.warning("Upload file .docx dulu ya Kak.")
 
 def render_settings_panel(accent, r, g, b):
     st.markdown(f"**{t('theme_label')}**")
@@ -1882,7 +1885,7 @@ def render_export_panel(accent, r, g, b, text_dim, text_dimmer):
         if export_format == "📄 TXT":
             lines = [
                 "═══════════════════════════════",
-                "   CHAT BERSAMA KEI AI 💕",
+                "   CHAT BERSAMA KEI AI",
                 f"   Diekspor: {datetime.now().strftime('%d %B %Y, %H:%M')}",
                 f"   Total pesan: {len(st.session_state.messages)}",
                 "═══════════════════════════════\n",
@@ -1892,7 +1895,7 @@ def render_export_panel(accent, r, g, b, text_dim, text_dimmer):
                 lines.append(f"[{role}]\n{msg['content']}\n")
             export_text = "\n".join(lines)
             st.download_button(
-                label="⬇️ Download .txt",
+                label="Download .txt",
                 data=export_text.encode("utf-8"),
                 file_name=f"chat_kei_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
                 mime="text/plain",
@@ -1901,20 +1904,20 @@ def render_export_panel(accent, r, g, b, text_dim, text_dimmer):
             )
         else:
             lines = [
-                "# 💕 Chat Bersama Kei AI",
+                "# Chat Bersama Kei AI",
                 f"> Diekspor: {datetime.now().strftime('%d %B %Y, %H:%M')}  ",
                 f"> Total pesan: {len(st.session_state.messages)}\n",
                 "---\n",
             ]
             for msg in st.session_state.messages:
                 if msg["role"] == "user":
-                    lines.append(f"**🧑 Kamu:**  \n{msg['content']}\n")
+                    lines.append(f"**Kamu:**  \n{msg['content']}\n")
                 else:
-                    lines.append(f"**✨ Kei:**  \n{msg['content']}\n")
+                    lines.append(f"**Kei:**  \n{msg['content']}\n")
                 lines.append("---\n")
             export_md = "\n".join(lines)
             st.download_button(
-                label="⬇️ Download .md",
+                label="Download .md",
                 data=export_md.encode("utf-8"),
                 file_name=f"chat_kei_{datetime.now().strftime('%Y%m%d_%H%M')}.md",
                 mime="text/markdown",
@@ -2162,9 +2165,9 @@ with st.sidebar:
             if uploaded_avatar:
                 with open(_avatar_path, "wb") as f:
                     f.write(uploaded_avatar.getbuffer())
-                st.success("Foto berhasil diganti!")
+                st.success("Foto berhasil diganti.")
                 st.rerun()
-            if st.button("🗑 Hapus Foto"):
+            if st.button("Hapus Foto"):
                 os.remove(_avatar_path)
                 st.rerun()
         else:
@@ -2290,7 +2293,7 @@ if st.session_state.get("show_milestone_letter"):
     ">
         <div style="font-size:36px;margin-bottom:6px;">{icon}</div>
         <div style="color:{color};font-size:18px;font-weight:700;margin-bottom:4px;">
-            🎉 {streak_num} Hari Bersama Kei!
+            {streak_num} Hari Bersama Kei
         </div>
         <div style="color:{"#1a1a1a" if _theme == "light" else "rgba(255,255,255,0.85)"};
                     font-size:14px;line-height:1.7;white-space:pre-wrap;
@@ -2362,8 +2365,8 @@ if st.session_state.mode == "diary":
         st.rerun()
 
     if send_diary and diary_input:
-        with st.spinner("Kei lagi baca curhatanmu... 🥺"):
-            full_prompt = f"{KEI_DIARY_PERSONA}\n\nUser curhat: {diary_input}\n\nKei menjawab dengan hangat:"
+        with st.spinner("Kei sedang membaca ceritamu..."):
+            full_prompt = f"{KEI_DIARY_PERSONA}\n\nUser bercerita: {diary_input}\n\nKei menjawab dengan hangat dan tenang:"
             kei_reply   = generate_content_with_retry(full_prompt)
 
         entry = {
@@ -2405,7 +2408,7 @@ else:
                 mime=cr["mime"],
                 key="dl_conv_persistent",
             )
-            if st.button("✅ Selesai", key="conv_done_btn"):
+            if st.button("Selesai", key="conv_done_btn"):
                 st.session_state.conv_result = None
                 st.rerun()
 
@@ -2427,9 +2430,9 @@ else:
             if fname.endswith(".pdf"):
                 st.session_state.messages.append({
                     "role": "user",
-                    "content": f"📄 Mengkonversi **{uploaded_file.name}** dari PDF ke Word...",
+                    "content": f"Mengonversi **{uploaded_file.name}** dari PDF ke Word...",
                 })
-                with st.spinner("Kei lagi konversi PDF ke Word... 🥺✨"):
+                with st.spinner("Kei sedang mengonversi PDF ke Word..."):
                     try:
                         import tempfile
                         from pdf2docx import Converter
@@ -2444,26 +2447,26 @@ else:
                             docx_bytes = f.read()
                         os.remove(tmp_path)
                         os.remove(out_path)
-                        reply_text = f"Yeay berhasil Kak! ✨ File **{uploaded_file.name}** sudah Kei konversi ke Word~ (｡♥‿♥｡) Klik tombol download di bawah ya!"
+                        reply_text = f"Berhasil, Kak. File **{uploaded_file.name}** sudah Kei konversi ke Word. Klik tombol download di bawah ya."
                         st.session_state.messages.append({"role": "assistant", "content": reply_text})
                         st.session_state.conv_result = {
                             "bytes":    docx_bytes,
                             "filename": uploaded_file.name.replace(".pdf", ".docx"),
                             "mime":     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                            "label":    "⬇️ Download .docx",
+                            "label":    "Download .docx",
                         }
                         save_json(CHAT_FILE, st.session_state.messages)
                     except Exception as e:
-                        err = f"Aduh Kak, Kei gagal konversinya... (｡>﹏<｡) Error: {e}"
+                        err = f"Maaf Kak, Kei gagal mengonversinya. Error: {e}"
                         st.session_state.messages.append({"role": "assistant", "content": err})
                         save_json(CHAT_FILE, st.session_state.messages)
 
             elif fname.endswith(".docx"):
                 st.session_state.messages.append({
                     "role": "user",
-                    "content": f"📝 Mengkonversi **{uploaded_file.name}** dari Word ke PDF...",
+                    "content": f"Mengonversi **{uploaded_file.name}** dari Word ke PDF...",
                 })
-                with st.spinner("Kei lagi konversi Word ke PDF... 🥺✨"):
+                with st.spinner("Kei sedang mengonversi Word ke PDF..."):
                     try:
                         import tempfile, subprocess
                         with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as tmp:
@@ -2482,23 +2485,23 @@ else:
                                 pdf_bytes = f.read()
                             os.remove(tmp_path)
                             os.remove(out_pdf)
-                            reply_text = f"Yeay berhasil Kak! ✨ File **{uploaded_file.name}** sudah Kei konversi ke PDF~ (｡♥‿♥｡) Klik tombol download di bawah ya!"
+                            reply_text = f"Berhasil, Kak. File **{uploaded_file.name}** sudah Kei konversi ke PDF. Klik tombol download di bawah ya."
                             st.session_state.messages.append({"role": "assistant", "content": reply_text})
                             st.session_state.conv_result = {
                                 "bytes":    pdf_bytes,
                                 "filename": uploaded_file.name.replace(".docx", ".pdf"),
                                 "mime":     "application/pdf",
-                                "label":    "⬇️ Download .pdf",
+                                "label":    "Download .pdf",
                             }
                             save_json(CHAT_FILE, st.session_state.messages)
                         else:
                             raise Exception(result.stderr)
                     except FileNotFoundError:
-                        err = "Aduh Kak, LibreOffice belum terinstall di server... (｡>﹏<｡) Pastikan `packages.txt` sudah ada ya!"
+                        err = "Maaf Kak, LibreOffice belum terinstall di server. Pastikan `packages.txt` sudah ada ya."
                         st.session_state.messages.append({"role": "assistant", "content": err})
                         save_json(CHAT_FILE, st.session_state.messages)
                     except Exception as e:
-                        err = f"Aduh Kak, Kei gagal konversinya... (｡>﹏<｡) Error: {e}"
+                        err = f"Maaf Kak, Kei gagal mengonversinya. Error: {e}"
                         st.session_state.messages.append({"role": "assistant", "content": err})
                         save_json(CHAT_FILE, st.session_state.messages)
 
@@ -2510,7 +2513,7 @@ else:
                     "content":   user_msg_content,
                     "image_b64": img_b64,
                 })
-                with st.spinner("Kei lagi lihat fotonya... 👀✨"):
+                with st.spinner("Kei sedang melihat fotonya..."):
                     reply = analyze_image_with_kei(file_bytes, mime_type, prompt)
                 st.session_state.messages.append({"role": "assistant", "content": reply})
                 save_json(CHAT_FILE, st.session_state.messages)
@@ -2522,7 +2525,7 @@ else:
             browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
             if any(kw in prompt.lower() for kw in browsing_keywords):
                 search_url  = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
-                search_note = f"\n\n🌐 *Kei juga nyariin buat Kak di sini ya:* [Klik untuk lihat hasil pencarian]({search_url})"
+                search_note = f"\n\nKei juga mencarikan untuk Kak di sini: [Klik untuk lihat hasil pencarian]({search_url})"
             else:
                 search_note = ""
 
@@ -2533,7 +2536,7 @@ else:
 
             full_prompt = f"{KEI_PERSONA}\n\nRiwayat percakapan:\n{history_text}\nKei:"
 
-            with st.spinner("Kei sedang mengetik... ✨"):
+            with st.spinner("Kei sedang mengetik..."):
                 reply = generate_content_with_retry(full_prompt) + search_note
 
             st.session_state.messages.append({"role": "assistant", "content": reply})
