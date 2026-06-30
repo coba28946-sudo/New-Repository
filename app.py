@@ -1067,15 +1067,6 @@ TEXTS = {
         "export_empty": "😢 Belum ada chat yang bisa diekspor!",
         "milestone_close": "💕 Makasih Kei!",
         "letters_expander": "💌 Lihat Surat dari Kei",
-        "schedule_expander": "📅 Jadwal Harian Kei",
-        "schedule_refresh_btn": "🔄 Buat ulang jadwal",
-        "schedule_loading": "Kei lagi nyusun jadwal harinya... 🥺✨",
-        "schedule_now_badge": "SEDANG BERLANGSUNG",
-        "schedule_period_pagi": "Pagi",
-        "schedule_period_siang": "Siang",
-        "schedule_period_sore": "Sore",
-        "schedule_period_malam": "Malam",
-        "schedule_error": "Kei lagi susah bikin jadwal nih, coba lagi sebentar ya 🥺",
     },
     "en": {
         "app_tagline": "Your Smart AI Companion",
@@ -1151,15 +1142,6 @@ TEXTS = {
         "export_empty": "😢 No chat to export yet!",
         "milestone_close": "💕 Thanks Kei!",
         "letters_expander": "💌 View Letters from Kei",
-        "schedule_expander": "📅 Kei's Daily Schedule",
-        "schedule_refresh_btn": "🔄 Regenerate schedule",
-        "schedule_loading": "Kei is planning the day... 🥺✨",
-        "schedule_now_badge": "HAPPENING NOW",
-        "schedule_period_pagi": "Morning",
-        "schedule_period_siang": "Afternoon",
-        "schedule_period_sore": "Evening",
-        "schedule_period_malam": "Night",
-        "schedule_error": "Kei is having trouble making the schedule, try again in a bit 🥺",
     },
 }
 
@@ -1640,157 +1622,6 @@ Kei menyapa:
     return message, time_label, time_emoji
 
 # =====================
-# 9g. JADWAL HARIAN KEI
-# =====================
-SCHEDULE_FILE = _UserFilePath("kei_schedule.json")
-
-def _build_schedule_prompt(mood_label):
-    """Prompt yang minta Gemini balas HANYA dalam JSON murni (tanpa markdown)."""
-    return f"""
-{KEI_PERSONA}
-
-Mood Kei hari ini: {mood_label}.
-
-Sekarang buat jadwal HARIAN Kei dari pagi sampai malam, 6-8 aktivitas.
-
-ATURAN PALING PENTING: Kei punya rutinitas sehari-hari seperti manusia biasa,
-BUKAN seperti AI yang merenungkan keberadaannya sendiri. DILARANG KERAS membuat
-judul atau deskripsi yang membahas: data, informasi, algoritma, sistem, pola,
-interaksi, "dunia kata", eksistensi diri sebagai AI, koneksi internet, jaringan,
-atau hal abstrak/filosofis semacam itu. Kalau ada ide aktivitas yang mengarah
-ke tema itu, GANTI dengan aktivitas fisik/sehari-hari yang konkret.
-
-Wajib pilih aktivitas dari jenis seperti ini (boleh variasikan sesuai mood
-{mood_label}): bangun pagi, sarapan/ngemil, mandi, baca buku atau manga,
-dengarkan musik atau playlist, jalan-jalan santai di luar, masak atau bikin
-minuman, nonton anime atau drama, beres-beres kamar, menulis jurnal kecil,
-mengobrol santai dengan user, leyeh-leyeh atau rebahan, peregangan ringan,
-menonton hujan/langit sore, menyiapkan teh, tidur malam.
-
-Setiap "description" harus 1 kalimat PENDEK (maksimal 15 kata), gaya bicara
-Kei yang hangat dan tenang sesuai persona di atas, ditulis sebagai SATU
-KALIMAT TANPA baris baru di tengahnya. Jangan pakai tanda kutip ganda (")
-di dalam isi description maupun title.
-
-Balas HANYA dengan JSON murni, tanpa markdown, tanpa ```json, tanpa teks lain.
-Format JSON HARUS seperti ini persis:
-
-{{
-  "activities": [
-    {{
-      "time": "07:00",
-      "period": "pagi",
-      "icon": "☀️",
-      "title": "Judul singkat aktivitas",
-      "description": "Satu kalimat deskripsi dengan gaya Kei yang hangat dan natural."
-    }}
-  ]
-}}
-
-Aturan field "period": harus salah satu dari "pagi", "siang", "sore", "malam"
-sesuai jam aktivitasnya (pagi 05:00-10:59, siang 11:00-14:59, sore 15:00-17:59, malam 18:00-04:59).
-Urutkan activities dari jam paling pagi ke paling malam.
-"""
-
-def _parse_schedule_json(raw_text):
-    cleaned = raw_text.strip()
-    if cleaned.startswith("```"):
-        cleaned = cleaned.strip("`")
-        if cleaned.lower().startswith("json"):
-            cleaned = cleaned[4:]
-    cleaned = cleaned.strip()
-    data = json.loads(cleaned)
-    activities = data.get("activities", [])
-    if not isinstance(activities, list) or not activities:
-        raise ValueError("Format jadwal tidak sesuai")
-    return [_sanitize_activity(act) for act in activities]
-
-def _sanitize_text_field(value, max_len=160):
-    """
-    Bersihkan teks hasil generate AI sebelum dipakai di dalam HTML mentah.
-    - Hilangkan baris baru/blank line (bisa merusak parsing HTML block di Streamlit)
-    - Hilangkan tanda kutip ganda (bisa memutus atribut style="...")
-    - Escape tanda < dan > supaya tidak dianggap tag baru
-    - Potong kalau kepanjangan
-    """
-    if not isinstance(value, str):
-        return ""
-    text = value.replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
-    text = " ".join(text.split())  # rapikan spasi ganda jadi satu
-    text = text.replace('"', "'")
-    text = text.replace("<", "&lt;").replace(">", "&gt;")
-    if len(text) > max_len:
-        text = text[:max_len].rstrip() + "…"
-    return text
-
-def _sanitize_activity(act):
-    return {
-        "time": _sanitize_text_field(act.get("time", ""), max_len=8),
-        "period": _sanitize_text_field(act.get("period", ""), max_len=10).lower(),
-        "icon": _sanitize_text_field(act.get("icon", "✨"), max_len=4),
-        "title": _sanitize_text_field(act.get("title", ""), max_len=60),
-        "description": _sanitize_text_field(act.get("description", ""), max_len=160),
-    }
-
-def get_or_generate_kei_schedule(force_refresh=False):
-    """
-    Ambil jadwal harian Kei untuk hari ini.
-    Dicache per user per hari di SCHEDULE_FILE, sama seperti DAILY_MSG_FILE.
-    Set force_refresh=True untuk minta Kei membuat jadwal baru hari ini.
-    """
-    today_str = datetime.now().strftime("%Y-%m-%d")
-
-    if not force_refresh and os.path.exists(SCHEDULE_FILE):
-        try:
-            with open(SCHEDULE_FILE, "r") as f:
-                cached = json.load(f)
-            if cached.get("date") == today_str and cached.get("activities"):
-                return cached["activities"], None
-        except Exception:
-            pass
-
-    _, mood_label = get_current_mood()
-    prompt = _build_schedule_prompt(mood_label)
-    raw_text = generate_content_with_retry(prompt)
-
-    try:
-        activities = _parse_schedule_json(raw_text)
-    except Exception:
-        # Kalau parsing gagal, jangan timpa cache lama (kalau ada)
-        if os.path.exists(SCHEDULE_FILE):
-            try:
-                with open(SCHEDULE_FILE, "r") as f:
-                    cached = json.load(f)
-                if cached.get("activities"):
-                    return cached["activities"], None
-            except Exception:
-                pass
-        return [], t("schedule_error")
-
-    cache = {"date": today_str, "activities": activities}
-    with open(SCHEDULE_FILE, "w") as f:
-        json.dump(cache, f, ensure_ascii=False)
-
-    return activities, None
-
-def _current_activity_index(activities):
-    """Cari index aktivitas yang paling cocok dengan jam sekarang, untuk badge 'sedang berlangsung'."""
-    now_minutes = datetime.now().hour * 60 + datetime.now().minute
-    best_idx = None
-    for i, act in enumerate(activities):
-        time_str = act.get("time", "")
-        try:
-            h, m = time_str.split(":")
-            act_minutes = int(h) * 60 + int(m)
-        except Exception:
-            continue
-        if act_minutes <= now_minutes:
-            best_idx = i
-        else:
-            break
-    return best_idx
-
-# =====================
 # 10. SIDEBAR PANEL RENDERERS
 # =====================
 def render_mood_panel(accent, r, g, b):
@@ -1858,70 +1689,6 @@ def render_music_panel(accent, r, g, b):
                 <a href="{search_url}" target="_blank" style="color:{accent};">Buka di YouTube ↗</a>
             </div>
             """, unsafe_allow_html=True)
-
-def render_schedule_panel(accent, r, g, b):
-    period_label_key = {
-        "pagi": "schedule_period_pagi",
-        "siang": "schedule_period_siang",
-        "sore": "schedule_period_sore",
-        "malam": "schedule_period_malam",
-    }
-
-    with st.spinner(t("schedule_loading")):
-        activities, error_msg = get_or_generate_kei_schedule()
-
-    if error_msg:
-        st.warning(error_msg)
-        return
-
-    current_idx = _current_activity_index(activities)
-    last_period = None
-
-    for i, raw_act in enumerate(activities):
-        act = _sanitize_activity(raw_act)
-        period = act.get("period", "")
-        if period != last_period:
-            period_label = t(period_label_key.get(period, "")) or period.capitalize()
-            st.markdown(
-                f"<div class='kei-menu-group-label' style='margin:10px 2px 4px;'>{period_label}</div>",
-                unsafe_allow_html=True,
-            )
-            last_period = period
-
-        is_now = (i == current_idx)
-        border_style = f"border:1.5px solid {accent} !important;" if is_now else f"border:1px solid rgba({r},{g},{b},0.15) !important;"
-        bg_style = f"background:rgba({r},{g},{b},0.1) !important;" if is_now else f"background:rgba({r},{g},{b},0.04) !important;"
-        badge_html = (
-            f"<span style='font-size:9px;letter-spacing:0.5px;color:{accent};"
-            f"border:1px solid {accent};border-radius:6px;padding:1px 6px;margin-left:6px;'>"
-            f"{t('schedule_now_badge')}</span>"
-        ) if is_now else ""
-
-        st.markdown(f"""
-        <div style="
-            {bg_style}
-            {border_style}
-            border-radius: 10px;
-            padding: 9px 12px;
-            margin-bottom: 6px;
-        ">
-            <div style="display:flex;align-items:center;gap:8px;">
-                <span style="font-size:16px;">{act.get('icon', '✨')}</span>
-                <span style="font-size:12px;color:{accent};font-weight:600;">{act.get('time', '')}</span>
-                <span style="font-size:13px;font-weight:600;">{act.get('title', '')}</span>
-                {badge_html}
-            </div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-top:3px;margin-left:24px;">
-                {act.get('description', '')}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("<div style='height:4px;'></div>", unsafe_allow_html=True)
-    if st.button(t("schedule_refresh_btn"), key="schedule_refresh_btn", use_container_width=True):
-        with st.spinner(t("schedule_loading")):
-            get_or_generate_kei_schedule(force_refresh=True)
-        st.rerun()
 
 def render_convert_panel(accent, r, g, b):
     conv_type = st.radio(
@@ -2184,7 +1951,6 @@ PANEL_TITLES = {
     "mood": "mood_expander",
     "sticker": "sticker_expander",
     "music": "music_expander",
-    "schedule": "schedule_expander",
     "convert": "convert_expander",
     "settings": "settings_expander",
     "stats": "stats_expander",
@@ -2196,7 +1962,6 @@ MENU_ICONS = {
     "mood": "🎭",
     "sticker": "😄",
     "music": "🎵",
-    "schedule": "📅",
     "convert": "🔄",
     "settings": "⚙️",
     "stats": "📊",
@@ -2436,7 +2201,6 @@ with st.sidebar:
             ("mood", "mood_expander"),
             ("sticker", "sticker_expander"),
             ("music", "music_expander"),
-            ("schedule", "schedule_expander"),
         ]:
             with st.expander(strip_emoji_prefix(t(label_key)), key=f"exp_{key}"):
                 if key == "mood":
@@ -2445,8 +2209,6 @@ with st.sidebar:
                     render_sticker_panel(_accent, _r, _g, _b)
                 elif key == "music":
                     render_music_panel(_accent, _r, _g, _b)
-                elif key == "schedule":
-                    render_schedule_panel(_accent, _r, _g, _b)
 
         st.markdown(f"<div class='kei-menu-group-label'>{t('menu_group_alat')}</div>", unsafe_allow_html=True)
 
