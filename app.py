@@ -132,10 +132,19 @@ section[data-testid="stSidebar"] > div:first-child {
     padding-top: 0.5rem !important;
 }
 
+/* ===== GLASSMORPHISM SIDEBAR ===== */
+section[data-testid="stSidebar"] {
+    background: rgba(17, 17, 17, 0.5) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border-right: 1px solid rgba(255,255,255,0.09) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35) !important;
+}
+
 .kei-sidebar {
     width: 260px;
     min-width: 260px;
-    background: #111111;
+    background: transparent;
     border-right: 1px solid rgba(255,255,255,0.07);
     display: flex;
     flex-direction: column;
@@ -156,7 +165,9 @@ section[data-testid="stSidebar"] > div:first-child {
     top: 14px;
     left: 14px;
     z-index: 999;
-    background: #1a1a1a;
+    background: rgba(26,26,26,0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 8px;
     width: 36px;
@@ -239,11 +250,33 @@ section[data-testid="stSidebar"] > div:first-child {
 }
 [data-testid="stChatInput"] button svg { fill: white !important; }
 
+/* Kartu profil (avatar, nama, status online) - GLASS */
+.kei-sidebar-inner > div:first-child,
+div[style*="background: linear-gradient(160deg"] {
+    background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02)) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2) !important;
+    border-radius: 18px !important;
+}
+
+/* Box Mood & Streak - GLASS */
+.kei-sidebar-inner div[style*="flex:1;background:"] {
+    background: rgba(255,255,255,0.05) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 14px !important;
+}
+
 .kei-sidebar-inner .stButton > button {
-    background: rgba(255,255,255,0.04) !important;
+    background: rgba(255,255,255,0.045) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
     color: rgba(255,255,255,0.7) !important;
-    border: 1px solid rgba(255,255,255,0.07) !important;
-    border-radius: 10px !important;
+    border: 1px solid rgba(255,255,255,0.09) !important;
+    border-radius: 14px !important;
     width: 100% !important;
     text-align: left !important;
     font-size: 14px !important;
@@ -253,12 +286,14 @@ section[data-testid="stSidebar"] > div:first-child {
 .kei-sidebar-inner .stButton > button:hover {
     border-color: rgba(255,138,216,0.4) !important;
     color: #ff8ad8 !important;
-    background: rgba(255,138,216,0.05) !important;
+    background: rgba(255,138,216,0.1) !important;
 }
 
 .kei-sidebar-inner [data-testid="stTextInput"] > div {
-    background: rgba(255,255,255,0.04) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
+    background: rgba(255,255,255,0.05) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255,255,255,0.09) !important;
     border-radius: 10px !important;
 }
 .kei-sidebar-inner [data-testid="stTextInput"] input {
@@ -272,10 +307,17 @@ section[data-testid="stSidebar"] > div:first-child {
 }
 .kei-sidebar-inner [data-testid="stTextInput"] label { color: rgba(255,255,255,0.5) !important; font-size: 12px !important; }
 
+/* Expander (Ganti Foto, Interaksi, Alat) - GLASS */
 .kei-sidebar-inner [data-testid="stExpander"] {
-    background: rgba(255,255,255,0.02) !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
-    border-radius: 10px !important;
+    background: rgba(255,255,255,0.045) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    border: 1px solid rgba(255,255,255,0.09) !important;
+    border-radius: 14px !important;
+}
+.kei-sidebar-inner [data-testid="stExpander"]:hover {
+    background: rgba(255,138,216,0.08) !important;
+    border-color: rgba(255,138,216,0.3) !important;
 }
 .kei-sidebar-inner [data-testid="stExpander"] summary {
     color: rgba(255,255,255,0.6) !important;
@@ -311,9 +353,11 @@ section[data-testid="stSidebar"] > div:first-child {
 
 /* Logout */
 .st-key-logout_btn button {
-    background: transparent !important;
+    background: rgba(255,255,255,0.03) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
     color: rgba(255,255,255,0.35) !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
+    border: 1px solid rgba(255,255,255,0.09) !important;
 }
 .st-key-logout_btn button p,
 .st-key-logout_btn button span {
@@ -321,7 +365,7 @@ section[data-testid="stSidebar"] > div:first-child {
 }
 .st-key-logout_btn button:hover {
     border-color: rgba(239,68,68,0.4) !important;
-    background: rgba(239,68,68,0.06) !important;
+    background: rgba(239,68,68,0.08) !important;
 }
 .st-key-logout_btn button:hover p,
 .st-key-logout_btn button:hover span {
@@ -336,9 +380,11 @@ section[data-testid="stSidebar"] > div:first-child {
 .mode-btn {
     flex: 1;
     padding: 9px 0;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.09);
+    background: rgba(255,255,255,0.045);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     color: rgba(255,255,255,0.5);
     font-size: 13px;
     font-weight: 500;
@@ -351,7 +397,7 @@ section[data-testid="stSidebar"] > div:first-child {
 .mode-btn:hover { border-color: rgba(255,138,216,0.4); color: #ff8ad8; }
 .mode-btn.active {
     border-color: #ff8ad8;
-    background: rgba(255,138,216,0.08);
+    background: rgba(255,138,216,0.1);
     color: #ff8ad8;
 }
 
@@ -359,20 +405,24 @@ section[data-testid="stSidebar"] > div:first-child {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 10px;
+    background: rgba(255,255,255,0.045);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 14px;
     padding: 10px 14px;
     font-size: 13px;
     color: rgba(255,255,255,0.6);
     margin-bottom: 12px;
 }
-.dot-online { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+.dot-online { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; box-shadow: 0 0 6px #4ade80; }
 
 .status-panel {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 12px;
+    background: rgba(255,255,255,0.045);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 14px;
     padding: 4px 14px;
     margin-bottom: 14px;
     font-size: 13px;
@@ -386,13 +436,15 @@ section[data-testid="stSidebar"] > div:first-child {
 }
 .status-row-divider {
     height: 1px;
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.08);
 }
 
 .diary-box {
-    background: rgba(255,182,230,0.05);
-    border: 1px solid rgba(255,138,216,0.1);
-    border-radius: 12px;
+    background: rgba(255,182,230,0.06);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,138,216,0.12);
+    border-radius: 14px;
     padding: 16px;
     margin: 8px 0;
     color: #f0c4e8;
@@ -401,13 +453,15 @@ section[data-testid="stSidebar"] > div:first-child {
 
 .kei-divider {
     height: 1px;
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.08);
     margin: 12px 0;
 }
 
 .music-result {
-    background: rgba(255,138,216,0.04);
-    border: 1px solid rgba(255,138,216,0.1);
+    background: rgba(255,138,216,0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,138,216,0.12);
     border-radius: 10px;
     padding: 10px 12px;
     font-size: 13px;
@@ -631,23 +685,29 @@ def render_dynamic_css():
         r, g, b = (255, 138, 216)
 
     if theme == "light":
-        bg_main      = "#f7f5fa"
-        bg_sidebar   = "#ffffff"
-        text_main    = "#1a1a1a"
-        text_dim     = "rgba(0,0,0,0.55)"
-        text_dimmer  = "rgba(0,0,0,0.35)"
-        border_col   = "#d8d5e0"
-        input_bg     = "#f1eef6"
-        chat_input_bg= "#ffffff"
+        bg_main       = "#f7f5fa"
+        bg_sidebar    = "rgba(255,255,255,0.55)"
+        sidebar_border= "rgba(0,0,0,0.08)"
+        glass_fill    = "rgba(255,255,255,0.45)"
+        glass_border  = "rgba(0,0,0,0.07)"
+        text_main     = "#1a1a1a"
+        text_dim      = "rgba(0,0,0,0.55)"
+        text_dimmer   = "rgba(0,0,0,0.35)"
+        border_col    = "#d8d5e0"
+        input_bg      = "rgba(255,255,255,0.4)"
+        chat_input_bg = "#ffffff"
     else:
-        bg_main      = "#0a0e1a"
-        bg_sidebar   = "#111111"
-        text_main    = "#ffffff"
-        text_dim     = "rgba(255,255,255,0.5)"
-        text_dimmer  = "rgba(255,255,255,0.35)"
-        border_col   = "rgba(255,255,255,0.16)"
-        input_bg     = "rgba(255,255,255,0.04)"
-        chat_input_bg= "#1a1a1a"
+        bg_main       = "#0a0e1a"
+        bg_sidebar    = "rgba(17,17,17,0.5)"
+        sidebar_border= "rgba(255,255,255,0.09)"
+        glass_fill    = "rgba(255,255,255,0.045)"
+        glass_border  = "rgba(255,255,255,0.09)"
+        text_main     = "#ffffff"
+        text_dim      = "rgba(255,255,255,0.5)"
+        text_dimmer   = "rgba(255,255,255,0.35)"
+        border_col    = "rgba(255,255,255,0.16)"
+        input_bg      = "rgba(255,255,255,0.045)"
+        chat_input_bg = "#1a1a1a"
 
     st.markdown(f"""
     <style>
@@ -681,9 +741,27 @@ def render_dynamic_css():
         color: {text_main} !important;
     }}
 
+    /* ===== GLASSMORPHISM (ikut tema) ===== */
     section[data-testid="stSidebar"] {{
         background: {bg_sidebar} !important;
-        border-right: 1px solid {border_col} !important;
+        backdrop-filter: blur(24px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+        border-right: 1px solid {sidebar_border} !important;
+    }}
+
+    .kei-sidebar-inner > div:first-child,
+    div[style*="background: linear-gradient(160deg"] {{
+        background: {glass_fill} !important;
+        border: 1px solid {glass_border} !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+    }}
+
+    .kei-sidebar-inner div[style*="flex:1;background:"] {{
+        background: {glass_fill} !important;
+        border: 1px solid {glass_border} !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
     }}
 
     .kei-input-area {{
@@ -706,9 +784,11 @@ def render_dynamic_css():
     .kei-sidebar-inner [data-testid="stButton"] button,
     .kei-sidebar-inner button[kind="secondary"],
     .kei-sidebar-inner [data-testid^="stBaseButton"] {{
-        background: {input_bg} !important;
+        background: {glass_fill} !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
         color: {text_main} !important;
-        border: 1px solid {border_col} !important;
+        border: 1px solid {glass_border} !important;
     }}
     .kei-sidebar-inner .stButton button p,
     .kei-sidebar-inner .stButton button span,
@@ -720,7 +800,7 @@ def render_dynamic_css():
     .kei-sidebar-inner [data-testid^="stBaseButton"]:hover {{
         border-color: rgba({r},{g},{b},0.4) !important;
         color: {accent} !important;
-        background: rgba({r},{g},{b},0.08) !important;
+        background: rgba({r},{g},{b},0.1) !important;
     }}
     .kei-sidebar-inner .stButton button:hover p,
     .kei-sidebar-inner .stButton button:hover span {{
@@ -728,8 +808,10 @@ def render_dynamic_css():
     }}
 
     .kei-sidebar-inner [data-testid="stTextInput"] > div {{
-        background: {input_bg} !important;
-        border: 1px solid {border_col} !important;
+        background: {glass_fill} !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: 1px solid {glass_border} !important;
     }}
     .kei-sidebar-inner [data-testid="stTextInput"] input {{
         background: transparent !important;
@@ -738,9 +820,11 @@ def render_dynamic_css():
     .kei-sidebar-inner [data-testid="stTextInput"] label {{ color: {text_dim} !important; }}
 
     .kei-sidebar-inner [data-testid="stExpander"] {{
-        background: {input_bg} !important;
-        border: 1px solid {border_col} !important;
-        border-radius: 10px !important;
+        background: {glass_fill} !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        border: 1px solid {glass_border} !important;
+        border-radius: 14px !important;
         margin-bottom: 10px !important;
     }}
     .kei-sidebar-inner [data-testid="stExpander"] summary {{
@@ -757,7 +841,7 @@ def render_dynamic_css():
     }}
     .kei-sidebar-inner [data-testid="stExpander"]:hover {{
         border-color: rgba({r},{g},{b},0.35) !important;
-        background: rgba({r},{g},{b},0.04) !important;
+        background: rgba({r},{g},{b},0.06) !important;
     }}
     .kei-sidebar-inner [data-testid="stExpander"] summary:focus,
     .kei-sidebar-inner [data-testid="stExpander"] summary:focus-visible,
@@ -785,21 +869,21 @@ def render_dynamic_css():
     .mode-btn:hover {{ border-color: rgba({r},{g},{b},0.4) !important; color: {accent} !important; }}
     .mode-btn.active {{
         border-color: {accent} !important;
-        background: rgba({r},{g},{b},0.08) !important;
+        background: rgba({r},{g},{b},0.1) !important;
         color: {accent} !important;
     }}
 
     .status-online {{
-        background: {input_bg} !important;
-        border: 1px solid {border_col} !important;
+        background: {glass_fill} !important;
+        border: 1px solid {glass_border} !important;
         color: {text_dim} !important;
     }}
     .status-online span {{ color: {text_dim} !important; }}
     .status-online b {{ color: {accent} !important; }}
 
     .status-panel {{
-        background: {input_bg} !important;
-        border: 1px solid {border_col} !important;
+        background: {glass_fill} !important;
+        border: 1px solid {glass_border} !important;
         color: {text_dim} !important;
     }}
     .status-panel span {{ color: {text_dim} !important; }}
@@ -807,7 +891,9 @@ def render_dynamic_css():
     .status-row-divider {{ background: {border_col} !important; }}
 
     .diary-box {{
-        background: rgba({r},{g},{b},0.06) !important;
+        background: rgba({r},{g},{b},0.07) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
         border: 1px solid rgba({r},{g},{b},0.15) !important;
         color: {text_main} !important;
     }}
@@ -817,6 +903,8 @@ def render_dynamic_css():
 
     .music-result {{
         background: rgba({r},{g},{b},0.05) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
         border: 1px solid rgba({r},{g},{b},0.15) !important;
         color: {text_dim} !important;
     }}
@@ -902,6 +990,7 @@ for key, val in {
     "show_milestone_letter": None,
     "show_forgot_password": False,
     "active_panel": None,
+    "keep_panel_open": None,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = val
@@ -1647,6 +1736,7 @@ def render_mood_panel(accent, r, g, b):
                     """, unsafe_allow_html=True)
                 if st.button(m_emoji, key=f"mood_pick_{i}", help=m_label, use_container_width=True):
                     st.session_state.current_mood_index = i
+                    st.session_state.keep_panel_open = "mood"
                     st.rerun()
     st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
     is_auto_active = current_idx is None
@@ -1655,6 +1745,7 @@ def render_mood_panel(accent, r, g, b):
     st.markdown(f"<div style='font-size:12px;color:{status_color};margin-bottom:6px;'>{'●' if is_auto_active else '○'} {status_text}</div>", unsafe_allow_html=True)
     if st.button(t("mood_auto_btn"), key="mood_auto_btn", use_container_width=True):
         st.session_state.current_mood_index = None
+        st.session_state.keep_panel_open = "mood"
         st.rerun()
 
 def render_sticker_panel(accent, r, g, b):
@@ -1670,6 +1761,7 @@ def render_sticker_panel(accent, r, g, b):
                     st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
                     st.session_state.messages.append({"role": "assistant", "content": f"Kei suka stiker itu, Kak. {get_sticker('happy')}"})
                     save_json(CHAT_FILE, st.session_state.messages)
+                    st.session_state.keep_panel_open = "sticker"
                     st.rerun()
         cols2 = st.columns(5)
         for i in range(5, 10):
@@ -1679,6 +1771,7 @@ def render_sticker_panel(accent, r, g, b):
                     st.session_state.messages.append({"role": "user",      "content": f"[Stiker: {sticker}]"})
                     st.session_state.messages.append({"role": "assistant", "content": f"Kei suka stiker itu, Kak. {get_sticker('happy')}"})
                     save_json(CHAT_FILE, st.session_state.messages)
+                    st.session_state.keep_panel_open = "sticker"
                     st.rerun()
 
 def render_music_panel(accent, r, g, b):
@@ -1783,6 +1876,7 @@ def render_settings_panel(accent, r, g, b):
     )
     if theme_choice != st.session_state.theme:
         st.session_state.theme = theme_choice
+        st.session_state.keep_panel_open = "settings"
         save_prefs()
         st.rerun()
 
@@ -1798,6 +1892,7 @@ def render_settings_panel(accent, r, g, b):
     )
     if lang_choice != st.session_state.lang:
         st.session_state.lang = lang_choice
+        st.session_state.keep_panel_open = "settings"
         save_prefs()
         st.rerun()
 
@@ -1992,15 +2087,15 @@ with st.sidebar:
 
     _theme = st.session_state.get("theme", "dark")
     if _theme == "light":
-        _ms_bg     = "#f1eef6"
+        _ms_bg     = "rgba(255,255,255,0.4)"
         _ms_text   = "rgba(0,0,0,0.55)"
-        _ms_border = "#d8d5e0"
+        _ms_border = "rgba(0,0,0,0.07)"
         _text_dim  = "rgba(0,0,0,0.45)"
         _text_dimmer = "rgba(0,0,0,0.3)"
     else:
-        _ms_bg     = "rgba(255,255,255,0.03)"
+        _ms_bg     = "rgba(255,255,255,0.045)"
         _ms_text   = "rgba(255,255,255,0.5)"
-        _ms_border = "rgba(255,255,255,0.16)"
+        _ms_border = "rgba(255,255,255,0.09)"
         _text_dim  = "rgba(255,255,255,0.4)"
         _text_dimmer = "rgba(255,255,255,0.25)"
 
@@ -2009,6 +2104,8 @@ with st.sidebar:
     <style>
     .st-key-kei_mode_switch {{
         background: {_ms_bg} !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
         border: 1px solid {_ms_border} !important;
         border-radius: 16px !important;
         padding: 4px !important;
@@ -2141,17 +2238,20 @@ with st.sidebar:
 
     st.markdown(f"""
     <div style="
-        background: linear-gradient(160deg, rgba({_r},{_g},{_b},0.07), rgba({_r},{_g},{_b},0.02));
+        background: linear-gradient(160deg, rgba({_r},{_g},{_b},0.09), rgba({_r},{_g},{_b},0.02));
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba({_r},{_g},{_b},0.18);
-        border-radius: 16px;
+        border-radius: 18px;
         padding: 16px;
         text-align: center;
         margin-bottom: 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     ">
         <div style="position:relative;width:64px;height:64px;margin:0 auto 8px;">
             {avatar_img_html}
             <span style="position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;
-                border-radius:50%;background:#4ade80;border:2px solid #111111;"></span>
+                border-radius:50%;background:#4ade80;border:2px solid rgba(17,17,17,0.8);box-shadow:0 0 6px #4ade80;"></span>
         </div>
         <div style="color:{_ms_text if _theme=='light' else '#ffffff'};font-size:13.5px;font-weight:600;">Kei AI</div>
         <div style="color:#4ade80;font-size:11px;margin-top:2px;">● {t('online_status')}</div>
@@ -2179,12 +2279,12 @@ with st.sidebar:
 
     st.markdown(f"""
     <div style="display:flex;gap:8px;margin-bottom:14px;">
-        <div style="flex:1;background:{_ms_bg};border:1px solid {_ms_border};border-radius:10px;padding:9px 0;text-align:center;">
+        <div style="flex:1;background:{_ms_bg};backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid {_ms_border};border-radius:14px;padding:9px 0;text-align:center;">
             <div style="font-size:16px;">{mood_emoji}</div>
             <div style="color:{_text_dim};font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('mood_today').upper()}</div>
             <div style="color:{_accent};font-size:11.5px;font-weight:600;">{mood_label}</div>
         </div>
-        <div style="flex:1;background:{_ms_bg};border:1px solid {_ms_border};border-radius:10px;padding:9px 0;text-align:center;">
+        <div style="flex:1;background:{_ms_bg};backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid {_ms_border};border-radius:14px;padding:9px 0;text-align:center;">
             <div style="font-size:16px;">🔥</div>
             <div style="color:{_text_dim};font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('streak').upper()}</div>
             <div style="color:{_accent};font-size:11.5px;font-weight:600;">{streak_count} {t('streak_unit')}</div>
@@ -2205,7 +2305,11 @@ with st.sidebar:
             ("sticker", "sticker_expander"),
             ("music", "music_expander"),
         ]:
-            with st.expander(strip_emoji_prefix(t(label_key)), key=f"exp_{key}"):
+            with st.expander(
+                strip_emoji_prefix(t(label_key)),
+                key=f"exp_{key}",
+                expanded=(st.session_state.get("keep_panel_open") == key),
+            ):
                 if key == "mood":
                     render_mood_panel(_accent, _r, _g, _b)
                 elif key == "sticker":
@@ -2222,7 +2326,11 @@ with st.sidebar:
             ("search", "search_expander"),
             ("export", "export_expander"),
         ]:
-            with st.expander(strip_emoji_prefix(t(label_key)), key=f"exp_{key}"):
+            with st.expander(
+                strip_emoji_prefix(t(label_key)),
+                key=f"exp_{key}",
+                expanded=(st.session_state.get("keep_panel_open") == key),
+            ):
                 if key == "convert":
                     render_convert_panel(_accent, _r, _g, _b)
                 elif key == "settings":
