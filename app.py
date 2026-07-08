@@ -367,8 +367,8 @@ div[style*="background: linear-gradient(160deg"] {
 }
 .kei-sidebar-inner [data-testid="stExpander"] summary,
 .kei-sidebar-inner [data-testid="stExpander"] summary *,
-.kei-sidebar-inner [data-testid="stExpander"] *:focus,
-.kei-sidebar-inner [data-testid="stExpander"] *:focus-visible,
+.kei-sidebar-inner *:focus,
+.kei-sidebar-inner *:focus-visible,
 .kei-sidebar-inner [data-testid="stExpander"]:focus,
 .kei-sidebar-inner [data-testid="stExpander"]:focus-within {
     outline: none !important;
@@ -709,16 +709,16 @@ def render_dynamic_css():
         r, g, b = (255, 138, 216)
 
     if theme == "light":
-        bg_main       = "#f7f5fa"
-        bg_sidebar    = "rgba(255,255,255,0.55)"
-        sidebar_border= "rgba(0,0,0,0.08)"
-        glass_fill    = "rgba(255,255,255,0.45)"
-        glass_border  = "rgba(0,0,0,0.07)"
-        text_main     = "#1a1a1a"
-        text_dim      = "rgba(0,0,0,0.55)"
-        text_dimmer   = "rgba(0,0,0,0.35)"
-        border_col    = "#d8d5e0"
-        input_bg      = "rgba(255,255,255,0.4)"
+        bg_main       = "#eef0fb"
+        bg_sidebar    = "rgba(255,255,255,0.35)"
+        sidebar_border= "rgba(0,0,0,0.06)"
+        glass_fill    = "rgba(255,255,255,0.55)"
+        glass_border  = "rgba(0,0,0,0.06)"
+        text_main     = "#2b2b40"
+        text_dim      = "rgba(43,43,64,0.55)"
+        text_dimmer   = "rgba(43,43,64,0.35)"
+        border_col    = "#e2def0"
+        input_bg      = "rgba(255,255,255,0.6)"
         chat_input_bg = "#ffffff"
     else:
         bg_main       = "#0a0e1a"
@@ -800,14 +800,17 @@ def render_dynamic_css():
 
     [data-testid="stChatInput"] {{
         background: {chat_input_bg} !important;
-        border: 1px solid {border_col} !important;
+        border: {"1px solid " + border_col if theme == "dark" else "none"} !important;
+        border-radius: {"14px" if theme == "dark" else "22px"} !important;
+        box-shadow: {"none" if theme == "dark" else "0 20px 50px rgba(120,100,200,0.18)"} !important;
+        padding: {"" if theme == "dark" else "4px"} !important;
     }}
     [data-testid="stChatInput"] textarea {{
         background: transparent !important;
         color: {text_main} !important;
     }}
     [data-testid="stChatInput"] textarea::placeholder {{ color: {text_dimmer} !important; }}
-    [data-testid="stChatInput"] button {{ background: {accent} !important; }}
+    [data-testid="stChatInput"] button {{ background: {accent} !important; border-radius: 50% !important; }}
 
     .kei-sidebar-inner .stButton button,
     .kei-sidebar-inner [data-testid="stButton"] button,
@@ -1016,7 +1019,11 @@ def render_dynamic_css():
 
     /* Background utama app - radial gradient halus dengan tint warna accent */
     .stApp {{
-        background: {"radial-gradient(circle at 20% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.16) 0%, #150a20 42%, " + bg_main + " 100%)" if theme == "dark" else bg_main} !important;
+        background: {
+            ("radial-gradient(circle at 20% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.16) 0%, #150a20 42%, " + bg_main + " 100%)")
+            if theme == "dark" else
+            ("linear-gradient(135deg, #dbe4fb 0%, #ece3f7 40%, #f7e7f3 70%, #eef2fc 100%)")
+        } !important;
     }}
 
     .login-title {{ color: {accent} !important; }}
@@ -1045,9 +1052,9 @@ for key, val in {
     "avatar": None,
     "sidebar_open": True,
     "conv_result": None,
-    "theme": "dark",
+    "theme": "light",
     "lang": "id",
-    "theme_color": "#ff8ad8",
+    "theme_color": "#7f77dd",
     "current_mood_index": None,
     "show_milestone_letter": None,
     "show_forgot_password": False,
@@ -2490,17 +2497,32 @@ if st.session_state.mode == "diary":
     </div>
     """, unsafe_allow_html=True)
 else:
-    st.markdown(f"""
-    <div style="text-align:center;padding:4px 0 4px;">
-        <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:6px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 36 36">
-                <polygon points="18,0 21,15 36,18 21,21 18,36 15,21 0,18 15,15" fill="{st.session_state.get('theme_color', '#ff8ad8')}"/>
-            </svg>
-            <span style="color:{st.session_state.get('theme_color', '#ff8ad8')};font-size:48px;font-weight:700;line-height:1.1;">Kei AI</span>
+    _chat_is_empty = len(st.session_state.messages) == 0
+    if _chat_is_empty:
+        _headline_color = "#2b2b40" if _theme == "light" else "#ffffff"
+        st.markdown(f"""
+        <div style="text-align:center;padding:64px 20px 28px;">
+            <div style="font-size:12px;letter-spacing:0.14em;color:{_text_dimmer};font-weight:700;margin-bottom:8px;text-transform:uppercase;">
+                Tanya Kei &middot; AI Companion
+            </div>
+            <div style="font-size:32px;font-weight:700;color:{_headline_color};">
+                Apa yang bisa Kei bantu
+                <span style="color:{st.session_state.get('theme_color', '#7f77dd')};">hari ini?</span>
+            </div>
         </div>
-        <p style="color:{_header_tagline_color};font-size:20px;margin:0;">{t('app_companion')} {header_mood_emoji}</p>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+        <div style="text-align:center;padding:16px 0 4px;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:2px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 36 36">
+                    <polygon points="18,0 21,15 36,18 21,21 18,36 15,21 0,18 15,15" fill="{st.session_state.get('theme_color', '#7f77dd')}"/>
+                </svg>
+                <span style="color:{st.session_state.get('theme_color', '#7f77dd')};font-size:26px;font-weight:700;line-height:1.1;">Kei AI</span>
+            </div>
+            <p style="color:{_header_tagline_color};font-size:13px;margin:0;">{t('app_companion')} {header_mood_emoji}</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # =====================
 # 12. DEAR DIARY MODE
@@ -2581,6 +2603,51 @@ else:
             if st.button("Selesai", key="conv_done_btn"):
                 st.session_state.conv_result = None
                 st.rerun()
+
+    if not st.session_state.messages:
+        st.markdown("""
+        <style>
+        .st-key-kei_quick_actions div[data-testid="stHorizontalBlock"] {
+            justify-content: center !important;
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+        }
+        .st-key-kei_quick_actions div[data-testid^="column"] {
+            width: auto !important;
+            flex: 0 0 auto !important;
+        }
+        .st-key-kei_quick_actions button {
+            border-radius: 20px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            padding: 6px 16px !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        QUICK_ACTIONS = [
+            ("scanner", "\u2924 Scanner", "Bisa bantu aku scan dan rapikan isi dokumen ini jadi teks?"),
+            ("studio", "\u25d0 Studio", "Ajak aku ngobrol santai dong, Kei. Lagi pengen cerita ringan."),
+            ("dokumen", "\U0001F4C4 Dokumen", "Aku mau konversi file PDF/Word, gimana caranya Kei?"),
+            ("berita", "\U0001F4F0 Berita", "Kei, ada berita menarik apa hari ini?"),
+            ("darurat", "\u29B8 Darurat", "Aku lagi butuh bantuan, ini agak darurat."),
+            ("rundown", "\u2261 Rundown", "Kei, coba rangkum progres ngobrol kita sejauh ini."),
+        ]
+
+        quick_row = st.container(key="kei_quick_actions")
+        with quick_row:
+            qa_cols = st.columns(len(QUICK_ACTIONS))
+            for qa_col, (qa_key, qa_label, qa_prompt) in zip(qa_cols, QUICK_ACTIONS):
+                with qa_col:
+                    if st.button(qa_label, key=f"qa_{qa_key}"):
+                        st.session_state.messages.append({"role": "user", "content": qa_prompt})
+                        history_text = f"User: {qa_prompt}\n"
+                        full_prompt = f"{KEI_PERSONA}\n\nRiwayat percakapan:\n{history_text}\nKei:"
+                        with st.spinner("Kei sedang mengetik..."):
+                            reply = generate_content_with_retry(full_prompt)
+                        st.session_state.messages.append({"role": "assistant", "content": reply})
+                        save_json(CHAT_FILE, st.session_state.messages)
+                        st.rerun()
 
     chat_input = st.chat_input(
         t("chat_placeholder"),
