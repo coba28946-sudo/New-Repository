@@ -966,14 +966,42 @@ def render_dynamic_css():
         background: rgba({r},{g},{b},0.08) !important;
     }}
 
-    ::-webkit-scrollbar {{ width: 8px; height: 8px; }}
-    ::-webkit-scrollbar-track {{ background: transparent; }}
-    ::-webkit-scrollbar-thumb {{
+    ::-webkit-scrollbar,
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar,
+    [data-testid="stAppViewContainer"]::-webkit-scrollbar,
+    [data-testid="stMain"]::-webkit-scrollbar,
+    [data-testid="stMainBlockContainer"]::-webkit-scrollbar,
+    section[data-testid="stSidebar"]::-webkit-scrollbar,
+    section[data-testid="stSidebar"] div::-webkit-scrollbar {{
+        width: 8px !important;
+        height: 8px !important;
+    }}
+    ::-webkit-scrollbar-track,
+    html::-webkit-scrollbar-track,
+    body::-webkit-scrollbar-track,
+    [data-testid="stAppViewContainer"]::-webkit-scrollbar-track,
+    section[data-testid="stSidebar"]::-webkit-scrollbar-track {{
+        background: transparent !important;
+    }}
+    ::-webkit-scrollbar-thumb,
+    html::-webkit-scrollbar-thumb,
+    body::-webkit-scrollbar-thumb,
+    [data-testid="stAppViewContainer"]::-webkit-scrollbar-thumb,
+    section[data-testid="stSidebar"]::-webkit-scrollbar-thumb {{
         background: linear-gradient(180deg, {accent}, rgba({r},{g},{b},0.35)) !important;
         border-radius: 8px !important;
+        border: none !important;
     }}
-    ::-webkit-scrollbar-thumb:hover {{ background: {accent} !important; }}
+    ::-webkit-scrollbar-thumb:hover,
+    html::-webkit-scrollbar-thumb:hover,
+    body::-webkit-scrollbar-thumb:hover,
+    [data-testid="stAppViewContainer"]::-webkit-scrollbar-thumb:hover,
+    section[data-testid="stSidebar"]::-webkit-scrollbar-thumb:hover {{
+        background: {accent} !important;
+    }}
     * {{ scrollbar-width: thin; scrollbar-color: rgba({r},{g},{b},0.5) transparent; }}
+    html {{ scrollbar-color: rgba({r},{g},{b},0.6) transparent !important; }}
 
     /* Background utama app - radial gradient halus dengan tint warna accent */
     .stApp {{
