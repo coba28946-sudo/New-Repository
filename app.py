@@ -132,6 +132,17 @@ section[data-testid="stSidebar"] > div:first-child {
     padding-top: 0.5rem !important;
 }
 
+/* FIX GLASS: wrapper internal Streamlit di sidebar sering punya background solid
+   bawaan yang menutupi blur dari section utama. Paksa transparan semua wrapper anak,
+   TANPA menimpa background translucent milik section[data-testid="stSidebar"] sendiri. */
+section[data-testid="stSidebar"] > div,
+section[data-testid="stSidebar"] > div > div,
+section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"],
+section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] > div,
+section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+    background-color: transparent !important;
+}
+
 /* ===== GLASSMORPHISM SIDEBAR ===== */
 section[data-testid="stSidebar"] {
     background: rgba(17, 17, 17, 0.5) !important;
