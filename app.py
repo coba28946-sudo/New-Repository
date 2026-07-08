@@ -139,6 +139,19 @@ section[data-testid="stSidebar"] {
     -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
     border-right: 1px solid rgba(255,255,255,0.09) !important;
     box-shadow: 0 8px 32px rgba(0,0,0,0.35) !important;
+    position: relative !important;
+}
+
+/* Garis vertikal pemisah sidebar & chat (warna ikut accent, diisi di render_dynamic_css) */
+section[data-testid="stSidebar"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    pointer-events: none;
+    z-index: 20;
 }
 
 .kei-sidebar {
@@ -749,6 +762,11 @@ def render_dynamic_css():
         border-right: 1px solid {sidebar_border} !important;
     }}
 
+    section[data-testid="stSidebar"]::after {{
+        background: linear-gradient(180deg, transparent, {accent} 15%, {accent} 85%, transparent);
+        box-shadow: 0 0 12px rgba({r},{g},{b},0.55);
+    }}
+
     .kei-sidebar-inner > div:first-child,
     div[style*="background: linear-gradient(160deg"] {{
         background: {glass_fill} !important;
@@ -951,11 +969,16 @@ def render_dynamic_css():
     ::-webkit-scrollbar {{ width: 8px; height: 8px; }}
     ::-webkit-scrollbar-track {{ background: transparent; }}
     ::-webkit-scrollbar-thumb {{
-        background: rgba({r},{g},{b},0.25) !important;
+        background: linear-gradient(180deg, {accent}, rgba({r},{g},{b},0.35)) !important;
         border-radius: 8px !important;
     }}
-    ::-webkit-scrollbar-thumb:hover {{ background: rgba({r},{g},{b},0.4) !important; }}
-    * {{ scrollbar-width: thin; scrollbar-color: rgba({r},{g},{b},0.25) transparent; }}
+    ::-webkit-scrollbar-thumb:hover {{ background: {accent} !important; }}
+    * {{ scrollbar-width: thin; scrollbar-color: rgba({r},{g},{b},0.5) transparent; }}
+
+    /* Background utama app - radial gradient halus dengan tint warna accent */
+    .stApp {{
+        background: {"radial-gradient(circle at 20% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.16) 0%, #150a20 42%, " + bg_main + " 100%)" if theme == "dark" else bg_main} !important;
+    }}
 
     .login-title {{ color: {accent} !important; }}
     .login-sub {{ color: {text_dim} !important; }}
