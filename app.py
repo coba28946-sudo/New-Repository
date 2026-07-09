@@ -1026,6 +1026,30 @@ def render_dynamic_css():
         } !important;
     }}
 
+    .st-key-kei_quick_actions button {{
+        background: {glass_fill} !important;
+        border: 1px solid {glass_border} !important;
+        color: {text_main} !important;
+        border-radius: 999px !important;
+    }}
+    .st-key-kei_quick_actions button p {{
+        color: {text_main} !important;
+    }}
+    .st-key-kei_quick_actions button:hover {{
+        border-color: rgba({r},{g},{b},0.4) !important;
+        color: {accent} !important;
+        background: rgba({r},{g},{b},0.1) !important;
+    }}
+    .st-key-kei_quick_actions button:hover p {{
+        color: {accent} !important;
+    }}
+
+    .st-key-login_card_wrap {{
+        background: {"linear-gradient(180deg, #ffffff, #faf9ff)" if theme == "light" else "linear-gradient(180deg, #181a24, #13141c)"} !important;
+        border: 1px solid {glass_border} !important;
+        box-shadow: {"0 24px 60px -20px rgba(120,90,200,0.18), 0 0 60px -20px rgba(177,78,255,0.08)" if theme == "light" else "0 24px 60px -20px rgba(0,0,0,0.6), 0 0 80px -20px rgba(255,63,164,0.08)"} !important;
+    }}
+
     .login-title {{ color: {accent} !important; }}
     .login-sub {{ color: {text_dim} !important; }}
     .login-footer {{ color: {text_dimmer} !important; }}
@@ -2329,14 +2353,14 @@ with st.sidebar:
         padding: 16px;
         text-align: center;
         margin-bottom: 12px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        box-shadow: {"0 4px 16px rgba(120,90,200,0.12)" if _theme == "light" else "0 4px 16px rgba(0,0,0,0.2)"};
     ">
         <div style="position:relative;width:64px;height:64px;margin:0 auto 8px;">
             {avatar_img_html}
             <span style="position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;
-                border-radius:50%;background:#4ade80;border:2px solid rgba(17,17,17,0.8);box-shadow:0 0 6px #4ade80;"></span>
+                border-radius:50%;background:#4ade80;border:2px solid {"#ffffff" if _theme == "light" else "rgba(17,17,17,0.8)"};box-shadow:0 0 6px #4ade80;"></span>
         </div>
-        <div style="color:{_ms_text if _theme=='light' else '#ffffff'};font-size:13.5px;font-weight:600;">Kei AI</div>
+        <div style="color:{_accent if _theme=='light' else '#ffffff'};font-size:14px;font-weight:700;">Kei AI</div>
         <div style="color:#4ade80;font-size:11px;margin-top:2px;">● {t('online_status')}</div>
         <div style="color:{_text_dim};font-size:11px;margin-top:4px;">👤 {_user_email_short}</div>
     </div>
