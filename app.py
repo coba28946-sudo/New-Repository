@@ -1022,8 +1022,12 @@ def render_dynamic_css():
         background: {
             ("radial-gradient(circle at 20% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.16) 0%, #150a20 42%, " + bg_main + " 100%)")
             if theme == "dark" else
-            ("linear-gradient(135deg, #dbe4fb 0%, #ece3f7 40%, #f7e7f3 70%, #eef2fc 100%)")
+            ("radial-gradient(650px 500px at 12% 10%, rgba(127,119,221,0.20), transparent 65%),"
+             "radial-gradient(650px 500px at 90% 15%, rgba(255,143,216,0.18), transparent 65%),"
+             "radial-gradient(750px 560px at 50% 105%, rgba(110,140,255,0.16), transparent 65%),"
+             "linear-gradient(135deg, #d8e3fd 0%, #e6d9f9 35%, #fbdcf0 65%, #dbe8fd 100%)")
         } !important;
+        background-attachment: fixed !important;
     }}
 
     .st-key-kei_quick_actions button {{
