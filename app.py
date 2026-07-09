@@ -916,6 +916,8 @@ def render_dynamic_css():
 
     .kei-divider {{ background: {border_col} !important; }}
 
+    .kei-menu-group-label {{ color: {text_dim} !important; font-weight: 700 !important; }}
+
     .music-result {{
         background: rgba({r},{g},{b},0.05) !important;
         backdrop-filter: blur(12px) !important;
