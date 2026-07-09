@@ -9,6 +9,7 @@ import random
 import base64
 from PIL import Image
 import io
+import colorsys
 from datetime import datetime, timedelta
 
 # =====================
@@ -686,6 +687,20 @@ small[data-testid="InputInstructions"],
 # =====================
 # 3b. CSS DINAMIS
 # =====================
+def hue_shift_rgb(r, g, b, shift):
+    """Geser hue warna (r,g,b) sejauh `shift` (0..1), pertahankan saturasi & lightness."""
+    h, l, s = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+    h = (h + shift) % 1.0
+    nr, ng, nb = colorsys.hls_to_rgb(h, l, s)
+    return int(nr * 255), int(ng * 255), int(nb * 255)
+
+def tint_hex(r, g, b, amount):
+    """Campur warna (r,g,b) dengan putih sejauh `amount` (0..1) -> hex pastel."""
+    tr = int(r + (255 - r) * amount)
+    tg = int(g + (255 - g) * amount)
+    tb = int(b + (255 - b) * amount)
+    return f"#{tr:02x}{tg:02x}{tb:02x}"
+
 def render_dynamic_css():
     accent = st.session_state.get("theme_color", "#ff8ad8")
     theme  = st.session_state.get("theme", "dark")
@@ -695,6 +710,15 @@ def render_dynamic_css():
         r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
     except Exception:
         r, g, b = (255, 138, 216)
+
+    # Variasi warna turunan dari accent, buat gradient background yang ikut ganti
+    # tiap kali warna aksen diganti di Pengaturan.
+    r_pink, g_pink, b_pink = hue_shift_rgb(r, g, b, 0.09)   # geser ke arah pink/magenta
+    r_blue, g_blue, b_blue = hue_shift_rgb(r, g, b, -0.10)  # geser ke arah biru
+    grad_stop1 = tint_hex(r_blue, g_blue, b_blue, 0.72)
+    grad_stop2 = tint_hex(r, g, b, 0.68)
+    grad_stop3 = tint_hex(r_pink, g_pink, b_pink, 0.70)
+    grad_stop4 = tint_hex(r_blue, g_blue, b_blue, 0.76)
 
     if theme == "light":
         bg_main       = "#eef0fb"
@@ -1021,10 +1045,10 @@ def render_dynamic_css():
         background: {
             ("radial-gradient(circle at 20% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.16) 0%, #150a20 42%, " + bg_main + " 100%)")
             if theme == "dark" else
-            ("radial-gradient(650px 500px at 12% 10%, rgba(127,119,221,0.20), transparent 65%),"
-             "radial-gradient(650px 500px at 90% 15%, rgba(255,143,216,0.18), transparent 65%),"
-             "radial-gradient(750px 560px at 50% 105%, rgba(110,140,255,0.16), transparent 65%),"
-             "linear-gradient(135deg, #d8e3fd 0%, #e6d9f9 35%, #fbdcf0 65%, #dbe8fd 100%)")
+            ("radial-gradient(650px 500px at 12% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.20), transparent 65%),"
+             "radial-gradient(650px 500px at 90% 15%, rgba(" + str(r_pink) + "," + str(g_pink) + "," + str(b_pink) + ",0.18), transparent 65%),"
+             "radial-gradient(750px 560px at 50% 105%, rgba(" + str(r_blue) + "," + str(g_blue) + "," + str(b_blue) + ",0.16), transparent 65%),"
+             "linear-gradient(135deg, " + grad_stop1 + " 0%, " + grad_stop2 + " 35%, " + grad_stop3 + " 65%, " + grad_stop4 + " 100%)")
         } !important;
         background-attachment: fixed !important;
     }}
