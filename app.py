@@ -2663,6 +2663,19 @@ else:
             font-weight: 600 !important;
             padding: 6px 16px !important;
         }
+
+        /* Chat kosong: kotak chat_input dipindah naik, nempel di bawah pill quick-action,
+           bukan nge-float di bawah layar seperti biasa. */
+        [data-testid="stBottom"] {
+            position: static !important;
+            inset: auto !important;
+        }
+        [data-testid="stBottomBlockContainer"] {
+            position: static !important;
+            max-width: 700px !important;
+            margin: 28px auto 0 !important;
+            padding: 0 1rem !important;
+        }
         </style>
         """, unsafe_allow_html=True)
 
