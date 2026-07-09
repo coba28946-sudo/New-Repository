@@ -153,18 +153,6 @@ section[data-testid="stSidebar"] {
     position: relative !important;
 }
 
-/* Garis vertikal pemisah sidebar & chat (warna ikut accent, diisi di render_dynamic_css) */
-section[data-testid="stSidebar"]::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 2px;
-    height: 100%;
-    pointer-events: none;
-    z-index: 20;
-}
-
 .kei-sidebar {
     width: 260px;
     min-width: 260px;
@@ -771,11 +759,6 @@ def render_dynamic_css():
         backdrop-filter: blur(24px) saturate(180%) !important;
         -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
         border-right: 1px solid {sidebar_border} !important;
-    }}
-
-    section[data-testid="stSidebar"]::after {{
-        background: linear-gradient(180deg, transparent, {accent} 15%, {accent} 85%, transparent);
-        box-shadow: 0 0 12px rgba({r},{g},{b},0.55);
     }}
 
     .kei-sidebar-inner > div:first-child,
