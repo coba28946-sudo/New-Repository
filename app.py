@@ -726,7 +726,11 @@ def render_dynamic_css():
     :root {{ color-scheme: {theme} !important; }}
     html {{ color-scheme: {theme} !important; }}
 
-    html, body, .stApp,
+    html, body, .stApp {{
+        background: {bg_main} !important;
+        color: {text_main} !important;
+    }}
+
     [data-testid="stAppViewContainer"],
     [data-testid="stMain"],
     [data-testid="stMainBlockContainer"],
@@ -734,7 +738,7 @@ def render_dynamic_css():
     [data-testid="stBottom"],
     [data-testid="stBottom"] > div,
     .kei-input-area {{
-        background: {bg_main} !important;
+        background: transparent !important;
         color: {text_main} !important;
     }}
 
