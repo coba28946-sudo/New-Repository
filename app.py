@@ -2599,14 +2599,14 @@ else:
         """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
-        <div style="text-align:center;padding:24px 0 10px;">
-            <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:4px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+        <div style="text-align:center;padding:32px 0 14px;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:6px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 36 36">
                     <polygon points="18,0 21,15 36,18 21,21 18,36 15,21 0,18 15,15" fill="{st.session_state.get('theme_color', '#7f77dd')}"/>
                 </svg>
-                <span style="color:{st.session_state.get('theme_color', '#7f77dd')};font-size:36px;font-weight:700;line-height:1.1;">Kei AI</span>
+                <span style="color:{st.session_state.get('theme_color', '#7f77dd')};font-size:48px;font-weight:700;line-height:1.1;">Kei AI</span>
             </div>
-            <p style="color:{_header_tagline_color};font-size:16px;margin:0;">{t('app_companion')} {header_mood_emoji}</p>
+            <p style="color:{_header_tagline_color};font-size:18px;margin:0;">{t('app_companion')} {header_mood_emoji}</p>
         </div>
         """, unsafe_allow_html=True)
 
