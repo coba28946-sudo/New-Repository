@@ -791,6 +791,16 @@ def render_dynamic_css():
         border-radius: 999px !important;
         box-shadow: {"none" if theme == "dark" else "0 20px 50px rgba(120,100,200,0.18)"} !important;
         padding: {"" if theme == "dark" else "4px"} !important;
+        overflow: hidden !important;
+    }}
+    [data-testid="stChatInput"] > div,
+    [data-testid="stChatInputContainer"],
+    [data-testid="stChatInput"] [data-baseweb="textarea"],
+    [data-testid="stChatInput"] [data-baseweb="base-input"] {{
+        background: transparent !important;
+        border: none !important;
+        border-radius: 999px !important;
+        box-shadow: none !important;
     }}
     [data-testid="stChatInput"] textarea {{
         background: transparent !important;
