@@ -792,6 +792,31 @@ def render_dynamic_css():
         color: {text_main} !important;
     }}
 
+    /* ===== GAYA CHATGPT: bubble kanan buat user, teks polos kiri buat Kei ===== */
+    [data-testid="stChatMessageAvatarUser"],
+    [data-testid="stChatMessageAvatarAssistant"] {{
+        display: none !important;
+    }}
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {{
+        justify-content: flex-end !important;
+    }}
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {{
+        max-width: 70% !important;
+        flex-grow: 0 !important;
+    }}
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stMarkdownContainer"] {{
+        background: {glass_fill if theme == "light" else "rgba(255,255,255,0.08)"};
+        border: 1px solid {glass_border};
+        border-radius: 18px !important;
+        padding: 10px 16px !important;
+        width: fit-content !important;
+        margin-left: auto !important;
+    }}
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stMarkdownContainer"] {{
+        background: transparent !important;
+        padding: 4px 0 !important;
+    }}
+
     /* ===== GLASSMORPHISM (ikut tema) ===== */
     section[data-testid="stSidebar"] {{
         background: {bg_sidebar} !important;
