@@ -788,7 +788,7 @@ def render_dynamic_css():
     [data-testid="stChatInput"] {{
         background: {chat_input_bg} !important;
         border: {"1px solid " + border_col if theme == "dark" else "none"} !important;
-        border-radius: {"14px" if theme == "dark" else "22px"} !important;
+        border-radius: 999px !important;
         box-shadow: {"none" if theme == "dark" else "0 20px 50px rgba(120,100,200,0.18)"} !important;
         padding: {"" if theme == "dark" else "4px"} !important;
     }}
