@@ -2688,15 +2688,21 @@ else:
             flex-wrap: wrap !important;
             gap: 8px !important;
         }
+        .st-key-kei_quick_actions div[data-testid="stColumn"],
         .st-key-kei_quick_actions div[data-testid^="column"] {
             width: auto !important;
+            min-width: 0 !important;
             flex: 0 0 auto !important;
+        }
+        .st-key-kei_quick_actions div[data-testid="stColumn"] > div {
+            width: auto !important;
         }
         .st-key-kei_quick_actions button {
             border-radius: 20px !important;
             font-size: 13px !important;
             font-weight: 600 !important;
             padding: 6px 16px !important;
+            white-space: nowrap !important;
         }
         </style>
         """, unsafe_allow_html=True)
