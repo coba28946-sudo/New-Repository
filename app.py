@@ -2307,7 +2307,16 @@ with st.sidebar:
     }}
     ''' for key in PANEL_TITLES if st.session_state.get("active_panel") == key])}
     {''.join([f'''
-    .st-key-exp_{key} summary p::before {{ content: "{icon}"; }}
+    .st-key-exp_{key} summary p::before {{
+        content: "{icon}";
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 22px !important;
+        margin-right: 10px !important;
+        font-size: 14px !important;
+        flex-shrink: 0 !important;
+    }}
     .st-key-exp_{key} [data-testid="stExpander"],
     .st-key-exp_{key} summary,
     .st-key-exp_{key} *,
