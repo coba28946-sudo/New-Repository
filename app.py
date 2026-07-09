@@ -29,6 +29,7 @@ st.markdown("""
   gtag('js', new Date());
   gtag('config', 'G-PGLBV0H3KF');
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 """, unsafe_allow_html=True)
 
 # =====================
@@ -2203,14 +2204,14 @@ PANEL_TITLES = {
 }
 
 MENU_ICONS = {
-    "mood": "🎭",
-    "sticker": "😄",
-    "music": "🎵",
-    "convert": "🔄",
-    "settings": "⚙️",
-    "stats": "📊",
-    "search": "🔍",
-    "export": "💾",
+    "mood": "\uf630",      # fa-masks-theater
+    "sticker": "\uf118",   # fa-face-smile
+    "music": "\uf001",     # fa-music
+    "convert": "\uf021",   # fa-arrows-rotate
+    "settings": "\uf013",  # fa-gear
+    "stats": "\uf080",     # fa-chart-bar / fa-chart-simple
+    "search": "\uf002",    # fa-magnifying-glass
+    "export": "\uf019",    # fa-download
 }
 
 def strip_emoji_prefix(label_text):
@@ -2307,7 +2308,12 @@ with st.sidebar:
     }}
     ''' for key in PANEL_TITLES if st.session_state.get("active_panel") == key])}
     {''.join([f'''
-    .st-key-exp_{key} summary p::before {{ content: "{icon}"; }}
+    .st-key-exp_{key} summary p::before {{
+        content: "{icon}";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        color: {_accent};
+    }}
     .st-key-exp_{key} [data-testid="stExpander"],
     .st-key-exp_{key} summary,
     .st-key-exp_{key} *,
@@ -2339,9 +2345,15 @@ with st.sidebar:
         flex-shrink: 0;
         font-size: 12px;
     }}
-    .st-key-new_chat_btn button p::before {{ content: "🆕"; }}
-    .st-key-clear_chat_btn button p::before {{ content: "🗑️"; }}
-    .st-key-logout_btn button p::before {{ content: "🚪"; }}
+    .st-key-new_chat_btn button p::before,
+    .st-key-clear_chat_btn button p::before,
+    .st-key-logout_btn button p::before {{
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+    }}
+    .st-key-new_chat_btn button p::before {{ content: "\\f067"; }}
+    .st-key-clear_chat_btn button p::before {{ content: "\\f2ed"; }}
+    .st-key-logout_btn button p::before {{ content: "\\f2f5"; }}
     </style>
     """, unsafe_allow_html=True)
 
