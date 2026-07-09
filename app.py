@@ -735,7 +735,7 @@ def render_dynamic_css():
         bg_main       = "#eef0fb"
         bg_sidebar    = "rgba(255,255,255,0.35)"
         sidebar_border= "rgba(0,0,0,0.06)"
-        glass_fill    = "rgba(255,255,255,0.55)"
+        glass_fill    = "#ffffff"
         glass_border  = "rgba(0,0,0,0.06)"
         text_main     = "#2b2b40"
         text_dim      = "rgba(43,43,64,0.55)"
@@ -1056,9 +1056,10 @@ def render_dynamic_css():
         background: {
             ("radial-gradient(circle at 20% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.16) 0%, #150a20 42%, " + bg_main + " 100%)")
             if theme == "dark" else
-            ("radial-gradient(650px 500px at 12% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.20), transparent 65%),"
-             "radial-gradient(650px 500px at 90% 15%, rgba(" + str(r_pink) + "," + str(g_pink) + "," + str(b_pink) + ",0.18), transparent 65%),"
-             "radial-gradient(750px 560px at 50% 105%, rgba(" + str(r_blue) + "," + str(g_blue) + "," + str(b_blue) + ",0.16), transparent 65%),"
+            ("radial-gradient(500px 380px at 70% 8%, rgba(255,255,255,0.55), transparent 60%),"
+             "radial-gradient(650px 500px at 12% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.16), transparent 65%),"
+             "radial-gradient(650px 500px at 90% 40%, rgba(" + str(r_pink) + "," + str(g_pink) + "," + str(b_pink) + ",0.20), transparent 65%),"
+             "radial-gradient(750px 560px at 50% 105%, rgba(" + str(r_blue) + "," + str(g_blue) + "," + str(b_blue) + ",0.18), transparent 65%),"
              "linear-gradient(135deg, " + grad_stop1 + " 0%, " + grad_stop2 + " 35%, " + grad_stop3 + " 65%, " + grad_stop4 + " 100%)")
         } !important;
         background-attachment: fixed !important;
