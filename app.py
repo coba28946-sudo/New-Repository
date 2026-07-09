@@ -701,6 +701,15 @@ def tint_hex(r, g, b, amount):
     tb = int(b + (255 - b) * amount)
     return f"#{tr:02x}{tg:02x}{tb:02x}"
 
+def mix_rgb(c1, c2, t):
+    """Interpolasi linear antara 2 warna (r,g,b). t=0 -> c1, t=1 -> c2."""
+    return tuple(int(c1[i] + (c2[i] - c1[i]) * t) for i in range(3))
+
+# Warna jangkar tetap buat gradient background - supaya arah "ke biru" & "ke pink"
+# selalu konsisten enak dilihat, apa pun warna aksen yang dipilih user.
+ANCHOR_BLUE = (110, 140, 255)
+ANCHOR_PINK = (255, 143, 216)
+
 def render_dynamic_css():
     accent = st.session_state.get("theme_color", "#ff8ad8")
     theme  = st.session_state.get("theme", "dark")
@@ -712,9 +721,11 @@ def render_dynamic_css():
         r, g, b = (255, 138, 216)
 
     # Variasi warna turunan dari accent, buat gradient background yang ikut ganti
-    # tiap kali warna aksen diganti di Pengaturan.
-    r_pink, g_pink, b_pink = hue_shift_rgb(r, g, b, 0.09)   # geser ke arah pink/magenta
-    r_blue, g_blue, b_blue = hue_shift_rgb(r, g, b, -0.10)  # geser ke arah biru
+    # tiap kali warna aksen diganti di Pengaturan. Dicampur (blend) dengan warna
+    # jangkar biru & pink yang tetap, biar hasilnya selalu konsisten enak dilihat
+    # apa pun warna aksen yang dipilih (gak "loncat" ke hue aneh kayak hue-shift).
+    r_blue, g_blue, b_blue = mix_rgb((r, g, b), ANCHOR_BLUE, 0.6)
+    r_pink, g_pink, b_pink = mix_rgb((r, g, b), ANCHOR_PINK, 0.6)
     grad_stop1 = tint_hex(r_blue, g_blue, b_blue, 0.72)
     grad_stop2 = tint_hex(r, g, b, 0.68)
     grad_stop3 = tint_hex(r_pink, g_pink, b_pink, 0.70)
@@ -1105,7 +1116,7 @@ for key, val in {
     "conv_result": None,
     "theme": "light",
     "lang": "id",
-    "theme_color": "#7f77dd",
+    "theme_color": "#ff6f9c",
     "current_mood_index": None,
     "show_milestone_letter": None,
     "show_forgot_password": False,
