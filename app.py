@@ -55,7 +55,7 @@ header[data-testid="stHeader"] { background: transparent !important; box-shadow:
 [data-testid="stAppViewBlockContainer"],
 section.main > div.block-container,
 div[class*="block-container"] {
-    padding: 1rem 2rem !important;
+    padding: 1rem 1.25rem !important;
     max-width: 100% !important;
     width: 100% !important;
     box-sizing: border-box !important;
