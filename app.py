@@ -38,7 +38,7 @@ st.markdown("""
 <style>
 
 /* ===== GLOBAL ===== */
-html, body, .stApp { background: #0a0e1a !important; color: #ffffff !important; }
+html, body, .stApp { background: #141414 !important; color: #ffffff !important; }
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
 header[data-testid="stHeader"] { background: transparent !important; box-shadow: none !important; }
@@ -49,7 +49,14 @@ header[data-testid="stHeader"] { background: transparent !important; box-shadow:
 [data-testid="stToolbarActions"] a[aria-label*="dit" i] {
     display: none !important;
 }
-.main .block-container { padding: 0 !important; max-width: 100% !important; }
+.main .block-container,
+[data-testid="stMainBlockContainer"],
+[data-testid="stMain"] .block-container,
+[data-testid="stAppViewBlockContainer"] {
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
 
 .login-title {
     color: #ff8ad8;
@@ -744,7 +751,7 @@ def render_dynamic_css():
         input_bg      = "rgba(255,255,255,0.6)"
         chat_input_bg = "#ffffff"
     else:
-        bg_main       = "#0a0e1a"
+        bg_main       = "#141414"
         bg_sidebar    = "rgba(17,17,17,0.5)"
         sidebar_border= "rgba(255,255,255,0.09)"
         glass_fill    = "rgba(255,255,255,0.045)"
@@ -1079,7 +1086,7 @@ def render_dynamic_css():
     /* Background utama app - radial gradient halus dengan tint warna accent */
     .stApp {{
         background: {
-            ("radial-gradient(circle at 20% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.16) 0%, #150a20 42%, " + bg_main + " 100%)")
+            (bg_main)
             if theme == "dark" else
             ("radial-gradient(500px 380px at 70% 8%, rgba(255,255,255,0.55), transparent 60%),"
              "radial-gradient(650px 500px at 12% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.16), transparent 65%),"
