@@ -572,7 +572,7 @@ small[data-testid="InputInstructions"],
     font-weight: 800;
     font-size: 52px;
     letter-spacing: -1px;
-    background: linear-gradient(95deg, #FFFFFF 5%, #FF3FA4 45%, #B14EFF 75%, #6E6BFF 100%);
+    background: linear-gradient(95deg, #FFFFFF 5%, #D6336C 45%, #A89ADF 75%, #3FA9DA 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -707,8 +707,8 @@ def mix_rgb(c1, c2, t):
 
 # Warna jangkar tetap buat gradient background - supaya arah "ke biru" & "ke pink"
 # selalu konsisten enak dilihat, apa pun warna aksen yang dipilih user.
-ANCHOR_BLUE = (110, 140, 255)
-ANCHOR_PINK = (255, 143, 216)
+ANCHOR_BLUE = (63, 169, 218)
+ANCHOR_PINK = (214, 51, 108)
 
 def render_dynamic_css():
     accent = st.session_state.get("theme_color", "#ff8ad8")
@@ -1142,7 +1142,7 @@ for key, val in {
     "conv_result": None,
     "theme": "light",
     "lang": "id",
-    "theme_color": "#ff6f9c",
+    "theme_color": "#d6336c",
     "current_mood_index": None,
     "show_milestone_letter": None,
     "show_forgot_password": False,
@@ -1207,8 +1207,6 @@ def user_file(filename):
     """Path file storage yang unik per user (chat, diary, streak, dll)."""
     return os.path.join(get_user_data_dir(), filename)
 
-# Properti dinamis: dievaluasi ulang tiap dipanggil, supaya selalu cocok
-# dengan user yang sedang login (user_email bisa berubah antar sesi).
 class _UserFilePath:
     def __init__(self, filename):
         self.filename = filename
@@ -1405,7 +1403,6 @@ if not st.session_state.logged_in:
 
     login_card = st.container(key="login_card_wrap")
     with login_card:
-        # Header logo
         st.markdown(f"""
         <div style="padding-top:8px; text-align:center; margin-bottom:16px;">
             <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
@@ -1438,7 +1435,6 @@ if not st.session_state.logged_in:
         </style>
         """, unsafe_allow_html=True)
 
-        # ── FORGOT PASSWORD ──
         if st.session_state.show_forgot_password:
             st.markdown(f"""
             <div style="margin-bottom:14px;">
@@ -1472,7 +1468,6 @@ if not st.session_state.logged_in:
                     st.rerun()
 
         else:
-            # ── TAB LOGIN / DAFTAR ──
             tab_login, tab_register = st.tabs(["✨ Masuk", "🌸 Daftar"])
 
             with tab_login:
@@ -2057,7 +2052,7 @@ def render_settings_panel(accent, r, g, b):
     st.markdown(f"**{'Warna aksen' if st.session_state.get('lang') == 'id' else 'Accent color'}**")
     color_choice = st.color_picker(
         "Warna aksen",
-        value=st.session_state.get("theme_color", "#7f77dd"),
+        value=st.session_state.get("theme_color", "#d6336c"),
         key="theme_color_picker",
         label_visibility="collapsed",
     )
@@ -2249,12 +2244,12 @@ with st.sidebar:
     st.markdown('<div class="kei-sidebar-inner">', unsafe_allow_html=True)
 
     current_mode = st.session_state.mode
-    _accent = st.session_state.get("theme_color", "#ff8ad8")
+    _accent = st.session_state.get("theme_color", "#d6336c")
     _hex = _accent.lstrip("#")
     try:
         _r, _g, _b = tuple(int(_hex[i:i+2], 16) for i in (0, 2, 4))
     except Exception:
-        _r, _g, _b = (255, 138, 216)
+        _r, _g, _b = (214, 51, 108)
 
     _theme = st.session_state.get("theme", "dark")
     if _theme == "light":
@@ -2305,8 +2300,8 @@ with st.sidebar:
     }}
     .st-key-{"mode_chat_wrap" if _chat_active else "mode_diary_wrap"} button {{
         color: #ffffff !important;
-        background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
-        box-shadow: 0 4px 14px -4px rgba(255,63,164,0.55) !important;
+        background: #D6336C !important;
+        box-shadow: 0 4px 14px -4px rgba(214,51,108,0.55) !important;
     }}
     .st-key-{"mode_chat_wrap" if _chat_active else "mode_diary_wrap"} button:hover {{
         color: #ffffff !important;
@@ -2408,34 +2403,34 @@ with st.sidebar:
         avatar_img_html = f'<img src="data:image/png;base64,{avatar_b64}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;display:block;" />'
     else:
         avatar_img_html = f'''<div style="width:64px;height:64px;border-radius:50%;
-            background:linear-gradient(135deg,{_accent},#B14EFF);
+            background:#1c1c1e;border:2px solid #ffffff;
             display:flex;align-items:center;justify-content:center;
             color:#fff;font-weight:700;font-size:24px;">K</div>'''
 
-    # Tampilkan email user yang login
     _user_email_display = st.session_state.get("user_email", "")
     _user_email_short = _user_email_display.split("@")[0] if _user_email_display else "User"
 
     st.markdown(f"""
     <div style="
-        background: linear-gradient(160deg, rgba({_r},{_g},{_b},0.09), rgba({_r},{_g},{_b},0.02));
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba({_r},{_g},{_b},0.18);
+        background: #D6336C;
         border-radius: 18px;
-        padding: 16px;
+        padding: 18px 16px;
         text-align: center;
         margin-bottom: 12px;
-        box-shadow: {"0 4px 16px rgba(120,90,200,0.12)" if _theme == "light" else "0 4px 16px rgba(0,0,0,0.2)"};
+        position: relative;
+        overflow: hidden;
     ">
-        <div style="position:relative;width:64px;height:64px;margin:0 auto 8px;">
-            {avatar_img_html}
-            <span style="position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;
-                border-radius:50%;background:#4ade80;border:2px solid {"#ffffff" if _theme == "light" else "rgba(17,17,17,0.8)"};box-shadow:0 0 6px #4ade80;"></span>
+        <div style="position:absolute;top:-18px;right:-18px;width:64px;height:64px;border-radius:50%;background:#E85F95;"></div>
+        <div style="position:relative;">
+            <div style="position:relative;width:64px;height:64px;margin:0 auto 8px;">
+                {avatar_img_html}
+                <span style="position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;
+                    border-radius:50%;background:#4ade80;border:2px solid #D6336C;"></span>
+            </div>
+            <div style="color:#ffffff;font-size:14px;font-weight:700;">Kei AI</div>
+            <div style="color:#FFE0EB;font-size:11px;margin-top:2px;">● {t('online_status')}</div>
+            <div style="color:#FFC2DC;font-size:11px;margin-top:4px;">👤 {_user_email_short}</div>
         </div>
-        <div style="color:{_accent if _theme=='light' else '#ffffff'};font-size:14px;font-weight:700;">Kei AI</div>
-        <div style="color:#4ade80;font-size:11px;margin-top:2px;">● {t('online_status')}</div>
-        <div style="color:{_text_dim};font-size:11px;margin-top:4px;">👤 {_user_email_short}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -2459,15 +2454,15 @@ with st.sidebar:
 
     st.markdown(f"""
     <div style="display:flex;gap:8px;margin-bottom:14px;">
-        <div style="flex:1;background:{_ms_bg};backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid {_ms_border};border-radius:14px;padding:9px 0;text-align:center;">
+        <div style="flex:1;background:#FAC775;border-radius:14px;padding:9px 0;text-align:center;">
             <div style="font-size:16px;">{mood_emoji}</div>
-            <div style="color:{_text_dim};font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('mood_today').upper()}</div>
-            <div style="color:{_accent};font-size:11.5px;font-weight:600;">{mood_label}</div>
+            <div style="color:#633806;font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('mood_today').upper()}</div>
+            <div style="color:#412402;font-size:11.5px;font-weight:600;">{mood_label}</div>
         </div>
-        <div style="flex:1;background:{_ms_bg};backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid {_ms_border};border-radius:14px;padding:9px 0;text-align:center;">
+        <div style="flex:1;background:#3FA9DA;border-radius:14px;padding:9px 0;text-align:center;">
             <div style="font-size:16px;">🔥</div>
-            <div style="color:{_text_dim};font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('streak').upper()}</div>
-            <div style="color:{_accent};font-size:11.5px;font-weight:600;">{streak_count} {t('streak_unit')}</div>
+            <div style="color:#042c53;font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('streak').upper()}</div>
+            <div style="color:#042c53;font-size:11.5px;font-weight:600;">{streak_count} {t('streak_unit')}</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -2563,16 +2558,16 @@ if st.session_state.get("show_milestone_letter"):
     streak_num  = letter_data["streak"]
 
     milestone_colors = {
-        7:   ("🌸", "#ff8ad8"),
-        30:  ("🌟", "#ffd700"),
-        100: ("💎", "#7dd3fc"),
-        365: ("👑", "#fb923c"),
+        7:   ("🌸", "#D6336C"),
+        30:  ("🌟", "#FAC775"),
+        100: ("💎", "#3FA9DA"),
+        365: ("👑", "#A89ADF"),
     }
     icon, color = milestone_colors.get(streak_num, ("💕", _accent))
 
     st.markdown(f"""
     <div style="
-        background: linear-gradient(135deg, rgba({_r},{_g},{_b},0.08), rgba({_r},{_g},{_b},0.03));
+        background: rgba({_r},{_g},{_b},0.08);
         border: 1.5px solid rgba({_r},{_g},{_b},0.3);
         border-radius: 16px;
         padding: 20px 24px;
@@ -2618,7 +2613,7 @@ else:
             </div>
             <div style="font-size:32px;font-weight:700;color:{_headline_color};">
                 Apa yang bisa Kei bantu
-                <span style="color:{st.session_state.get('theme_color', '#7f77dd')};">hari ini?</span>
+                <span style="color:#D6336C;">hari ini?</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -2627,9 +2622,9 @@ else:
         <div style="text-align:center;padding:32px 0 14px;">
             <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:6px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 36 36">
-                    <polygon points="18,0 21,15 36,18 21,21 18,36 15,21 0,18 15,15" fill="{st.session_state.get('theme_color', '#7f77dd')}"/>
+                    <polygon points="18,0 21,15 36,18 21,21 18,36 15,21 0,18 15,15" fill="#D6336C"/>
                 </svg>
-                <span style="color:{st.session_state.get('theme_color', '#7f77dd')};font-size:48px;font-weight:700;line-height:1.1;">Kei AI</span>
+                <span style="color:#D6336C;font-size:48px;font-weight:700;line-height:1.1;">Kei AI</span>
             </div>
             <p style="color:{_header_tagline_color};font-size:18px;margin:0;">{t('app_companion')} {header_mood_emoji}</p>
         </div>
