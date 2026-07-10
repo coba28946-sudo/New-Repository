@@ -52,10 +52,27 @@ header[data-testid="stHeader"] { background: transparent !important; box-shadow:
 .main .block-container,
 [data-testid="stMainBlockContainer"],
 [data-testid="stMain"] .block-container,
-[data-testid="stAppViewBlockContainer"] {
-    padding: 0 !important;
+[data-testid="stAppViewBlockContainer"],
+section.main > div.block-container,
+div[class*="block-container"] {
+    padding: 1rem 2rem !important;
     max-width: 100% !important;
     width: 100% !important;
+    box-sizing: border-box !important;
+}
+[data-testid="stChatMessage"],
+[data-testid="stChatMessageContent"],
+[data-testid="stChatInputContainer"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+[data-testid="stMarkdownContainer"] p {
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+}
+[data-testid="stVerticalBlock"] {
+    max-width: 100% !important;
 }
 
 .login-title {
