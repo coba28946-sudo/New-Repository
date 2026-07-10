@@ -2048,20 +2048,6 @@ def render_settings_panel(accent, r, g, b):
         save_prefs()
         st.rerun()
 
-    st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
-    st.markdown(f"**{'Warna aksen' if st.session_state.get('lang') == 'id' else 'Accent color'}**")
-    color_choice = st.color_picker(
-        "Warna aksen",
-        value=st.session_state.get("theme_color", "#d6336c"),
-        key="theme_color_picker",
-        label_visibility="collapsed",
-    )
-    if color_choice != st.session_state.theme_color:
-        st.session_state.theme_color = color_choice
-        st.session_state.keep_panel_open = "settings"
-        save_prefs()
-        st.rerun()
-
 def render_stats_panel(accent, r, g, b):
     chat_stats = record_active_day_and_get_stats(st.session_state.messages)
     stat_col1, stat_col2 = st.columns(2)
