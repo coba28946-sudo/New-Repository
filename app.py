@@ -1041,13 +1041,22 @@ def render_dynamic_css():
         border: 1px solid rgba({r},{g},{b},0.3) !important;
     }}
 
-    [data-testid="stTextInput"] > div {{
+    [data-testid="stTextInput"] > div,
+    [data-testid="stTextInput"] > div > div,
+    [data-testid="stTextInput"] [data-baseweb="base-input"],
+    [data-testid="stTextInput"] [data-baseweb="input"] {{
         background: {input_bg} !important;
-        border: 1px solid {border_col} !important;
+        border-color: {border_col} !important;
     }}
     [data-testid="stTextInput"] input {{
         background: transparent !important;
         color: {text_main} !important;
+        -webkit-text-fill-color: {text_main} !important;
+        caret-color: {text_main} !important;
+    }}
+    [data-testid="stTextInput"] input::placeholder {{
+        color: {text_dimmer} !important;
+        -webkit-text-fill-color: {text_dimmer} !important;
     }}
     [data-testid="stTextInput"] label p {{ color: {text_dim} !important; }}
     .stButton > button {{
@@ -1151,6 +1160,33 @@ def render_dynamic_css():
         height: 0 !important;
         margin: 0 !important;
         padding: 0 !important;
+    }}
+
+    .st-key-forgot_pw_btn {{
+        display: flex !important;
+        justify-content: flex-end !important;
+        margin: 8px 0 4px !important;
+    }}
+    .st-key-forgot_pw_btn button {{
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: {text_dim} !important;
+        font-size: 12.5px !important;
+        font-weight: 400 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+        width: auto !important;
+    }}
+    .st-key-forgot_pw_btn button:hover {{
+        color: {accent} !important;
+        text-decoration: underline !important;
+        background: transparent !important;
+    }}
+    .st-key-forgot_pw_btn button p {{
+        color: inherit !important;
+        margin: 0 !important;
     }}
 
     </style>
@@ -1499,16 +1535,7 @@ if not st.session_state.logged_in:
                 email_login = st.text_input("Email", key="login_email", placeholder="email@gmail.com")
                 password_login = st.text_input("Password", type="password", key="login_password", placeholder="Password kamu")
 
-                st.markdown(f"""
-                <div class="login-forgot-row">
-                    <a href="#" style="color:{_login_text_dim};">{t('forgot_password')}</a>
-                </div>
-                """, unsafe_allow_html=True)
-
                 forgot_clicked = st.button(t("forgot_password"), key="forgot_pw_btn")
-                st.markdown("""
-                <style>.st-key-forgot_pw_btn { display:none !important; }</style>
-                """, unsafe_allow_html=True)
                 if forgot_clicked:
                     st.session_state.show_forgot_password = True
                     st.rerun()
