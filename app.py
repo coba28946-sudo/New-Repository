@@ -1486,7 +1486,10 @@ if not st.session_state.logged_in:
 
         st.markdown("""
         <style>
-        .stButton > button {
+        .st-key-login_btn button,
+        .st-key-register_btn button,
+        .st-key-send_reset_btn button,
+        .st-key-back_to_login_btn button {
             height: 52px !important;
             font-size: 16px !important;
             font-weight: 600 !important;
