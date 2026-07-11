@@ -704,8 +704,8 @@ small[data-testid="InputInstructions"],
 
 .robot-wrap {
     position: relative;
-    width: 168px;
-    height: 200px;
+    width: 190px;
+    height: 228px;
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -714,7 +714,7 @@ small[data-testid="InputInstructions"],
 .robot-glow {
     position: absolute;
     inset: -10px;
-    background: radial-gradient(circle at 50% 45%, rgba(255,63,164,0.30), transparent 65%);
+    background: radial-gradient(circle at 50% 40%, rgba(255,63,164,0.32), transparent 65%);
     filter: blur(18px);
     animation: robot-pulse-glow 3s ease-in-out infinite;
 }
@@ -725,8 +725,8 @@ small[data-testid="InputInstructions"],
 .robot-svg {
     position: relative;
     z-index: 1;
-    width: 168px;
-    height: 200px;
+    width: 190px;
+    height: 228px;
     animation: robot-bob 3.4s ease-in-out infinite;
 }
 @keyframes robot-bob {
@@ -1590,17 +1590,17 @@ if not st.session_state.logged_in:
                 <div class="login-ring r2"></div>
                 <div class="robot-wrap">
                     <div class="robot-glow"></div>
-                    <svg class="robot-svg" viewBox="0 0 180 220" fill="none">
+                    <svg class="robot-svg" viewBox="0 0 200 240" fill="none">
                         <defs>
                             <linearGradient id="gradBody" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#fdfdfe"/>
-                                <stop offset="100%" stop-color="#d8dce4"/>
+                                <stop offset="0%" stop-color="#ffffff"/>
+                                <stop offset="100%" stop-color="#d5dae2"/>
                             </linearGradient>
                             <linearGradient id="gradScreen" x1="0" y1="0" x2="1" y2="1">
-                                <stop offset="0%" stop-color="#26192f"/>
+                                <stop offset="0%" stop-color="#2b1c37"/>
                                 <stop offset="100%" stop-color="#160f1c"/>
                             </linearGradient>
-                            <linearGradient id="gradEye" x1="0" y1="0" x2="0" y2="1">
+                            <linearGradient id="gradEye" x1="0" y1="0" x2="1" y2="1">
                                 <stop offset="0%" stop-color="#FF6FBF"/>
                                 <stop offset="100%" stop-color="#B14EFF"/>
                             </linearGradient>
@@ -1609,27 +1609,26 @@ if not st.session_state.logged_in:
                                 <stop offset="100%" stop-color="#ff9bd6"/>
                             </linearGradient>
                         </defs>
-                        <ellipse cx="90" cy="197" rx="46" ry="19" fill="#151318"/>
-                        <ellipse cx="90" cy="197" rx="46" ry="19" fill="none" stroke="#2c2a33" stroke-width="2"/>
-                        <circle cx="90" cy="197" r="11" fill="#2c2a33"/>
-                        <circle cx="90" cy="197" r="4" fill="#48454f"/>
-                        <rect x="75" y="150" width="30" height="42" rx="10" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
-                        <rect x="68" y="118" width="44" height="38" rx="15" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
-                        <polygon points="28,92 55,78 62,100 48,132 22,122" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
-                        <polygon points="152,92 125,78 118,100 132,132 158,122" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
-                        <circle cx="57" cy="103" r="4.5" fill="url(#gradEye)"/>
-                        <circle cx="123" cy="103" r="4.5" fill="url(#gradEye)"/>
-                        <rect x="44" y="38" width="92" height="70" rx="26" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="2"/>
-                        <rect x="57" y="55" width="66" height="38" rx="12" fill="url(#gradScreen)"/>
-                        <rect x="70" y="66" width="9" height="18" rx="4.5" fill="url(#gradEye)"/>
-                        <rect x="101" y="66" width="9" height="18" rx="4.5" fill="url(#gradEye)"/>
-                        <rect x="82" y="87" width="16" height="4" rx="2" fill="#ff9bd6" opacity="0.85"/>
-                        <rect x="87" y="24" width="4" height="16" rx="2" fill="#c7cbd4"/>
-                        <circle cx="89" cy="22" r="6.5" fill="url(#gradEye)"/>
-                        <g transform="rotate(-10 128 18)">
-                            <polygon points="112,8 148,-2 142,24 106,32" fill="url(#gradFlag)" opacity="0.9"/>
-                            <polygon points="126,16 158,8 152,32 120,40" fill="url(#gradFlag)" opacity="0.55"/>
+                        <ellipse cx="100" cy="222" rx="46" ry="12" fill="#000000" opacity="0.22"/>
+                        <ellipse cx="100" cy="210" rx="40" ry="15" fill="#17151b"/>
+                        <ellipse cx="100" cy="210" rx="40" ry="15" fill="none" stroke="#332f3a" stroke-width="2"/>
+                        <circle cx="100" cy="210" r="8" fill="#3a3742"/>
+                        <g transform="rotate(-14 158 26)">
+                            <polygon points="140,10 176,-6 168,26 132,36" fill="url(#gradFlag)"/>
                         </g>
+                        <polygon points="24,118 58,100 68,128 52,168 16,158" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
+                        <polygon points="176,118 142,100 132,128 148,168 184,158" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
+                        <circle cx="60" cy="132" r="6" fill="url(#gradEye)"/>
+                        <circle cx="140" cy="132" r="6" fill="url(#gradEye)"/>
+                        <rect x="62" y="150" width="76" height="66" rx="32" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
+                        <circle cx="100" cy="180" r="7" fill="url(#gradEye)" opacity="0.85"/>
+                        <rect x="97" y="8" width="6" height="18" rx="3" fill="#c3c8d1"/>
+                        <circle cx="100" cy="8" r="8" fill="url(#gradEye)"/>
+                        <rect x="34" y="26" width="132" height="104" rx="38" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2.5"/>
+                        <rect x="52" y="44" width="96" height="64" rx="20" fill="url(#gradScreen)"/>
+                        <path d="M76 68 Q86 54 96 68" stroke="url(#gradEye)" stroke-width="7" fill="none" stroke-linecap="round"/>
+                        <path d="M104 68 Q114 54 124 68" stroke="url(#gradEye)" stroke-width="7" fill="none" stroke-linecap="round"/>
+                        <rect x="91" y="86" width="18" height="4.5" rx="2.25" fill="#ff9bd6" opacity="0.9"/>
                     </svg>
                 </div>
                 <div class="illus-caption">Teman ngobrol yang selalu <b>tenang</b> dan siap dengar, kapan pun kamu butuh.</div>
