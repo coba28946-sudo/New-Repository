@@ -751,6 +751,45 @@ small[data-testid="InputInstructions"],
     justify-content: center;
 }
 
+.mini-brand-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+.mini-brand-badge .mini-orb {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(140deg, #2a1c37, #1a1424);
+    border: 1px solid rgba(255,255,255,0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.mini-brand-badge span {
+    font-weight: 700;
+    font-size: 12.5px;
+    letter-spacing: 0.6px;
+}
+.form-heading {
+    font-weight: 700;
+    font-size: 22px;
+    margin: 0 0 4px;
+    letter-spacing: -0.3px;
+}
+.form-heading .accent {
+    background: linear-gradient(95deg, #FF3FA4, #B14EFF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.form-subtitle {
+    font-size: 13px;
+    margin: 0 0 18px;
+}
+
 @media (max-width: 680px) {
     .st-key-login_card_wrap { max-width: 420px; }
     .st-key-login_illus_panel { display: none !important; }
@@ -1541,6 +1580,7 @@ def t(key):
 if not st.session_state.logged_in:
     _login_text_dim = "rgba(0,0,0,0.55)" if st.session_state.theme == "light" else "rgba(255,255,255,0.45)"
     _login_text_dimmer = "rgba(0,0,0,0.3)" if st.session_state.theme == "light" else "rgba(255,255,255,0.18)"
+    _login_text_main = "#2b2b40" if st.session_state.theme == "light" else "#f3f3f6"
     _accent_login = st.session_state.get("theme_color", "#ff8ad8")
 
     st.markdown(f"""
@@ -1638,6 +1678,24 @@ if not st.session_state.logged_in:
         with col_form:
             form_panel = st.container(key="login_form_panel")
             with form_panel:
+                _mini_badge_html = f"""
+                <div class="mini-brand-badge">
+                    <div class="mini-orb">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 0 L14.2 9.8 L24 12 L14.2 14.2 L12 24 L9.8 14.2 L0 12 L9.8 9.8 Z" fill="url(#miniGrad)"/>
+                            <defs>
+                                <linearGradient id="miniGrad" x1="0" y1="0" x2="24" y2="24">
+                                    <stop offset="0%" stop-color="#FF3FA4"/>
+                                    <stop offset="100%" stop-color="#B14EFF"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span style="color:{_login_text_dim};">KEI AI</span>
+                </div>
+                """
+                st.markdown(" ".join(_mini_badge_html.split()), unsafe_allow_html=True)
+
                 if st.session_state.show_forgot_password:
                     _forgot_html = f"""
                     <div style="margin-bottom:14px;">
@@ -1675,7 +1733,11 @@ if not st.session_state.logged_in:
                     tab_login, tab_register = st.tabs(["✨ Masuk", "🌸 Daftar"])
 
                     with tab_login:
-                        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+                        _login_head_html = f"""
+                        <div class="form-heading" style="color:{_login_text_main};">Masuk ke <span class="accent">Kei</span></div>
+                        <div class="form-subtitle" style="color:{_login_text_dim};">Yuk lanjutkan ngobrol sama Kei.</div>
+                        """
+                        st.markdown(" ".join(_login_head_html.split()), unsafe_allow_html=True)
                         email_login = st.text_input("Email", key="login_email", placeholder="email@gmail.com")
                         password_login = st.text_input("Password", type="password", key="login_password", placeholder="Password kamu")
 
@@ -1709,9 +1771,19 @@ if not st.session_state.logged_in:
                                         st.error(f"Login gagal: {err}")
 
                     with tab_register:
+                        _reg_head_html = f"""
+                        <div class="form-heading" style="color:{_login_text_main};">Daftar ke <span class="accent">Kei</span></div>
+                        <div class="form-subtitle" style="color:{_login_text_dim};">Buat akun buat mulai ngobrol sama Kei.</div>
+                        """
+                        st.markdown(" ".join(_reg_head_html.split()), unsafe_allow_html=True)
                         email_reg = st.text_input("Email", key="reg_email", placeholder="email@gmail.com")
                         password_reg = st.text_input("Password", type="password", key="reg_password", placeholder="Minimal 6 karakter")
                         password_reg2 = st.text_input("Ulangi Password", type="password", key="reg_password2", placeholder="Ketik ulang password")
+
+                        agree_terms = st.checkbox(
+                            "Aku setuju dengan [Syarat & Ketentuan](#) dan [Kebijakan Privasi](#)",
+                            key="agree_terms",
+                        )
 
                         st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
 
@@ -1722,6 +1794,8 @@ if not st.session_state.logged_in:
                                 st.error("Password tidak cocok, coba lagi ya Kak.")
                             elif len(password_reg) < 6:
                                 st.error("Password minimal 6 karakter ya Kak.")
+                            elif not agree_terms:
+                                st.error("Setujui dulu Syarat & Ketentuan dan Kebijakan Privasi ya Kak.")
                             else:
                                 try:
                                     supabase.auth.sign_up({
