@@ -10,6 +10,7 @@ import base64
 from PIL import Image
 import io
 import colorsys
+import textwrap
 from datetime import datetime, timedelta
 
 # =====================
@@ -1585,7 +1586,7 @@ if not st.session_state.logged_in:
         with col_illus:
             illus_panel = st.container(key="login_illus_panel")
             with illus_panel:
-                st.markdown("""
+                st.markdown(textwrap.dedent("""
                 <div class="login-ring r1"></div>
                 <div class="login-ring r2"></div>
                 <div class="robot-wrap">
@@ -1639,13 +1640,13 @@ if not st.session_state.logged_in:
                     </svg>
                 </div>
                 <div class="illus-caption">Teman ngobrol yang selalu <b>tenang</b> dan siap dengar, kapan pun kamu butuh.</div>
-                """, unsafe_allow_html=True)
+                """), unsafe_allow_html=True)
 
         with col_form:
             form_panel = st.container(key="login_form_panel")
             with form_panel:
                 if st.session_state.show_forgot_password:
-                    st.markdown(f"""
+                    st.markdown(textwrap.dedent(f"""
                     <div style="margin-bottom:14px;">
                         <div style="color:{_accent_login}; font-size:19px; font-weight:700; margin-bottom:4px;">
                             {t('forgot_password_title')}
@@ -1654,7 +1655,7 @@ if not st.session_state.logged_in:
                             {t('forgot_password_desc')}
                         </div>
                     </div>
-                    """, unsafe_allow_html=True)
+                    """), unsafe_allow_html=True)
 
                     reset_email = st.text_input(t("forgot_password_input_label"), key="reset_email", placeholder="email@gmail.com")
                     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
