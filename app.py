@@ -663,15 +663,97 @@ small[data-testid="InputInstructions"],
         #0a0e1a !important;
 }
 .st-key-login_card_wrap {
-    max-width: 460px;
+    max-width: 820px;
     margin: 40px auto 0 !important;
     background: linear-gradient(180deg, #181a24, #13141c);
     border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    padding: 36px 36px 28px;
+    border-radius: 22px;
+    padding: 0;
+    overflow: hidden;
     box-shadow:
         0 24px 60px -20px rgba(0,0,0,0.6),
         0 0 80px -20px rgba(255,63,164,0.08);
+}
+.st-key-login_card_wrap [data-testid="stHorizontalBlock"] {
+    align-items: stretch !important;
+    gap: 0 !important;
+}
+
+/* ===== PANEL ILUSTRASI ROBOT (kiri) ===== */
+.st-key-login_illus_panel {
+    background:
+        radial-gradient(320px 260px at 30% 25%, rgba(255,63,164,0.18), transparent 70%),
+        radial-gradient(300px 260px at 75% 75%, rgba(177,78,255,0.18), transparent 70%),
+        #100c18;
+    padding: 36px 24px;
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.login-ring {
+    position: absolute;
+    border: 1.5px solid rgba(177,78,255,0.28);
+    border-radius: 50%;
+}
+.login-ring.r1 { width: 210px; height: 210px; top: 8%; left: -60px; }
+.login-ring.r2 { width: 150px; height: 150px; top: 20%; left: -10px; border-color: rgba(255,63,164,0.24); }
+
+.robot-wrap {
+    position: relative;
+    width: 168px;
+    height: 200px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.robot-glow {
+    position: absolute;
+    inset: -10px;
+    background: radial-gradient(circle at 50% 45%, rgba(255,63,164,0.30), transparent 65%);
+    filter: blur(18px);
+    animation: robot-pulse-glow 3s ease-in-out infinite;
+}
+@keyframes robot-pulse-glow {
+    0%, 100% { opacity: 0.55; transform: scale(0.92); }
+    50% { opacity: 1; transform: scale(1.08); }
+}
+.robot-svg {
+    position: relative;
+    z-index: 1;
+    width: 168px;
+    height: 200px;
+    animation: robot-bob 3.4s ease-in-out infinite;
+}
+@keyframes robot-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+.illus-caption {
+    margin-top: 6px;
+    text-align: center;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+    max-width: 230px;
+}
+.illus-caption b { color: #ff9bd6; font-weight: 600; }
+
+/* ===== PANEL FORM (kanan) ===== */
+.st-key-login_form_panel {
+    padding: 34px 34px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media (max-width: 680px) {
+    .st-key-login_card_wrap { max-width: 420px; }
+    .st-key-login_illus_panel { display: none !important; }
 }
 
 /* Tab styling */
@@ -1461,139 +1543,203 @@ if not st.session_state.logged_in:
     _login_text_dimmer = "rgba(0,0,0,0.3)" if st.session_state.theme == "light" else "rgba(255,255,255,0.18)"
     _accent_login = st.session_state.get("theme_color", "#ff8ad8")
 
+    st.markdown(f"""
+    <div style="padding-top:8px; text-align:center; margin-bottom:16px;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
+            <div class="login-spark-wrap">
+                <div class="login-spark-glow"></div>
+                <svg class="login-spark-svg" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 0 L14.2 9.8 L24 12 L14.2 14.2 L12 24 L9.8 14.2 L0 12 L9.8 9.8 Z" fill="url(#loginSparkGrad)"/>
+                    <defs>
+                        <linearGradient id="loginSparkGrad" x1="0" y1="0" x2="24" y2="24">
+                            <stop offset="0%" stop-color="#FF3FA4"/>
+                            <stop offset="100%" stop-color="#B14EFF"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <span class="login-brand-name">Kei AI</span>
+        </div>
+        <div style="color:{_login_text_dim}; font-size:16px; margin-top:0; letter-spacing:2.5px;">{t('app_tagline')}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <style>
+    .st-key-login_btn button,
+    .st-key-register_btn button,
+    .st-key-send_reset_btn button,
+    .st-key-back_to_login_btn button {
+        height: 52px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     login_card = st.container(key="login_card_wrap")
     with login_card:
-        st.markdown(f"""
-        <div style="padding-top:8px; text-align:center; margin-bottom:16px;">
-            <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
-                <div class="login-spark-wrap">
-                    <div class="login-spark-glow"></div>
-                    <svg class="login-spark-svg" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 0 L14.2 9.8 L24 12 L14.2 14.2 L12 24 L9.8 14.2 L0 12 L9.8 9.8 Z" fill="url(#loginSparkGrad)"/>
+        col_illus, col_form = st.columns([1, 1.15])
+
+        with col_illus:
+            illus_panel = st.container(key="login_illus_panel")
+            with illus_panel:
+                st.markdown("""
+                <div class="login-ring r1"></div>
+                <div class="login-ring r2"></div>
+                <div class="robot-wrap">
+                    <div class="robot-glow"></div>
+                    <svg class="robot-svg" viewBox="0 0 180 220" fill="none">
                         <defs>
-                            <linearGradient id="loginSparkGrad" x1="0" y1="0" x2="24" y2="24">
-                                <stop offset="0%" stop-color="#FF3FA4"/>
+                            <linearGradient id="gradBody" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#fdfdfe"/>
+                                <stop offset="100%" stop-color="#d8dce4"/>
+                            </linearGradient>
+                            <linearGradient id="gradScreen" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#26192f"/>
+                                <stop offset="100%" stop-color="#160f1c"/>
+                            </linearGradient>
+                            <linearGradient id="gradEye" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#FF6FBF"/>
                                 <stop offset="100%" stop-color="#B14EFF"/>
                             </linearGradient>
+                            <linearGradient id="gradFlag" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#FF3FA4"/>
+                                <stop offset="100%" stop-color="#ff9bd6"/>
+                            </linearGradient>
                         </defs>
+
+                        <ellipse cx="90" cy="197" rx="46" ry="19" fill="#151318"/>
+                        <ellipse cx="90" cy="197" rx="46" ry="19" fill="none" stroke="#2c2a33" stroke-width="2"/>
+                        <circle cx="90" cy="197" r="11" fill="#2c2a33"/>
+                        <circle cx="90" cy="197" r="4" fill="#48454f"/>
+
+                        <rect x="75" y="150" width="30" height="42" rx="10" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
+                        <rect x="68" y="118" width="44" height="38" rx="15" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
+
+                        <polygon points="28,92 55,78 62,100 48,132 22,122" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
+                        <polygon points="152,92 125,78 118,100 132,132 158,122" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
+                        <circle cx="57" cy="103" r="4.5" fill="url(#gradEye)"/>
+                        <circle cx="123" cy="103" r="4.5" fill="url(#gradEye)"/>
+
+                        <rect x="44" y="38" width="92" height="70" rx="26" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="2"/>
+                        <rect x="57" y="55" width="66" height="38" rx="12" fill="url(#gradScreen)"/>
+                        <rect x="70" y="66" width="9" height="18" rx="4.5" fill="url(#gradEye)"/>
+                        <rect x="101" y="66" width="9" height="18" rx="4.5" fill="url(#gradEye)"/>
+                        <rect x="82" y="87" width="16" height="4" rx="2" fill="#ff9bd6" opacity="0.85"/>
+
+                        <rect x="87" y="24" width="4" height="16" rx="2" fill="#c7cbd4"/>
+                        <circle cx="89" cy="22" r="6.5" fill="url(#gradEye)"/>
+
+                        <g transform="rotate(-10 128 18)">
+                            <polygon points="112,8 148,-2 142,24 106,32" fill="url(#gradFlag)" opacity="0.9"/>
+                            <polygon points="126,16 158,8 152,32 120,40" fill="url(#gradFlag)" opacity="0.55"/>
+                        </g>
                     </svg>
                 </div>
-                <span class="login-brand-name">Kei AI</span>
-            </div>
-            <div style="color:{_login_text_dim}; font-size:16px; margin-top:0; letter-spacing:2.5px;">{t('app_tagline')}</div>
-        </div>
-        """, unsafe_allow_html=True)
+                <div class="illus-caption">Teman ngobrol yang selalu <b>tenang</b> dan siap dengar, kapan pun kamu butuh.</div>
+                """, unsafe_allow_html=True)
 
-        st.markdown("""
-        <style>
-        .st-key-login_btn button,
-        .st-key-register_btn button,
-        .st-key-send_reset_btn button,
-        .st-key-back_to_login_btn button {
-            height: 52px !important;
-            font-size: 16px !important;
-            font-weight: 600 !important;
-            border-radius: 12px !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+        with col_form:
+            form_panel = st.container(key="login_form_panel")
+            with form_panel:
+                if st.session_state.show_forgot_password:
+                    st.markdown(f"""
+                    <div style="margin-bottom:14px;">
+                        <div style="color:{_accent_login}; font-size:19px; font-weight:700; margin-bottom:4px;">
+                            {t('forgot_password_title')}
+                        </div>
+                        <div style="color:{_login_text_dim}; font-size:13.5px; line-height:1.5;">
+                            {t('forgot_password_desc')}
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
 
-        if st.session_state.show_forgot_password:
-            st.markdown(f"""
-            <div style="margin-bottom:14px;">
-                <div style="color:{_accent_login}; font-size:19px; font-weight:700; margin-bottom:4px;">
-                    {t('forgot_password_title')}
-                </div>
-                <div style="color:{_login_text_dim}; font-size:13.5px; line-height:1.5;">
-                    {t('forgot_password_desc')}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+                    reset_email = st.text_input(t("forgot_password_input_label"), key="reset_email", placeholder="email@gmail.com")
+                    st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
-            reset_email = st.text_input(t("forgot_password_input_label"), key="reset_email", placeholder="email@gmail.com")
-            st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+                    if st.button(t("forgot_password_send"), use_container_width=True, key="send_reset_btn"):
+                        if not reset_email:
+                            st.warning(t("forgot_password_empty"))
+                        else:
+                            try:
+                                supabase.auth.reset_password_email(reset_email)
+                                st.success(t("forgot_password_sent"))
+                            except Exception as e:
+                                st.error(f"Gagal kirim: {str(e)}")
 
-            if st.button(t("forgot_password_send"), use_container_width=True, key="send_reset_btn"):
-                if not reset_email:
-                    st.warning(t("forgot_password_empty"))
-                else:
-                    try:
-                        supabase.auth.reset_password_email(reset_email)
-                        st.success(t("forgot_password_sent"))
-                    except Exception as e:
-                        st.error(f"Gagal kirim: {str(e)}")
-
-            st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
-            back_col1, back_col2, back_col3 = st.columns([1, 2, 1])
-            with back_col2:
-                if st.button(t("forgot_password_back"), key="back_to_login_btn", use_container_width=True):
-                    st.session_state.show_forgot_password = False
-                    st.rerun()
-
-        else:
-            tab_login, tab_register = st.tabs(["✨ Masuk", "🌸 Daftar"])
-
-            with tab_login:
-                st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
-                email_login = st.text_input("Email", key="login_email", placeholder="email@gmail.com")
-                password_login = st.text_input("Password", type="password", key="login_password", placeholder="Password kamu")
-
-                forgot_clicked = st.button(t("forgot_password"), key="forgot_pw_btn")
-                if forgot_clicked:
-                    st.session_state.show_forgot_password = True
-                    st.rerun()
-
-                st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
-
-                if st.button("Masuk ✨", use_container_width=True, key="login_btn"):
-                    if not email_login or not password_login:
-                        st.error(t("login_err_empty"))
-                    else:
-                        try:
-                            res = supabase.auth.sign_in_with_password({
-                                "email": email_login,
-                                "password": password_login,
-                            })
-                            st.session_state.logged_in = True
-                            st.session_state.user_email = res.user.email
-                            st.session_state.messages = load_json(CHAT_FILE)
+                    st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
+                    back_col1, back_col2, back_col3 = st.columns([1, 2, 1])
+                    with back_col2:
+                        if st.button(t("forgot_password_back"), key="back_to_login_btn", use_container_width=True):
+                            st.session_state.show_forgot_password = False
                             st.rerun()
-                        except Exception as e:
-                            err = str(e)
-                            if "Email not confirmed" in err:
-                                st.error("Email belum diverifikasi. Cek inbox kamu dulu ya.")
-                            elif "Invalid login" in err or "invalid_credentials" in err:
-                                st.error(t("login_err_wrong"))
+
+                else:
+                    tab_login, tab_register = st.tabs(["✨ Masuk", "🌸 Daftar"])
+
+                    with tab_login:
+                        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+                        email_login = st.text_input("Email", key="login_email", placeholder="email@gmail.com")
+                        password_login = st.text_input("Password", type="password", key="login_password", placeholder="Password kamu")
+
+                        forgot_clicked = st.button(t("forgot_password"), key="forgot_pw_btn")
+                        if forgot_clicked:
+                            st.session_state.show_forgot_password = True
+                            st.rerun()
+
+                        st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
+
+                        if st.button("Masuk ✨", use_container_width=True, key="login_btn"):
+                            if not email_login or not password_login:
+                                st.error(t("login_err_empty"))
                             else:
-                                st.error(f"Login gagal: {err}")
+                                try:
+                                    res = supabase.auth.sign_in_with_password({
+                                        "email": email_login,
+                                        "password": password_login,
+                                    })
+                                    st.session_state.logged_in = True
+                                    st.session_state.user_email = res.user.email
+                                    st.session_state.messages = load_json(CHAT_FILE)
+                                    st.rerun()
+                                except Exception as e:
+                                    err = str(e)
+                                    if "Email not confirmed" in err:
+                                        st.error("Email belum diverifikasi. Cek inbox kamu dulu ya.")
+                                    elif "Invalid login" in err or "invalid_credentials" in err:
+                                        st.error(t("login_err_wrong"))
+                                    else:
+                                        st.error(f"Login gagal: {err}")
 
-            with tab_register:
-                email_reg = st.text_input("Email", key="reg_email", placeholder="email@gmail.com")
-                password_reg = st.text_input("Password", type="password", key="reg_password", placeholder="Minimal 6 karakter")
-                password_reg2 = st.text_input("Ulangi Password", type="password", key="reg_password2", placeholder="Ketik ulang password")
+                    with tab_register:
+                        email_reg = st.text_input("Email", key="reg_email", placeholder="email@gmail.com")
+                        password_reg = st.text_input("Password", type="password", key="reg_password", placeholder="Minimal 6 karakter")
+                        password_reg2 = st.text_input("Ulangi Password", type="password", key="reg_password2", placeholder="Ketik ulang password")
 
-                st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
+                        st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
 
-                if st.button("Daftar Sekarang 🌸", use_container_width=True, key="register_btn"):
-                    if not email_reg or not password_reg or not password_reg2:
-                        st.error("Semua kolom harus diisi ya.")
-                    elif password_reg != password_reg2:
-                        st.error("Password tidak cocok, coba lagi ya Kak.")
-                    elif len(password_reg) < 6:
-                        st.error("Password minimal 6 karakter ya Kak.")
-                    else:
-                        try:
-                            supabase.auth.sign_up({
-                                "email": email_reg,
-                                "password": password_reg,
-                            })
-                            st.success("Akun berhasil dibuat. Cek email kamu untuk verifikasi dulu ya.")
-                        except Exception as e:
-                            err = str(e)
-                            if "already registered" in err or "already been registered" in err:
-                                st.error("Email ini sudah terdaftar. Coba login aja ya Kak.")
+                        if st.button("Daftar Sekarang 🌸", use_container_width=True, key="register_btn"):
+                            if not email_reg or not password_reg or not password_reg2:
+                                st.error("Semua kolom harus diisi ya.")
+                            elif password_reg != password_reg2:
+                                st.error("Password tidak cocok, coba lagi ya Kak.")
+                            elif len(password_reg) < 6:
+                                st.error("Password minimal 6 karakter ya Kak.")
                             else:
-                                st.error(f"Gagal daftar: {err}")
+                                try:
+                                    supabase.auth.sign_up({
+                                        "email": email_reg,
+                                        "password": password_reg,
+                                    })
+                                    st.success("Akun berhasil dibuat. Cek email kamu untuk verifikasi dulu ya.")
+                                except Exception as e:
+                                    err = str(e)
+                                    if "already registered" in err or "already been registered" in err:
+                                        st.error("Email ini sudah terdaftar. Coba login aja ya Kak.")
+                                    else:
+                                        st.error(f"Gagal daftar: {err}")
 
     st.markdown(f"""
     <div style="text-align:center;margin-top:24px;color:{_login_text_dimmer};font-size:12px;">
