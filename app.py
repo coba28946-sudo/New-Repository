@@ -10,7 +10,6 @@ import base64
 from PIL import Image
 import io
 import colorsys
-import textwrap
 from datetime import datetime, timedelta
 
 # =====================
@@ -1586,7 +1585,7 @@ if not st.session_state.logged_in:
         with col_illus:
             illus_panel = st.container(key="login_illus_panel")
             with illus_panel:
-                st.markdown(textwrap.dedent("""
+                _robot_svg = """
                 <div class="login-ring r1"></div>
                 <div class="login-ring r2"></div>
                 <div class="robot-wrap">
@@ -1610,29 +1609,23 @@ if not st.session_state.logged_in:
                                 <stop offset="100%" stop-color="#ff9bd6"/>
                             </linearGradient>
                         </defs>
-
                         <ellipse cx="90" cy="197" rx="46" ry="19" fill="#151318"/>
                         <ellipse cx="90" cy="197" rx="46" ry="19" fill="none" stroke="#2c2a33" stroke-width="2"/>
                         <circle cx="90" cy="197" r="11" fill="#2c2a33"/>
                         <circle cx="90" cy="197" r="4" fill="#48454f"/>
-
                         <rect x="75" y="150" width="30" height="42" rx="10" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
                         <rect x="68" y="118" width="44" height="38" rx="15" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
-
                         <polygon points="28,92 55,78 62,100 48,132 22,122" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
                         <polygon points="152,92 125,78 118,100 132,132 158,122" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
                         <circle cx="57" cy="103" r="4.5" fill="url(#gradEye)"/>
                         <circle cx="123" cy="103" r="4.5" fill="url(#gradEye)"/>
-
                         <rect x="44" y="38" width="92" height="70" rx="26" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="2"/>
                         <rect x="57" y="55" width="66" height="38" rx="12" fill="url(#gradScreen)"/>
                         <rect x="70" y="66" width="9" height="18" rx="4.5" fill="url(#gradEye)"/>
                         <rect x="101" y="66" width="9" height="18" rx="4.5" fill="url(#gradEye)"/>
                         <rect x="82" y="87" width="16" height="4" rx="2" fill="#ff9bd6" opacity="0.85"/>
-
                         <rect x="87" y="24" width="4" height="16" rx="2" fill="#c7cbd4"/>
                         <circle cx="89" cy="22" r="6.5" fill="url(#gradEye)"/>
-
                         <g transform="rotate(-10 128 18)">
                             <polygon points="112,8 148,-2 142,24 106,32" fill="url(#gradFlag)" opacity="0.9"/>
                             <polygon points="126,16 158,8 152,32 120,40" fill="url(#gradFlag)" opacity="0.55"/>
@@ -1640,13 +1633,14 @@ if not st.session_state.logged_in:
                     </svg>
                 </div>
                 <div class="illus-caption">Teman ngobrol yang selalu <b>tenang</b> dan siap dengar, kapan pun kamu butuh.</div>
-                """), unsafe_allow_html=True)
+                """
+                st.markdown(" ".join(_robot_svg.split()), unsafe_allow_html=True)
 
         with col_form:
             form_panel = st.container(key="login_form_panel")
             with form_panel:
                 if st.session_state.show_forgot_password:
-                    st.markdown(textwrap.dedent(f"""
+                    _forgot_html = f"""
                     <div style="margin-bottom:14px;">
                         <div style="color:{_accent_login}; font-size:19px; font-weight:700; margin-bottom:4px;">
                             {t('forgot_password_title')}
@@ -1655,7 +1649,8 @@ if not st.session_state.logged_in:
                             {t('forgot_password_desc')}
                         </div>
                     </div>
-                    """), unsafe_allow_html=True)
+                    """
+                    st.markdown(" ".join(_forgot_html.split()), unsafe_allow_html=True)
 
                     reset_email = st.text_input(t("forgot_password_input_label"), key="reset_email", placeholder="email@gmail.com")
                     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
