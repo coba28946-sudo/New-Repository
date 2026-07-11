@@ -2699,12 +2699,30 @@ else:
     if not st.session_state.messages:
         st.session_state.messages = load_json(CHAT_FILE)
 
+    _chat_text_color = "#2b2b40" if _theme == "light" else "#f2f2f5"
+    _bubble_bg = "#ffffff" if _theme == "light" else "rgba(255,255,255,0.08)"
+
     for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
-            if msg.get("image_b64"):
-                img_bytes = base64.b64decode(msg["image_b64"])
-                st.image(img_bytes, width=300)
-            st.markdown(msg["content"])
+        img_tag = ""
+        if msg.get("image_b64"):
+            img_tag = f'<img src="data:image/png;base64,{msg["image_b64"]}" style="max-width:240px;border-radius:14px;display:block;margin-bottom:6px;" />'
+
+        if msg["role"] == "user":
+            st.markdown(f"""
+            <div style="display:flex; justify-content:flex-end; margin:6px 0;">
+                <div style="max-width:70%; background:{_bubble_bg}; border:1px solid {_ms_border};
+                            border-radius:18px; padding:10px 16px; color:{_chat_text_color};
+                            font-size:15px; line-height:1.5;">
+                    {img_tag}{msg["content"]}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div style="margin:6px 0 14px; color:{_chat_text_color}; font-size:15px; line-height:1.6;">
+                {img_tag}{msg["content"]}
+            </div>
+            """, unsafe_allow_html=True)
 
     if st.session_state.conv_result:
         cr = st.session_state.conv_result
