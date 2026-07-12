@@ -686,7 +686,7 @@ small[data-testid="InputInstructions"],
         radial-gradient(300px 260px at 75% 75%, rgba(177,78,255,0.18), transparent 70%),
         #100c18;
     padding: 36px 24px;
-    min-height: 480px;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
