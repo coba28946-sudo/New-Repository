@@ -1695,6 +1695,35 @@ if not st.session_state.logged_in:
     .st-key-login_card_wrap [data-testid="stAlertContentWarning"] {
         color: #f3f3f6 !important;
     }
+    .st-key-login_btn button,
+    .st-key-register_btn button,
+    .st-key-send_reset_btn button {
+        background: linear-gradient(95deg, #FF3FA4, #B14EFF) !important;
+        border: none !important;
+        box-shadow: 0 8px 24px -8px rgba(255,63,164,0.45) !important;
+    }
+    .st-key-login_btn button:hover,
+    .st-key-register_btn button:hover,
+    .st-key-send_reset_btn button:hover {
+        border: none !important;
+        box-shadow: 0 10px 28px -6px rgba(255,63,164,0.6) !important;
+    }
+    .st-key-login_btn button p,
+    .st-key-login_btn button span,
+    .st-key-register_btn button p,
+    .st-key-register_btn button span,
+    .st-key-send_reset_btn button p,
+    .st-key-send_reset_btn button span {
+        color: #ffffff !important;
+    }
+    .st-key-back_to_login_btn button {
+        background: rgba(255,255,255,0.045) !important;
+        border: 1px solid rgba(255,255,255,0.14) !important;
+        color: rgba(255,255,255,0.6) !important;
+    }
+    .st-key-back_to_login_btn button p {
+        color: rgba(255,255,255,0.6) !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
