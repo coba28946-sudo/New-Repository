@@ -791,8 +791,10 @@ small[data-testid="InputInstructions"],
 }
 
 @media (max-width: 680px) {
-    .st-key-login_card_wrap { max-width: 420px; }
+    .st-key-login_card_wrap { max-width: 420px; margin: 16px auto 0 !important; }
     .st-key-login_illus_panel { display: none !important; }
+    .login-top-brand { display: none !important; }
+    .st-key-login_form_panel { padding: 26px 22px 22px !important; }
 }
 
 /* Tab styling */
@@ -1584,7 +1586,7 @@ if not st.session_state.logged_in:
     _accent_login = st.session_state.get("theme_color", "#ff8ad8")
 
     st.markdown(f"""
-    <div style="padding-top:8px; text-align:center; margin-bottom:16px;">
+    <div class="login-top-brand" style="padding-top:8px; text-align:center; margin-bottom:16px;">
         <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
             <div class="login-spark-wrap">
                 <div class="login-spark-glow"></div>
