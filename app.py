@@ -682,8 +682,8 @@ small[data-testid="InputInstructions"],
 /* ===== PANEL ILUSTRASI ROBOT (kiri) ===== */
 .st-key-login_illus_panel {
     background:
-        radial-gradient(320px 260px at 30% 25%, rgba(255,63,164,0.18), transparent 70%),
-        radial-gradient(300px 260px at 75% 75%, rgba(177,78,255,0.18), transparent 70%),
+        radial-gradient(65% 55% at 30% 25%, rgba(255,63,164,0.18), transparent 70%),
+        radial-gradient(65% 60% at 75% 75%, rgba(177,78,255,0.18), transparent 70%),
         #100c18;
     padding: 36px 24px;
     min-height: 0;
@@ -745,10 +745,16 @@ small[data-testid="InputInstructions"],
 
 /* ===== PANEL FORM (kanan) ===== */
 .st-key-login_form_panel {
-    padding: 34px 34px 28px;
+    padding: 34px 34px 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+.st-key-login_form_panel [data-testid="stVerticalBlock"] {
+    gap: 0.55rem !important;
+}
+.st-key-login_form_panel [data-testid="stElementContainer"] {
+    margin-bottom: 0 !important;
 }
 
 .mini-brand-badge {
