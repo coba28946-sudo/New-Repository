@@ -790,11 +790,33 @@ small[data-testid="InputInstructions"],
     margin: 0 0 18px;
 }
 
+html, body { overflow-x: hidden !important; }
+.stApp { overflow-x: hidden !important; }
+
 @media (max-width: 680px) {
-    .st-key-login_card_wrap { max-width: 420px; margin: 16px auto 0 !important; }
+    .st-key-login_card_wrap {
+        max-width: calc(100vw - 32px) !important;
+        width: calc(100vw - 32px) !important;
+        margin: 16px auto 0 !important;
+    }
     .st-key-login_illus_panel { display: none !important; }
     .login-top-brand { display: none !important; }
     .st-key-login_form_panel { padding: 26px 22px 22px !important; }
+    .st-key-login_card_wrap [data-testid="stHorizontalBlock"] {
+        flex-wrap: nowrap !important;
+        width: 100% !important;
+    }
+    .st-key-login_card_wrap [data-testid="stColumn"]:has(.st-key-login_illus_panel) {
+        display: none !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        flex: 0 0 0 !important;
+    }
+    .st-key-login_card_wrap [data-testid="stColumn"]:has(.st-key-login_form_panel) {
+        width: 100% !important;
+        min-width: 0 !important;
+        flex: 1 1 100% !important;
+    }
 }
 
 /* Tab styling */
