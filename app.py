@@ -678,6 +678,16 @@ small[data-testid="InputInstructions"],
     align-items: stretch !important;
     gap: 0 !important;
 }
+.st-key-login_card_wrap [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {
+    display: flex !important;
+    flex-direction: column !important;
+}
+.st-key-login_card_wrap [data-testid="stColumn"] > div {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    height: 100% !important;
+}
 
 /* ===== PANEL ILUSTRASI ROBOT (kiri) ===== */
 .st-key-login_illus_panel {
@@ -687,6 +697,8 @@ small[data-testid="InputInstructions"],
         #100c18;
     padding: 36px 24px;
     min-height: 0;
+    height: 100%;
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
