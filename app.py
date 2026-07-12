@@ -1649,26 +1649,36 @@ if not st.session_state.logged_in:
                                 <stop offset="100%" stop-color="#ff9bd6"/>
                             </linearGradient>
                         </defs>
-                        <ellipse cx="100" cy="222" rx="46" ry="12" fill="#000000" opacity="0.22"/>
-                        <ellipse cx="100" cy="210" rx="40" ry="15" fill="#17151b"/>
-                        <ellipse cx="100" cy="210" rx="40" ry="15" fill="none" stroke="#332f3a" stroke-width="2"/>
-                        <circle cx="100" cy="210" r="8" fill="#3a3742"/>
-                        <g transform="rotate(-14 158 26)">
-                            <polygon points="140,10 176,-6 168,26 132,36" fill="url(#gradFlag)"/>
+                        <ellipse cx="100" cy="228" rx="44" ry="10" fill="#000000" opacity="0.28"/>
+                        <ellipse cx="100" cy="206" rx="42" ry="19" fill="#3d3946"/>
+                        <ellipse cx="100" cy="206" rx="42" ry="19" fill="none" stroke="#5b5766" stroke-width="2"/>
+                        <circle cx="100" cy="206" r="8" fill="#6b6673"/>
+                        <path d="M62 200 Q100 188 138 200" stroke="#5b5766" stroke-width="3" fill="none" opacity="0.6"/>
+                        <g transform="rotate(-14 158 22)">
+                            <polygon points="140,8 176,-8 168,24 132,34" fill="url(#gradFlag)"/>
                         </g>
-                        <polygon points="24,118 58,100 68,128 52,168 16,158" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
-                        <polygon points="176,118 142,100 132,128 148,168 184,158" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
-                        <circle cx="60" cy="132" r="6" fill="url(#gradEye)"/>
-                        <circle cx="140" cy="132" r="6" fill="url(#gradEye)"/>
-                        <rect x="62" y="150" width="76" height="66" rx="32" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
-                        <circle cx="100" cy="180" r="7" fill="url(#gradEye)" opacity="0.85"/>
-                        <rect x="97" y="8" width="6" height="18" rx="3" fill="#c3c8d1"/>
-                        <circle cx="100" cy="8" r="8" fill="url(#gradEye)"/>
-                        <rect x="34" y="26" width="132" height="104" rx="38" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2.5"/>
-                        <rect x="52" y="44" width="96" height="64" rx="20" fill="url(#gradScreen)"/>
-                        <path d="M76 68 Q86 54 96 68" stroke="url(#gradEye)" stroke-width="7" fill="none" stroke-linecap="round"/>
-                        <path d="M104 68 Q114 54 124 68" stroke="url(#gradEye)" stroke-width="7" fill="none" stroke-linecap="round"/>
-                        <rect x="91" y="86" width="18" height="4.5" rx="2.25" fill="#ff9bd6" opacity="0.9"/>
+                        <line x1="140" y1="128" x2="168" y2="146" stroke="#c3c8d1" stroke-width="20" stroke-linecap="round"/>
+                        <line x1="140" y1="128" x2="168" y2="146" stroke="url(#gradBody)" stroke-width="16" stroke-linecap="round"/>
+                        <circle cx="168" cy="146" r="9" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
+                        <line x1="168" y1="146" x2="156" y2="174" stroke="#c3c8d1" stroke-width="18" stroke-linecap="round"/>
+                        <line x1="168" y1="146" x2="156" y2="174" stroke="url(#gradBody)" stroke-width="14" stroke-linecap="round"/>
+                        <circle cx="156" cy="174" r="10" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
+                        <line x1="60" y1="128" x2="32" y2="146" stroke="#c3c8d1" stroke-width="20" stroke-linecap="round"/>
+                        <line x1="60" y1="128" x2="32" y2="146" stroke="url(#gradBody)" stroke-width="16" stroke-linecap="round"/>
+                        <circle cx="32" cy="146" r="9" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
+                        <line x1="32" y1="146" x2="44" y2="174" stroke="#c3c8d1" stroke-width="18" stroke-linecap="round"/>
+                        <line x1="32" y1="146" x2="44" y2="174" stroke="url(#gradBody)" stroke-width="14" stroke-linecap="round"/>
+                        <circle cx="44" cy="174" r="10" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
+                        <rect x="80" y="172" width="40" height="40" rx="14" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
+                        <rect x="62" y="118" width="76" height="62" rx="26" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2"/>
+                        <circle cx="100" cy="146" r="6" fill="url(#gradEye)" opacity="0.85"/>
+                        <rect x="97" y="6" width="6" height="18" rx="3" fill="#c3c8d1"/>
+                        <circle cx="100" cy="6" r="8" fill="url(#gradEye)"/>
+                        <rect x="34" y="24" width="132" height="104" rx="36" fill="url(#gradBody)" stroke="#c3c8d1" stroke-width="2.5"/>
+                        <rect x="52" y="42" width="96" height="64" rx="20" fill="url(#gradScreen)"/>
+                        <path d="M76 66 Q86 52 96 66" stroke="url(#gradEye)" stroke-width="7" fill="none" stroke-linecap="round"/>
+                        <path d="M104 66 Q114 52 124 66" stroke="url(#gradEye)" stroke-width="7" fill="none" stroke-linecap="round"/>
+                        <rect x="91" y="84" width="18" height="4.5" rx="2.25" fill="#ff9bd6" opacity="0.9"/>
                     </svg>
                 </div>
                 <div class="illus-caption">Teman ngobrol yang selalu <b>tenang</b> dan siap dengar, kapan pun kamu butuh.</div>
