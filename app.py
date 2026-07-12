@@ -1578,9 +1578,9 @@ def t(key):
 # 6. LOGIN SUPABASE
 # =====================
 if not st.session_state.logged_in:
-    _login_text_dim = "rgba(0,0,0,0.55)" if st.session_state.theme == "light" else "rgba(255,255,255,0.45)"
-    _login_text_dimmer = "rgba(0,0,0,0.3)" if st.session_state.theme == "light" else "rgba(255,255,255,0.18)"
-    _login_text_main = "#2b2b40" if st.session_state.theme == "light" else "#f3f3f6"
+    _login_text_dim = "rgba(255,255,255,0.45)"
+    _login_text_dimmer = "rgba(255,255,255,0.18)"
+    _login_text_main = "#f3f3f6"
     _accent_login = st.session_state.get("theme_color", "#ff8ad8")
 
     st.markdown(f"""
@@ -1614,6 +1614,84 @@ if not st.session_state.logged_in:
         font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 12px !important;
+    }
+
+    /* ===== HALAMAN LOGIN SELALU GELAP, TERLEPAS DARI TEMA SITUS ===== */
+    .stApp {
+        background:
+            radial-gradient(560px 420px at 50% 18%, rgba(255,63,164,0.10), transparent 70%),
+            radial-gradient(640px 480px at 80% 85%, rgba(110,107,255,0.07), transparent 70%),
+            radial-gradient(640px 480px at 10% 90%, rgba(177,78,255,0.06), transparent 70%),
+            #0a0e1a !important;
+        background-attachment: fixed !important;
+    }
+    html, body, .stApp { color: #f3f3f6 !important; }
+
+    .st-key-login_card_wrap {
+        background: linear-gradient(180deg, #181a24, #13141c) !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        box-shadow:
+            0 24px 60px -20px rgba(0,0,0,0.6),
+            0 0 80px -20px rgba(255,63,164,0.08) !important;
+    }
+    .st-key-login_card_wrap [data-testid="stMarkdownContainer"] p,
+    .st-key-login_card_wrap [data-testid="stMarkdownContainer"] li,
+    .st-key-login_card_wrap [data-testid="stMarkdownContainer"] strong {
+        color: #f3f3f6 !important;
+    }
+    .st-key-login_card_wrap [data-testid="stTextInput"] > div,
+    .st-key-login_card_wrap [data-testid="stTextInput"] > div > div,
+    .st-key-login_card_wrap [data-testid="stTextInput"] [data-baseweb="base-input"],
+    .st-key-login_card_wrap [data-testid="stTextInput"] [data-baseweb="input"] {
+        background: rgba(255,255,255,0.045) !important;
+        border-color: rgba(255,255,255,0.14) !important;
+    }
+    .st-key-login_card_wrap [data-testid="stTextInput"] input {
+        background: transparent !important;
+        color: #f3f3f6 !important;
+        -webkit-text-fill-color: #f3f3f6 !important;
+        caret-color: #f3f3f6 !important;
+    }
+    .st-key-login_card_wrap [data-testid="stTextInput"] input::placeholder {
+        color: rgba(255,255,255,0.35) !important;
+        -webkit-text-fill-color: rgba(255,255,255,0.35) !important;
+    }
+    .st-key-login_card_wrap [data-testid="stTextInput"] label p {
+        color: rgba(255,255,255,0.5) !important;
+    }
+    .st-key-login_card_wrap [data-testid="stTextInput"] [data-baseweb="input"] button svg {
+        fill: rgba(255,255,255,0.45) !important;
+    }
+    .st-key-login_card_wrap [data-testid="stTabs"] [data-testid="stTab"] {
+        color: rgba(255,255,255,0.5) !important;
+    }
+    .st-key-login_card_wrap [data-testid="stTabs"] [data-testid="stTab"][aria-selected="true"] {
+        color: #FF3FA4 !important;
+    }
+    .st-key-login_card_wrap [data-testid="stTabs"] [data-baseweb="tab-border"] {
+        background: rgba(255,255,255,0.1) !important;
+    }
+    .st-key-login_card_wrap [data-testid="stCheckbox"] label p,
+    .st-key-login_card_wrap [data-testid="stCheckbox"] label span {
+        color: rgba(255,255,255,0.55) !important;
+    }
+    .st-key-login_card_wrap [data-testid="stCheckbox"] label a {
+        color: #ff9bd6 !important;
+    }
+    .st-key-login_card_wrap [data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:first-child {
+        background: rgba(255,255,255,0.06) !important;
+        border-color: rgba(255,255,255,0.3) !important;
+    }
+    .st-key-forgot_pw_btn button {
+        color: rgba(255,255,255,0.5) !important;
+    }
+    .st-key-forgot_pw_btn button:hover {
+        color: #FF3FA4 !important;
+    }
+    .st-key-login_card_wrap [data-testid="stAlertContentError"],
+    .st-key-login_card_wrap [data-testid="stAlertContentSuccess"],
+    .st-key-login_card_wrap [data-testid="stAlertContentWarning"] {
+        color: #f3f3f6 !important;
     }
     </style>
     """, unsafe_allow_html=True)
