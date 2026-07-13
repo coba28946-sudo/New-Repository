@@ -769,23 +769,29 @@ small[data-testid="InputInstructions"],
 
 /* ===== PANEL FORM (kanan) ===== */
 .st-key-login_form_panel {
-    padding: 34px 34px 20px;
+    padding: 28px 32px 18px;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 .st-key-login_form_panel [data-testid="stVerticalBlock"] {
-    gap: 0.55rem !important;
+    gap: 0.35rem !important;
 }
 .st-key-login_form_panel [data-testid="stElementContainer"] {
     margin-bottom: 0 !important;
+}
+.st-key-login_form_panel [data-testid="stTextInput"] input {
+    height: 42px !important;
+}
+.st-key-login_form_panel [data-testid="stTabs"] {
+    margin-bottom: 4px !important;
 }
 
 .mini-brand-badge {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 18px;
+    margin-bottom: 12px;
 }
 .mini-brand-badge .mini-orb {
     width: 26px;
@@ -817,7 +823,7 @@ small[data-testid="InputInstructions"],
 }
 .form-subtitle {
     font-size: 13px;
-    margin: 0 0 18px;
+    margin: 0 0 12px;
 }
 
 html, body { overflow-x: hidden !important; }
