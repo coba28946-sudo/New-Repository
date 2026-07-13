@@ -766,6 +766,18 @@ small[data-testid="InputInstructions"],
     max-width: 230px;
 }
 .illus-caption b { color: #ff9bd6; font-weight: 600; }
+.illus-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 24px;
+    box-sizing: border-box;
+}
 
 /* ===== PANEL FORM (kanan) ===== */
 .st-key-login_form_panel {
@@ -1790,6 +1802,7 @@ if not st.session_state.logged_in:
                 _robot_svg = """
                 <div class="login-ring r1"></div>
                 <div class="login-ring r2"></div>
+                <div class="illus-content">
                 <div class="robot-wrap">
                     <div class="robot-glow"></div>
                     <svg class="robot-svg" viewBox="0 0 180 220" fill="none">
@@ -1835,6 +1848,7 @@ if not st.session_state.logged_in:
                     </svg>
                 </div>
                 <div class="illus-caption">Teman ngobrol yang selalu <b>tenang</b> dan siap dengar, kapan pun kamu butuh.</div>
+                </div>
                 """
                 st.markdown(" ".join(_robot_svg.split()), unsafe_allow_html=True)
 
