@@ -710,6 +710,14 @@ small[data-testid="InputInstructions"],
     position: relative;
     overflow: hidden;
 }
+.st-key-login_illus_panel [data-testid="stVerticalBlock"],
+.st-key-login_illus_panel [data-testid="stElementContainer"] {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .login-ring {
     position: absolute;
     border: 1.5px solid rgba(177,78,255,0.28);
