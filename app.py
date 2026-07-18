@@ -663,7 +663,7 @@ small[data-testid="InputInstructions"],
         #0a0e1a !important;
 }
 .st-key-login_card_wrap {
-    max-width: 700px !important;
+    max-width: 740px !important;
     width: 100% !important;
     margin: 40px auto 0 !important;
     background: linear-gradient(180deg, #181a24, #13141c);
