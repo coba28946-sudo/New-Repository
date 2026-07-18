@@ -596,7 +596,7 @@ small[data-testid="InputInstructions"],
     font-weight: 800;
     font-size: 52px;
     letter-spacing: -1px;
-    background: linear-gradient(95deg, #FFFFFF 5%, #D6336C 45%, #A89ADF 75%, #3FA9DA 100%);
+    background: linear-gradient(95deg, #2b2b40 5%, #D6336C 45%, #A855C9 75%, #3FA9DA 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -698,9 +698,9 @@ small[data-testid="InputInstructions"],
 /* ===== PANEL ILUSTRASI ROBOT (kiri) ===== */
 .st-key-login_illus_panel {
     background:
-        radial-gradient(65% 55% at 30% 25%, rgba(255,63,164,0.18), transparent 70%),
-        radial-gradient(65% 60% at 75% 75%, rgba(177,78,255,0.18), transparent 70%),
-        #100c18;
+        radial-gradient(65% 55% at 30% 25%, rgba(255,63,164,0.14), transparent 70%),
+        radial-gradient(65% 60% at 75% 75%, rgba(177,78,255,0.14), transparent 70%),
+        linear-gradient(160deg, #fdeaf5, #eee7fb);
     padding: 36px 24px;
     min-height: 0;
     height: 100%;
@@ -763,11 +763,11 @@ small[data-testid="InputInstructions"],
     margin-top: 6px;
     text-align: center;
     font-size: 13px;
-    color: rgba(255,255,255,0.5);
+    color: rgba(43,43,64,0.6);
     line-height: 1.6;
     max-width: 230px;
 }
-.illus-caption b { color: #ff9bd6; font-weight: 600; }
+.illus-caption b { color: #d6336c; font-weight: 600; }
 .illus-content {
     width: 100%;
     display: flex;
@@ -1643,9 +1643,9 @@ def t(key):
 # 6. LOGIN SUPABASE
 # =====================
 if not st.session_state.logged_in:
-    _login_text_dim = "rgba(255,255,255,0.45)"
-    _login_text_dimmer = "rgba(255,255,255,0.18)"
-    _login_text_main = "#f3f3f6"
+    _login_text_dim = "rgba(43,43,64,0.55)"
+    _login_text_dimmer = "rgba(43,43,64,0.3)"
+    _login_text_main = "#2b2b40"
     _accent_login = st.session_state.get("theme_color", "#ff8ad8")
 
     st.markdown(f"""
@@ -1681,54 +1681,54 @@ if not st.session_state.logged_in:
         border-radius: 12px !important;
     }
 
-    /* ===== HALAMAN LOGIN SELALU GELAP, TERLEPAS DARI TEMA SITUS ===== */
+    /* ===== HALAMAN LOGIN SELALU PUTIH/TERANG, TERLEPAS DARI TEMA SITUS ===== */
     .stApp {
         background:
-            radial-gradient(560px 420px at 50% 18%, rgba(255,63,164,0.10), transparent 70%),
-            radial-gradient(640px 480px at 80% 85%, rgba(110,107,255,0.07), transparent 70%),
-            radial-gradient(640px 480px at 10% 90%, rgba(177,78,255,0.06), transparent 70%),
-            #0a0e1a !important;
+            radial-gradient(560px 420px at 50% 18%, rgba(255,63,164,0.06), transparent 70%),
+            radial-gradient(640px 480px at 80% 85%, rgba(110,107,255,0.05), transparent 70%),
+            radial-gradient(640px 480px at 10% 90%, rgba(177,78,255,0.05), transparent 70%),
+            #f7f6fb !important;
         background-attachment: fixed !important;
     }
-    html, body, .stApp { color: #f3f3f6 !important; }
+    html, body, .stApp { color: #2b2b40 !important; }
 
     .st-key-login_card_wrap {
-        background: linear-gradient(180deg, #181a24, #13141c) !important;
-        border: 1px solid rgba(255,255,255,0.08) !important;
+        background: linear-gradient(180deg, #ffffff, #fbfaff) !important;
+        border: 1px solid #ece9f5 !important;
         box-shadow:
-            0 24px 60px -20px rgba(0,0,0,0.6),
+            0 24px 60px -20px rgba(60,50,90,0.16),
             0 0 80px -20px rgba(255,63,164,0.08) !important;
     }
     .st-key-login_card_wrap [data-testid="stMarkdownContainer"] p,
     .st-key-login_card_wrap [data-testid="stMarkdownContainer"] li,
     .st-key-login_card_wrap [data-testid="stMarkdownContainer"] strong {
-        color: #f3f3f6 !important;
+        color: #2b2b40 !important;
     }
     .st-key-login_card_wrap [data-testid="stTextInput"] > div,
     .st-key-login_card_wrap [data-testid="stTextInput"] > div > div,
     .st-key-login_card_wrap [data-testid="stTextInput"] [data-baseweb="base-input"],
     .st-key-login_card_wrap [data-testid="stTextInput"] [data-baseweb="input"] {
-        background: rgba(255,255,255,0.045) !important;
-        border-color: rgba(255,255,255,0.14) !important;
+        background: #f6f5fa !important;
+        border-color: #e5e1f0 !important;
     }
     .st-key-login_card_wrap [data-testid="stTextInput"] input {
         background: transparent !important;
-        color: #f3f3f6 !important;
-        -webkit-text-fill-color: #f3f3f6 !important;
-        caret-color: #f3f3f6 !important;
+        color: #2b2b40 !important;
+        -webkit-text-fill-color: #2b2b40 !important;
+        caret-color: #2b2b40 !important;
     }
     .st-key-login_card_wrap [data-testid="stTextInput"] input::placeholder {
-        color: rgba(255,255,255,0.35) !important;
-        -webkit-text-fill-color: rgba(255,255,255,0.35) !important;
+        color: rgba(43,43,64,0.35) !important;
+        -webkit-text-fill-color: rgba(43,43,64,0.35) !important;
     }
     .st-key-login_card_wrap [data-testid="stTextInput"] label p {
-        color: rgba(255,255,255,0.5) !important;
+        color: rgba(43,43,64,0.55) !important;
     }
     .st-key-login_card_wrap [data-testid="stTextInput"] [data-baseweb="input"] button svg {
-        fill: rgba(255,255,255,0.45) !important;
+        fill: rgba(43,43,64,0.4) !important;
     }
     .st-key-login_card_wrap [data-testid="stTextInput"] input[placeholder="email@gmail.com"] {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239a95a8' stroke-width='1.8'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 4-6 8-6s8 2 8 6'/%3E%3C/svg%3E") !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23837c95' stroke-width='1.8'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 4-6 8-6s8 2 8 6'/%3E%3C/svg%3E") !important;
         background-repeat: no-repeat !important;
         background-position: 14px center !important;
         padding-left: 40px !important;
@@ -1736,33 +1736,33 @@ if not st.session_state.logged_in:
     .st-key-login_card_wrap [data-testid="stTextInput"] input[placeholder="Password kamu"],
     .st-key-login_card_wrap [data-testid="stTextInput"] input[placeholder="Minimal 6 karakter"],
     .st-key-login_card_wrap [data-testid="stTextInput"] input[placeholder="Ketik ulang password"] {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%239a95a8' stroke-width='1.8'%3E%3Crect x='4' y='10' width='16' height='10' rx='2.5'/%3E%3Cpath d='M7.5 10V7a4.5 4.5 0 0 1 9 0v3'/%3E%3C/svg%3E") !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%23837c95' stroke-width='1.8'%3E%3Crect x='4' y='10' width='16' height='10' rx='2.5'/%3E%3Cpath d='M7.5 10V7a4.5 4.5 0 0 1 9 0v3'/%3E%3C/svg%3E") !important;
         background-repeat: no-repeat !important;
         background-position: 14px center !important;
         padding-left: 40px !important;
     }
     .st-key-login_card_wrap [data-testid="stTabs"] [data-testid="stTab"] {
-        color: rgba(255,255,255,0.5) !important;
+        color: rgba(43,43,64,0.5) !important;
     }
     .st-key-login_card_wrap [data-testid="stTabs"] [data-testid="stTab"][aria-selected="true"] {
         color: #FF3FA4 !important;
     }
     .st-key-login_card_wrap [data-testid="stTabs"] [data-baseweb="tab-border"] {
-        background: rgba(255,255,255,0.1) !important;
+        background: #ece9f5 !important;
     }
     .st-key-login_card_wrap [data-testid="stCheckbox"] label p,
     .st-key-login_card_wrap [data-testid="stCheckbox"] label span {
-        color: rgba(255,255,255,0.55) !important;
+        color: rgba(43,43,64,0.6) !important;
     }
     .st-key-login_card_wrap [data-testid="stCheckbox"] label a {
-        color: #ff9bd6 !important;
+        color: #d6336c !important;
     }
     .st-key-login_card_wrap [data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:first-child {
-        background: rgba(255,255,255,0.06) !important;
-        border-color: rgba(255,255,255,0.3) !important;
+        background: #f6f5fa !important;
+        border-color: #d9d4e8 !important;
     }
     .st-key-forgot_pw_btn button {
-        color: rgba(255,255,255,0.5) !important;
+        color: rgba(43,43,64,0.5) !important;
     }
     .st-key-forgot_pw_btn button:hover {
         color: #FF3FA4 !important;
@@ -1770,7 +1770,7 @@ if not st.session_state.logged_in:
     .st-key-login_card_wrap [data-testid="stAlertContentError"],
     .st-key-login_card_wrap [data-testid="stAlertContentSuccess"],
     .st-key-login_card_wrap [data-testid="stAlertContentWarning"] {
-        color: #f3f3f6 !important;
+        color: #2b2b40 !important;
     }
     .st-key-login_btn button,
     .st-key-register_btn button,
@@ -1794,14 +1794,15 @@ if not st.session_state.logged_in:
         color: #ffffff !important;
     }
     .st-key-back_to_login_btn button {
-        background: rgba(255,255,255,0.045) !important;
-        border: 1px solid rgba(255,255,255,0.14) !important;
-        color: rgba(255,255,255,0.6) !important;
+        background: #f6f5fa !important;
+        border: 1px solid #e5e1f0 !important;
+        color: rgba(43,43,64,0.65) !important;
     }
     .st-key-back_to_login_btn button p {
-        color: rgba(255,255,255,0.6) !important;
+        color: rgba(43,43,64,0.65) !important;
     }
     </style>
+
     """, unsafe_allow_html=True)
 
     login_card = st.container(key="login_card_wrap")
