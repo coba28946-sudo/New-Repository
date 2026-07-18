@@ -1693,11 +1693,14 @@ if not st.session_state.logged_in:
     html, body, .stApp { color: #2b2b40 !important; }
 
     .st-key-login_card_wrap {
-        background: linear-gradient(180deg, #ffffff, #fbfaff) !important;
+        background: linear-gradient(160deg, #fdeaf5, #eee7fb) !important;
         border: 1px solid #ece9f5 !important;
         box-shadow:
             0 24px 60px -20px rgba(60,50,90,0.16),
             0 0 80px -20px rgba(255,63,164,0.08) !important;
+    }
+    .st-key-login_form_panel {
+        background: #ffffff !important;
     }
     .st-key-login_card_wrap [data-testid="stMarkdownContainer"] p,
     .st-key-login_card_wrap [data-testid="stMarkdownContainer"] li,
