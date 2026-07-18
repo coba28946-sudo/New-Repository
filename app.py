@@ -1726,6 +1726,20 @@ if not st.session_state.logged_in:
     .st-key-login_card_wrap [data-testid="stTextInput"] [data-baseweb="input"] button svg {
         fill: rgba(255,255,255,0.45) !important;
     }
+    .st-key-login_card_wrap [data-testid="stTextInput"] input[placeholder="email@gmail.com"] {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239a95a8' stroke-width='1.8'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 4-6 8-6s8 2 8 6'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: 14px center !important;
+        padding-left: 40px !important;
+    }
+    .st-key-login_card_wrap [data-testid="stTextInput"] input[placeholder="Password kamu"],
+    .st-key-login_card_wrap [data-testid="stTextInput"] input[placeholder="Minimal 6 karakter"],
+    .st-key-login_card_wrap [data-testid="stTextInput"] input[placeholder="Ketik ulang password"] {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%239a95a8' stroke-width='1.8'%3E%3Crect x='4' y='10' width='16' height='10' rx='2.5'/%3E%3Cpath d='M7.5 10V7a4.5 4.5 0 0 1 9 0v3'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: 14px center !important;
+        padding-left: 40px !important;
+    }
     .st-key-login_card_wrap [data-testid="stTabs"] [data-testid="stTab"] {
         color: rgba(255,255,255,0.5) !important;
     }
