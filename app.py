@@ -675,6 +675,7 @@ small[data-testid="InputInstructions"],
         0 0 80px -20px rgba(255,63,164,0.08);
 }
 .st-key-login_card_wrap [data-testid="stHorizontalBlock"] {
+    display: flex !important;
     display: grid !important;
     grid-template-columns: 1fr 1.15fr !important;
     align-items: stretch !important;
@@ -767,10 +768,6 @@ small[data-testid="InputInstructions"],
 }
 .illus-caption b { color: #ff9bd6; font-weight: 600; }
 .illus-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 100%;
     display: flex;
     flex-direction: column;
