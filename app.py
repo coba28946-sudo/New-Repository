@@ -767,6 +767,8 @@ small[data-testid="InputInstructions"],
 .st-key-login_form_panel {
     padding: 28px 32px 18px;
     margin-left: 46.5%;
+    width: 53.5%;
+    max-width: 53.5%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -776,8 +778,14 @@ small[data-testid="InputInstructions"],
 }
 .st-key-login_form_panel [data-testid="stVerticalBlock"] {
     gap: 0.35rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 .st-key-login_form_panel [data-testid="stElementContainer"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
     margin-bottom: 0 !important;
 }
 .st-key-login_form_panel [data-testid="stTextInput"] input {
