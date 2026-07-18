@@ -671,50 +671,36 @@ small[data-testid="InputInstructions"],
     border-radius: 22px;
     padding: 0;
     overflow: hidden;
+    position: relative !important;
+    min-height: 420px;
     box-shadow:
         0 24px 60px -20px rgba(0,0,0,0.6),
         0 0 80px -20px rgba(255,63,164,0.08);
 }
-.st-key-login_card_wrap [data-testid="stHorizontalBlock"] {
-    display: flex !important;
-    display: grid !important;
-    grid-template-columns: 1fr 1.15fr !important;
-    align-items: stretch !important;
-    gap: 0 !important;
-}
-.st-key-login_card_wrap [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    min-width: 0 !important;
-}
-.st-key-login_card_wrap [data-testid="stColumn"] > div {
-    display: flex !important;
-    flex-direction: column !important;
-    flex: 1 1 auto !important;
-    height: 100% !important;
-}
 
-/* ===== PANEL ILUSTRASI ROBOT (kiri) ===== */
+/* ===== PANEL ILUSTRASI ROBOT (kiri) — overlay absolute, gak lagi bersaing tinggi sama form ===== */
 .st-key-login_illus_panel {
     background:
         radial-gradient(65% 55% at 30% 25%, rgba(255,63,164,0.14), transparent 70%),
         radial-gradient(65% 60% at 75% 75%, rgba(177,78,255,0.14), transparent 70%),
         linear-gradient(160deg, #fdeaf5, #eee7fb);
     padding: 36px 24px;
-    min-height: 0;
-    height: 100%;
-    flex: 1 1 auto;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 46.5%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: relative;
     overflow: hidden;
+    z-index: 1;
 }
 .st-key-login_illus_panel [data-testid="stVerticalBlock"],
 .st-key-login_illus_panel [data-testid="stElementContainer"] {
     height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -780,9 +766,13 @@ small[data-testid="InputInstructions"],
 /* ===== PANEL FORM (kanan) ===== */
 .st-key-login_form_panel {
     padding: 28px 32px 18px;
+    margin-left: 46.5%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
 }
 .st-key-login_form_panel [data-testid="stVerticalBlock"] {
     gap: 0.35rem !important;
@@ -844,19 +834,13 @@ html, body { overflow-x: hidden !important; }
         max-width: calc(100vw - 32px) !important;
         width: calc(100vw - 32px) !important;
         margin: 16px auto 0 !important;
+        min-height: 0;
     }
     .st-key-login_illus_panel { display: none !important; }
     .login-top-brand { display: none !important; }
-    .st-key-login_form_panel { padding: 26px 22px 22px !important; }
-    .st-key-login_card_wrap [data-testid="stHorizontalBlock"] {
-        display: block !important;
-        width: 100% !important;
-    }
-    .st-key-login_card_wrap [data-testid="stColumn"]:has(.st-key-login_illus_panel) {
-        display: none !important;
-    }
-    .st-key-login_card_wrap [data-testid="stColumn"]:has(.st-key-login_form_panel) {
-        width: 100% !important;
+    .st-key-login_form_panel {
+        padding: 26px 22px 22px !important;
+        margin-left: 0 !important;
     }
 }
 
@@ -1810,65 +1794,62 @@ if not st.session_state.logged_in:
 
     login_card = st.container(key="login_card_wrap")
     with login_card:
-        col_illus, col_form = st.columns([1, 1.15])
+        illus_panel = st.container(key="login_illus_panel")
+        with illus_panel:
+            _robot_svg = """
+            <div class="login-ring r1"></div>
+            <div class="login-ring r2"></div>
+            <div class="illus-content">
+            <div class="robot-wrap">
+                <div class="robot-glow"></div>
+                <svg class="robot-svg" viewBox="0 0 180 220" fill="none">
+                    <defs>
+                        <linearGradient id="gradBody" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#fdfdfe"/>
+                            <stop offset="100%" stop-color="#d8dce4"/>
+                        </linearGradient>
+                        <linearGradient id="gradScreen" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#26192f"/>
+                            <stop offset="100%" stop-color="#160f1c"/>
+                        </linearGradient>
+                        <linearGradient id="gradEye" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#FF6FBF"/>
+                            <stop offset="100%" stop-color="#B14EFF"/>
+                        </linearGradient>
+                        <linearGradient id="gradFlag" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#FF3FA4"/>
+                            <stop offset="100%" stop-color="#ff9bd6"/>
+                        </linearGradient>
+                    </defs>
+                    <ellipse cx="90" cy="197" rx="46" ry="19" fill="#151318"/>
+                    <ellipse cx="90" cy="197" rx="46" ry="19" fill="none" stroke="#2c2a33" stroke-width="2"/>
+                    <circle cx="90" cy="197" r="11" fill="#2c2a33"/>
+                    <circle cx="90" cy="197" r="4" fill="#48454f"/>
+                    <rect x="75" y="150" width="30" height="42" rx="10" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
+                    <rect x="68" y="118" width="44" height="38" rx="15" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
+                    <polygon points="28,92 55,78 62,100 48,132 22,122" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
+                    <polygon points="152,92 125,78 118,100 132,132 158,122" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
+                    <circle cx="57" cy="103" r="4.5" fill="url(#gradEye)"/>
+                    <circle cx="123" cy="103" r="4.5" fill="url(#gradEye)"/>
+                    <rect x="44" y="38" width="92" height="70" rx="26" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="2"/>
+                    <rect x="57" y="55" width="66" height="38" rx="12" fill="url(#gradScreen)"/>
+                    <rect x="70" y="66" width="9" height="18" rx="4.5" fill="url(#gradEye)"/>
+                    <rect x="101" y="66" width="9" height="18" rx="4.5" fill="url(#gradEye)"/>
+                    <rect x="82" y="87" width="16" height="4" rx="2" fill="#ff9bd6" opacity="0.85"/>
+                    <rect x="87" y="24" width="4" height="16" rx="2" fill="#c7cbd4"/>
+                    <circle cx="89" cy="22" r="6.5" fill="url(#gradEye)"/>
+                    <g transform="rotate(-10 128 18)">
+                        <polygon points="112,8 148,-2 142,24 106,32" fill="url(#gradFlag)" opacity="0.9"/>
+                        <polygon points="126,16 158,8 152,32 120,40" fill="url(#gradFlag)" opacity="0.55"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="illus-caption">Teman ngobrol yang selalu <b>tenang</b> dan siap dengar, kapan pun kamu butuh.</div>
+            </div>
+            """
+            st.markdown(" ".join(_robot_svg.split()), unsafe_allow_html=True)
 
-        with col_illus:
-            illus_panel = st.container(key="login_illus_panel")
-            with illus_panel:
-                _robot_svg = """
-                <div class="login-ring r1"></div>
-                <div class="login-ring r2"></div>
-                <div class="illus-content">
-                <div class="robot-wrap">
-                    <div class="robot-glow"></div>
-                    <svg class="robot-svg" viewBox="0 0 180 220" fill="none">
-                        <defs>
-                            <linearGradient id="gradBody" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#fdfdfe"/>
-                                <stop offset="100%" stop-color="#d8dce4"/>
-                            </linearGradient>
-                            <linearGradient id="gradScreen" x1="0" y1="0" x2="1" y2="1">
-                                <stop offset="0%" stop-color="#26192f"/>
-                                <stop offset="100%" stop-color="#160f1c"/>
-                            </linearGradient>
-                            <linearGradient id="gradEye" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#FF6FBF"/>
-                                <stop offset="100%" stop-color="#B14EFF"/>
-                            </linearGradient>
-                            <linearGradient id="gradFlag" x1="0" y1="0" x2="1" y2="1">
-                                <stop offset="0%" stop-color="#FF3FA4"/>
-                                <stop offset="100%" stop-color="#ff9bd6"/>
-                            </linearGradient>
-                        </defs>
-                        <ellipse cx="90" cy="197" rx="46" ry="19" fill="#151318"/>
-                        <ellipse cx="90" cy="197" rx="46" ry="19" fill="none" stroke="#2c2a33" stroke-width="2"/>
-                        <circle cx="90" cy="197" r="11" fill="#2c2a33"/>
-                        <circle cx="90" cy="197" r="4" fill="#48454f"/>
-                        <rect x="75" y="150" width="30" height="42" rx="10" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
-                        <rect x="68" y="118" width="44" height="38" rx="15" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
-                        <polygon points="28,92 55,78 62,100 48,132 22,122" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
-                        <polygon points="152,92 125,78 118,100 132,132 158,122" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="1.5"/>
-                        <circle cx="57" cy="103" r="4.5" fill="url(#gradEye)"/>
-                        <circle cx="123" cy="103" r="4.5" fill="url(#gradEye)"/>
-                        <rect x="44" y="38" width="92" height="70" rx="26" fill="url(#gradBody)" stroke="#c7cbd4" stroke-width="2"/>
-                        <rect x="57" y="55" width="66" height="38" rx="12" fill="url(#gradScreen)"/>
-                        <rect x="70" y="66" width="9" height="18" rx="4.5" fill="url(#gradEye)"/>
-                        <rect x="101" y="66" width="9" height="18" rx="4.5" fill="url(#gradEye)"/>
-                        <rect x="82" y="87" width="16" height="4" rx="2" fill="#ff9bd6" opacity="0.85"/>
-                        <rect x="87" y="24" width="4" height="16" rx="2" fill="#c7cbd4"/>
-                        <circle cx="89" cy="22" r="6.5" fill="url(#gradEye)"/>
-                        <g transform="rotate(-10 128 18)">
-                            <polygon points="112,8 148,-2 142,24 106,32" fill="url(#gradFlag)" opacity="0.9"/>
-                            <polygon points="126,16 158,8 152,32 120,40" fill="url(#gradFlag)" opacity="0.55"/>
-                        </g>
-                    </svg>
-                </div>
-                <div class="illus-caption">Teman ngobrol yang selalu <b>tenang</b> dan siap dengar, kapan pun kamu butuh.</div>
-                </div>
-                """
-                st.markdown(" ".join(_robot_svg.split()), unsafe_allow_html=True)
-
-        with col_form:
+        if True:
             form_panel = st.container(key="login_form_panel")
             with form_panel:
                 _mini_badge_html = f"""
