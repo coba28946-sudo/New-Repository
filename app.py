@@ -663,7 +663,7 @@ small[data-testid="InputInstructions"],
         #0a0e1a !important;
 }
 .st-key-login_card_wrap {
-    max-width: 800px !important;
+    max-width: min(800px, calc(100vw - 40px)) !important;
     width: 100% !important;
     margin: 40px auto 0 !important;
     background: linear-gradient(180deg, #181a24, #13141c);
@@ -1795,6 +1795,82 @@ if not st.session_state.logged_in:
     }
     .st-key-back_to_login_btn button p {
         color: rgba(43,43,64,0.65) !important;
+    }
+
+    /* ===== POLESAN MODERN ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&display=swap');
+
+    .st-key-login_card_wrap {
+        background: rgba(255,255,255,0.72) !important;
+        -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
+        backdrop-filter: blur(22px) saturate(160%) !important;
+        box-shadow:
+            0 30px 70px -28px rgba(120,60,140,0.22),
+            0 0 0 1px rgba(255,255,255,0.6) inset !important;
+        animation: cardRise 0.55s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes cardRise {
+        from { opacity: 0; transform: translateY(16px) scale(0.985); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .login-brand-name, .form-heading {
+        font-family: 'Outfit', sans-serif !important;
+    }
+    .form-heading {
+        font-weight: 700 !important;
+        letter-spacing: -0.4px !important;
+    }
+
+    .st-key-login_form_panel [data-testid="stTabs"] [data-baseweb="tab-list"] {
+        background: rgba(43,43,64,0.045) !important;
+        border-radius: 999px !important;
+        padding: 4px !important;
+        gap: 2px !important;
+        border-bottom: none !important;
+        display: inline-flex !important;
+    }
+    .st-key-login_form_panel [data-testid="stTabs"] [data-testid="stTab"] {
+        border-radius: 999px !important;
+        padding: 7px 18px !important;
+        font-weight: 700 !important;
+        transition: background 0.25s ease, color 0.25s ease !important;
+    }
+    .st-key-login_form_panel [data-testid="stTabs"] [data-testid="stTab"][aria-selected="true"] {
+        background: linear-gradient(100deg, #ffe1f0, #ecdcff) !important;
+        color: #b3266f !important;
+    }
+    .st-key-login_card_wrap [data-testid="stTabs"] [data-baseweb="tab-border"],
+    .st-key-login_card_wrap [data-testid="stTabs"] [data-baseweb="tab-highlight"] {
+        display: none !important;
+    }
+
+    .st-key-login_form_panel [data-testid="stTextInput"] > div,
+    .st-key-login_form_panel [data-testid="stTextInput"] > div > div,
+    .st-key-login_form_panel [data-testid="stTextInput"] [data-baseweb="base-input"],
+    .st-key-login_form_panel [data-testid="stTextInput"] [data-baseweb="input"] {
+        border-radius: 16px !important;
+        background: rgba(43,43,64,0.035) !important;
+        border-color: transparent !important;
+        transition: box-shadow 0.2s ease, background 0.2s ease !important;
+    }
+    .st-key-login_form_panel [data-testid="stTextInput"] input:focus {
+        background: #ffffff !important;
+    }
+    .st-key-login_form_panel [data-testid="stTextInput"] > div:focus-within,
+    .st-key-login_form_panel [data-testid="stTextInput"] > div > div:focus-within {
+        box-shadow: 0 0 0 3px rgba(214,51,124,0.16) !important;
+    }
+
+    .st-key-login_btn button,
+    .st-key-register_btn button,
+    .st-key-send_reset_btn button {
+        border-radius: 999px !important;
+        letter-spacing: 0.2px !important;
+    }
+
+    .st-key-login_illus_panel {
+        border-radius: 22px 0 0 22px !important;
     }
     </style>
 
