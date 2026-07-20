@@ -1287,16 +1287,15 @@ def render_dynamic_css():
     * {{ scrollbar-width: thin; scrollbar-color: rgba({r},{g},{b},0.5) transparent; }}
     html {{ scrollbar-color: rgba({r},{g},{b},0.6) transparent !important; }}
 
-    /* Background utama app - netral lembut dengan sentuhan warna aksen yang halus */
+    /* Background utama app - nuansa biru langit lembut ala Blue Archive, aksen pink-purple tetap ada tapi sekunder */
     .stApp {{
         background: {
             (bg_main)
             if theme == "dark" else
-            ("radial-gradient(500px 380px at 70% 8%, rgba(255,255,255,0.6), transparent 60%),"
-             "radial-gradient(650px 500px at 12% 10%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.06), transparent 65%),"
-             "radial-gradient(650px 500px at 90% 40%, rgba(" + str(r_pink) + "," + str(g_pink) + "," + str(b_pink) + ",0.08), transparent 65%),"
-             "radial-gradient(750px 560px at 50% 105%, rgba(" + str(r_blue) + "," + str(g_blue) + "," + str(b_blue) + ",0.07), transparent 65%),"
-             "#f7f6fb")
+            ("radial-gradient(800px 560px at 50% -8%, rgba(180,215,252,0.55), transparent 65%),"
+             "radial-gradient(600px 460px at 88% 18%, rgba(" + str(r_pink) + "," + str(g_pink) + "," + str(b_pink) + ",0.10), transparent 65%),"
+             "radial-gradient(600px 460px at 6% 85%, rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.08), transparent 65%),"
+             "linear-gradient(180deg, #eaf3fc 0%, #f2f6fb 45%, #f8f7fb 100%)")
         } !important;
         background-attachment: fixed !important;
     }}
