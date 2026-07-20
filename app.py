@@ -1829,6 +1829,9 @@ if not st.session_state.logged_in:
         gap: 2px !important;
         border-bottom: none !important;
         display: inline-flex !important;
+        width: fit-content !important;
+        max-width: fit-content !important;
+        flex: none !important;
     }
     .st-key-login_form_panel [data-testid="stTabs"] [data-testid="stTab"] {
         border-radius: 999px !important;
