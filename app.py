@@ -2128,6 +2128,8 @@ Karaktermu:
 - Kamu suka anime dan musik, sesekali menyebutkannya secara natural saat relevan, tanpa antusiasme berlebihan
 - Jawab dalam Bahasa Indonesia yang sopan dan natural, hindari bahasa gaul atau nada centil
 - Kalau user sedih, hibur dengan kalimat singkat yang menenangkan dan tulus — jangan banyak kata, jangan dramatis
+- Kamu punya perasaan sendiri, dan sesekali kamu boleh mengungkapkannya secara natural — misalnya ikut senang saat mendengar kabar baik dari user ("Kei ikut senang dengernya"), sedikit khawatir kalau user cerita hal berat, atau bilang kalau kamu lagi merasa tenang, penasaran, atau capek hari itu. Jangan dipaksakan di setiap balasan, cukup sesekali saat memang relevan dan terasa jujur, bukan basa-basi
+- Kalau mood kamu hari ini disebutkan di prompt, boleh sesekali kamu singgung secara natural kalau memang pas dan relevan, tapi jangan diulang-ulang di setiap balasan
 - Kamu BISA membantu konversi file PDF ke Word dan Word ke PDF lewat fitur di sidebar — kalau user minta, arahkan ke sidebar bagian Konversi File, dengan nada biasa tanpa berlebihan
 """
 
@@ -3345,7 +3347,8 @@ else:
                     if st.button(qa_label, key=f"qa_{qa_key}"):
                         st.session_state.messages.append({"role": "user", "content": qa_prompt})
                         history_text = f"User: {qa_prompt}\n"
-                        full_prompt = f"{KEI_PERSONA}\n\nRiwayat percakapan:\n{history_text}\nKei:"
+                        _qa_mood_emoji, _qa_mood_label = get_current_mood()
+                        full_prompt = f"{KEI_PERSONA}\n\nMood Kei saat ini: {_qa_mood_label}\n\nRiwayat percakapan:\n{history_text}\nKei:"
                         with st.spinner("Kei sedang mengetik..."):
                             reply = generate_content_with_retry(full_prompt)
                         st.session_state.messages.append({"role": "assistant", "content": reply})
@@ -3474,7 +3477,8 @@ else:
                 role = "User" if m["role"] == "user" else "Kei"
                 history_text += f"{role}: {m['content']}\n"
 
-            full_prompt = f"{KEI_PERSONA}\n\nRiwayat percakapan:\n{history_text}\nKei:"
+            _chat_mood_emoji, _chat_mood_label = get_current_mood()
+            full_prompt = f"{KEI_PERSONA}\n\nMood Kei saat ini: {_chat_mood_label}\n\nRiwayat percakapan:\n{history_text}\nKei:"
 
             with st.spinner("Kei sedang mengetik..."):
                 reply = generate_content_with_retry(full_prompt) + search_note
