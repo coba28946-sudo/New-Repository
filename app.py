@@ -1115,8 +1115,14 @@ def render_dynamic_css():
         backdrop-filter: blur(14px) !important;
         -webkit-backdrop-filter: blur(14px) !important;
         border: 1px solid {glass_border} !important;
-        border-radius: 14px !important;
+        border-radius: 16px !important;
         margin-bottom: 10px !important;
+        box-shadow: 0 4px 14px -8px rgba(30,20,50,0.12) !important;
+        transition: box-shadow 0.2s ease, transform 0.15s ease !important;
+    }}
+    .kei-sidebar-inner [data-testid="stExpander"]:hover {{
+        box-shadow: 0 8px 20px -8px rgba(216,51,140,0.18) !important;
+        transform: translateY(-1px) !important;
     }}
     .kei-sidebar-inner [data-testid="stExpander"] summary {{
         color: {text_main} !important;
@@ -2748,6 +2754,17 @@ MENU_ICONS = {
     "export": "💾",
 }
 
+MENU_ICON_BG = {
+    "mood": "linear-gradient(150deg,#ffd7ea,#ffb8dc)",
+    "sticker": "linear-gradient(150deg,#ffe9b8,#ffd27a)",
+    "music": "linear-gradient(150deg,#e3d7ff,#c9b3ff)",
+    "convert": "linear-gradient(150deg,#cfeaff,#a6d6ff)",
+    "settings": "linear-gradient(150deg,#d3f5e6,#a8ecd0)",
+    "stats": "linear-gradient(150deg,#ffd7ea,#ffb8dc)",
+    "search": "linear-gradient(150deg,#e3d7ff,#c9b3ff)",
+    "export": "linear-gradient(150deg,#cfeaff,#a6d6ff)",
+}
+
 def strip_emoji_prefix(label_text):
     parts = label_text.split(" ", 1)
     return parts[1] if len(parts) == 2 else label_text
@@ -2847,8 +2864,11 @@ with st.sidebar:
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        width: 22px !important;
-        margin-right: 10px !important;
+        width: 30px !important;
+        height: 30px !important;
+        margin-right: 12px !important;
+        border-radius: 10px !important;
+        background: {MENU_ICON_BG.get(key, "rgba(255,255,255,0.06)")} !important;
         font-size: 14px !important;
         flex-shrink: 0 !important;
     }}
@@ -2862,6 +2882,38 @@ with st.sidebar:
         border-color: {_ms_border} !important;
     }}
     ''' for key, icon in MENU_ICONS.items()])}
+
+    /* ===== GROUPED MENU LIST (gaya iOS Settings) ===== */
+    .st-key-menu_group_interaksi,
+    .st-key-menu_group_alat {{
+        background: {_ms_bg} !important;
+        border: 1px solid {_ms_border} !important;
+        border-radius: 18px !important;
+        overflow: hidden !important;
+        box-shadow: 0 10px 26px -16px rgba(60,40,80,0.18) !important;
+        margin-bottom: 10px !important;
+    }}
+    .st-key-menu_group_interaksi [data-testid="stExpander"],
+    .st-key-menu_group_alat [data-testid="stExpander"] {{
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin-bottom: 0 !important;
+    }}
+    .st-key-menu_group_interaksi [data-testid="stExpander"]:hover,
+    .st-key-menu_group_alat [data-testid="stExpander"]:hover {{
+        background: rgba(216,51,140,0.045) !important;
+        transform: none !important;
+    }}
+    .st-key-menu_group_interaksi [data-testid="stElementContainer"]:not(:last-of-type) [data-testid="stExpander"],
+    .st-key-menu_group_alat [data-testid="stElementContainer"]:not(:last-of-type) [data-testid="stExpander"] {{
+        border-bottom: 1px solid {_ms_border} !important;
+    }}
+    .st-key-menu_group_interaksi [data-testid="stExpander"] summary,
+    .st-key-menu_group_alat [data-testid="stExpander"] summary {{
+        padding: 12px 14px !important;
+    }}
     .st-key-new_chat_btn button p,
     .st-key-clear_chat_btn button p,
     .st-key-logout_btn button p {{
@@ -2927,22 +2979,24 @@ with st.sidebar:
 
     st.markdown(f"""
     <div style="
-        background: #D6336C;
-        border-radius: 18px;
+        background: linear-gradient(135deg, #ff5fa8, #b8398f);
+        border-radius: 20px;
         padding: 18px 16px;
         text-align: center;
         margin-bottom: 12px;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 12px 28px -10px rgba(216,51,140,0.45);
     ">
-        <div style="position:absolute;top:-18px;right:-18px;width:64px;height:64px;border-radius:50%;background:#E85F95;"></div>
+        <div style="position:absolute;top:-24px;right:-24px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.14);"></div>
+        <div style="position:absolute;bottom:-30px;left:-20px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.08);"></div>
         <div style="position:relative;">
             <div style="position:relative;width:64px;height:64px;margin:0 auto 8px;">
                 {avatar_img_html}
                 <span style="position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;
-                    border-radius:50%;background:#4ade80;border:2px solid #D6336C;"></span>
+                    border-radius:50%;background:#4ade80;border:2px solid #d8338c;box-shadow:0 0 0 2px rgba(255,255,255,0.25);"></span>
             </div>
-            <div style="color:#ffffff;font-size:14px;font-weight:700;">Kei AI</div>
+            <div style="color:#ffffff;font-size:14px;font-weight:700;letter-spacing:0.1px;">Kei AI</div>
             <div style="color:#FFE0EB;font-size:11px;margin-top:2px;">● {t('online_status')}</div>
             <div style="color:#FFC2DC;font-size:11px;margin-top:4px;">👤 {_user_email_short}</div>
         </div>
@@ -2969,15 +3023,15 @@ with st.sidebar:
 
     st.markdown(f"""
     <div style="display:flex;gap:8px;margin-bottom:14px;">
-        <div style="flex:1;background:#FAC775;border-radius:14px;padding:9px 0;text-align:center;">
+        <div style="flex:1;background:linear-gradient(150deg,#ffd98a,#ffb84d);border-radius:16px;padding:10px 0;text-align:center;box-shadow:0 8px 18px -8px rgba(255,166,0,0.35);">
             <div style="font-size:16px;">{mood_emoji}</div>
-            <div style="color:#633806;font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('mood_today').upper()}</div>
-            <div style="color:#412402;font-size:11.5px;font-weight:600;">{mood_label}</div>
+            <div style="color:#7a4a06;font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('mood_today').upper()}</div>
+            <div style="color:#4a2c02;font-size:11.5px;font-weight:700;">{mood_label}</div>
         </div>
-        <div style="flex:1;background:#3FA9DA;border-radius:14px;padding:9px 0;text-align:center;">
+        <div style="flex:1;background:linear-gradient(150deg,#8fd4f5,#4fb3e8);border-radius:16px;padding:10px 0;text-align:center;box-shadow:0 8px 18px -8px rgba(63,169,218,0.4);">
             <div style="font-size:16px;">🔥</div>
-            <div style="color:#042c53;font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('streak').upper()}</div>
-            <div style="color:#042c53;font-size:11.5px;font-weight:600;">{streak_count} {t('streak_unit')}</div>
+            <div style="color:#053a5f;font-size:9.5px;letter-spacing:0.5px;margin-top:2px;">{t('streak').upper()}</div>
+            <div style="color:#053a5f;font-size:11.5px;font-weight:700;">{streak_count} {t('streak_unit')}</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -2990,47 +3044,51 @@ with st.sidebar:
     with menu_list:
         st.markdown(f"<div class='kei-menu-group-label'>{t('menu_group_interaksi')}</div>", unsafe_allow_html=True)
 
-        for key, label_key in [
-            ("mood", "mood_expander"),
-            ("sticker", "sticker_expander"),
-            ("music", "music_expander"),
-        ]:
-            with st.expander(
-                strip_emoji_prefix(t(label_key)),
-                key=f"exp_{key}",
-                expanded=(st.session_state.get("keep_panel_open") == key),
-            ):
-                if key == "mood":
-                    render_mood_panel(_accent, _r, _g, _b)
-                elif key == "sticker":
-                    render_sticker_panel(_accent, _r, _g, _b)
-                elif key == "music":
-                    render_music_panel(_accent, _r, _g, _b)
+        group_interaksi = st.container(key="menu_group_interaksi")
+        with group_interaksi:
+            for key, label_key in [
+                ("mood", "mood_expander"),
+                ("sticker", "sticker_expander"),
+                ("music", "music_expander"),
+            ]:
+                with st.expander(
+                    strip_emoji_prefix(t(label_key)),
+                    key=f"exp_{key}",
+                    expanded=(st.session_state.get("keep_panel_open") == key),
+                ):
+                    if key == "mood":
+                        render_mood_panel(_accent, _r, _g, _b)
+                    elif key == "sticker":
+                        render_sticker_panel(_accent, _r, _g, _b)
+                    elif key == "music":
+                        render_music_panel(_accent, _r, _g, _b)
 
         st.markdown(f"<div class='kei-menu-group-label'>{t('menu_group_alat')}</div>", unsafe_allow_html=True)
 
-        for key, label_key in [
-            ("convert", "convert_expander"),
-            ("settings", "settings_expander"),
-            ("stats", "stats_expander"),
-            ("search", "search_expander"),
-            ("export", "export_expander"),
-        ]:
-            with st.expander(
-                strip_emoji_prefix(t(label_key)),
-                key=f"exp_{key}",
-                expanded=(st.session_state.get("keep_panel_open") == key),
-            ):
-                if key == "convert":
-                    render_convert_panel(_accent, _r, _g, _b)
-                elif key == "settings":
-                    render_settings_panel(_accent, _r, _g, _b)
-                elif key == "stats":
-                    render_stats_panel(_accent, _r, _g, _b)
-                elif key == "search":
-                    render_search_panel(_accent, _r, _g, _b, _ms_bg, _ms_border, _ms_text)
-                elif key == "export":
-                    render_export_panel(_accent, _r, _g, _b, _text_dim, _text_dimmer)
+        group_alat = st.container(key="menu_group_alat")
+        with group_alat:
+            for key, label_key in [
+                ("convert", "convert_expander"),
+                ("settings", "settings_expander"),
+                ("stats", "stats_expander"),
+                ("search", "search_expander"),
+                ("export", "export_expander"),
+            ]:
+                with st.expander(
+                    strip_emoji_prefix(t(label_key)),
+                    key=f"exp_{key}",
+                    expanded=(st.session_state.get("keep_panel_open") == key),
+                ):
+                    if key == "convert":
+                        render_convert_panel(_accent, _r, _g, _b)
+                    elif key == "settings":
+                        render_settings_panel(_accent, _r, _g, _b)
+                    elif key == "stats":
+                        render_stats_panel(_accent, _r, _g, _b)
+                    elif key == "search":
+                        render_search_panel(_accent, _r, _g, _b, _ms_bg, _ms_border, _ms_text)
+                    elif key == "export":
+                        render_export_panel(_accent, _r, _g, _b, _text_dim, _text_dimmer)
 
     st.markdown('<div class="kei-divider"></div>', unsafe_allow_html=True)
 
