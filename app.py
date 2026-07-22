@@ -3201,7 +3201,11 @@ else:
                 </svg>
                 <span style="color:#D6336C;font-size:48px;font-weight:700;line-height:1.1;">Kei AI</span>
             </div>
-            <p style="color:{_header_tagline_color};font-size:18px;margin:0;">{t('app_companion')} {header_mood_emoji}</p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;color:{_header_tagline_color};font-size:18px;">
+                <span>{header_mood_emoji}</span>
+                <span>{t('app_companion')}</span>
+                <span>{header_mood_emoji}</span>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
