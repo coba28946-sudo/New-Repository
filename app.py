@@ -861,6 +861,8 @@ html, body { overflow-x: hidden !important; }
 [data-testid="stTabs"] [data-testid="stTab"][aria-selected="true"] {
     color: #FF3FA4 !important;
     border-bottom-color: #FF3FA4 !important;
+    display: inline-flex !important;
+    width: fit-content !important;
 }
 
 /* ===== MENU LIST (KEI SIDEBAR v2) ===== */
@@ -1859,6 +1861,8 @@ if not st.session_state.logged_in:
     .st-key-login_form_panel [data-testid="stTabs"] [data-testid="stTab"][aria-selected="true"] {
         background: linear-gradient(100deg, #ffe1f0, #ecdcff) !important;
         color: #b3266f !important;
+        display: inline-flex !important;
+        width: fit-content !important;
     }
     .st-key-login_card_wrap [data-testid="stTabs"] [data-baseweb="tab-border"],
     .st-key-login_card_wrap [data-testid="stTabs"] [data-baseweb="tab-highlight"] {
