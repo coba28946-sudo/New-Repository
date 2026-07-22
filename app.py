@@ -1661,6 +1661,18 @@ if not st.session_state.logged_in:
                 </svg>
             </div>
             <span class="login-brand-name">Kei AI</span>
+            <div class="login-spark-wrap">
+                <div class="login-spark-glow"></div>
+                <svg class="login-spark-svg" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 0 L14.2 9.8 L24 12 L14.2 14.2 L12 24 L9.8 14.2 L0 12 L9.8 9.8 Z" fill="url(#loginSparkGrad2)"/>
+                    <defs>
+                        <linearGradient id="loginSparkGrad2" x1="0" y1="0" x2="24" y2="24">
+                            <stop offset="0%" stop-color="#FF3FA4"/>
+                            <stop offset="100%" stop-color="#B14EFF"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
         </div>
         <div style="color:{_login_text_dim}; font-size:16px; margin-top:0; letter-spacing:2.5px;">{t('app_tagline')}</div>
     </div>
