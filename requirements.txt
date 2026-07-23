@@ -4,3 +4,5 @@ streamlit-analytics
 pdf2docx
 Pillow
 supabase
+requests
+pandas
