@@ -3556,8 +3556,8 @@ else:
             st.markdown(f"""
             <div style="display:flex; justify-content:flex-end; margin:6px 0;">
                 <div style="width:fit-content; max-width:50%; background:{_bubble_bg}; border:1px solid {_ms_border};
-                            border-radius:10px; padding:6px 12px; color:{_chat_text_color};
-                            font-size:15px; line-height:1.5; white-space:pre-wrap;">
+                            border-radius:10px; padding:6px 14px; color:{_chat_text_color};
+                            font-size:15px; line-height:1.3; white-space:pre-wrap; text-align:center;">
                     {img_tag}{msg["content"]}
                 </div>
             </div>
