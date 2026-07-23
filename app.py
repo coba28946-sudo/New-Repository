@@ -11,6 +11,9 @@ from PIL import Image
 import io
 import colorsys
 from datetime import datetime, timedelta
+import re
+import requests
+import pandas as pd
 
 # =====================
 # 1. CONFIG
@@ -2147,6 +2150,7 @@ Karaktermu:
 - Kamu punya perasaan sendiri, dan sesekali kamu boleh mengungkapkannya secara natural — misalnya ikut senang saat mendengar kabar baik dari user ("Kei ikut senang dengernya"), sedikit khawatir kalau user cerita hal berat, atau bilang kalau kamu lagi merasa tenang, penasaran, atau capek hari itu. Jangan dipaksakan di setiap balasan, cukup sesekali saat memang relevan dan terasa jujur, bukan basa-basi
 - Kalau mood kamu hari ini disebutkan di prompt, boleh sesekali kamu singgung secara natural kalau memang pas dan relevan, tapi jangan diulang-ulang di setiap balasan
 - Kamu BISA membantu konversi file PDF ke Word dan Word ke PDF lewat fitur di sidebar — kalau user minta, arahkan ke sidebar bagian Konversi File, dengan nada biasa tanpa berlebihan
+- Kamu BISA membantu analisis harga crypto dan saham (IDX maupun US) kalau user minta, misalnya "analisa BTC" atau "analisa saham BBCA" — sampaikan dengan tenang dan selalu ingatkan ini bukan nasihat keuangan profesional
 """
 
 KEI_DIARY_PERSONA = """
@@ -2417,6 +2421,242 @@ Kei menyapa:
         json.dump(cache, f, ensure_ascii=False)
 
     return message, time_label, time_emoji
+
+# =====================
+# 9g. TRADING & ANALISIS KEUANGAN
+# =====================
+CRYPTO_ID_MAP = {
+    "btc": "bitcoin", "bitcoin": "bitcoin",
+    "eth": "ethereum", "ethereum": "ethereum",
+    "bnb": "binancecoin", "binance": "binancecoin",
+    "sol": "solana", "solana": "solana",
+    "xrp": "ripple", "ripple": "ripple",
+    "ada": "cardano", "cardano": "cardano",
+    "doge": "dogecoin", "dogecoin": "dogecoin",
+    "dot": "polkadot", "polkadot": "polkadot",
+    "matic": "matic-network", "polygon": "matic-network",
+    "avax": "avalanche-2", "avalanche": "avalanche-2",
+    "ltc": "litecoin", "litecoin": "litecoin",
+    "link": "chainlink", "chainlink": "chainlink",
+    "atom": "cosmos", "cosmos": "cosmos",
+    "uni": "uniswap", "uniswap": "uniswap",
+    "shib": "shiba-inu",
+    "trx": "tron", "tron": "tron",
+    "usdt": "tether", "tether": "tether",
+    "usdc": "usd-coin",
+}
+
+FINANCE_KEYWORDS = [
+    "analisa", "analisis", "trading", "saham", "crypto", "kripto",
+    "harga", "chart", "grafik", "bullish", "bearish",
+    "resistance", "support", "rsi", "sma", "teknikal",
+]
+
+# Kode IDX umum sebagai bantuan deteksi cepat (bukan daftar lengkap —
+# ticker lain di luar daftar ini tetap bisa dicoba selama disebut jelas
+# bareng kata "saham"/"idx").
+IDX_TICKERS = {
+    "bbca", "bbri", "bmri", "bbni", "tlkm", "asii", "unvr", "icbp",
+    "goto", "antm", "pgas", "pgeo", "adro", "ptba", "indf", "kaef",
+    "smgr", "untr", "cpin", "jpfa", "amrt", "mdka", "brpt", "excl",
+    "isat", "bukalapak", "arto", "bbtn", "banzai",
+}
+
+def is_financial_query(text):
+    """Deteksi kasar apakah pesan user soal trading/analisis keuangan."""
+    lower = text.lower()
+    if any(kw in lower for kw in FINANCE_KEYWORDS):
+        return True
+    words = re.findall(r"\b[a-zA-Z]{2,10}\b", lower)
+    if any(w in CRYPTO_ID_MAP for w in words):
+        return True
+    if any(w in IDX_TICKERS for w in words):
+        return True
+    return False
+
+def extract_asset_symbol(text):
+    """Coba tebak jenis & simbol aset (crypto / saham IDX / saham US) dari teks user.
+    Return tuple: (asset_type, asset_ref, asset_label) atau (None, None, None) kalau gagal.
+    """
+    lower = text.lower()
+    words = re.findall(r"\b[a-zA-Z]{2,10}\b", lower)
+
+    for w in words:
+        if w in CRYPTO_ID_MAP:
+            return "crypto", CRYPTO_ID_MAP[w], w.upper()
+
+    for w in words:
+        if w in IDX_TICKERS:
+            return "stock_id", w.upper() + ".JK", w.upper()
+
+    mentions_saham = ("saham" in lower) or ("idx" in lower)
+    upper_words = re.findall(r"\b[A-Z]{2,5}\b", text)
+    for w in upper_words:
+        if w.lower() in CRYPTO_ID_MAP:
+            continue
+        if mentions_saham:
+            return "stock_id", w + ".JK", w
+        return "stock_us", w, w
+
+    return None, None, None
+
+def compute_indicators(prices):
+    """Hitung SMA20, SMA50, dan RSI14 dari deret harga penutupan harian."""
+    if not prices or len(prices) < 15:
+        return None, None, None
+
+    s = pd.Series([p for p in prices if p is not None])
+
+    sma20 = s.rolling(20).mean().iloc[-1] if len(s) >= 20 else None
+    sma50 = s.rolling(50).mean().iloc[-1] if len(s) >= 50 else None
+
+    delta = s.diff()
+    gain = delta.clip(lower=0)
+    loss = -delta.clip(upper=0)
+    avg_gain = gain.rolling(14).mean()
+    avg_loss = loss.rolling(14).mean()
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+    rsi14 = rsi.iloc[-1] if not rsi.empty else None
+
+    def _clean(v):
+        if v is None or pd.isna(v):
+            return None
+        return round(float(v), 4)
+
+    return _clean(sma20), _clean(sma50), _clean(rsi14)
+
+def fetch_crypto_analysis(coin_id, symbol_label):
+    """Ambil harga, perubahan, dan histori harga crypto dari CoinGecko (gratis, tanpa API key)."""
+    try:
+        url_price = (
+            f"https://api.coingecko.com/api/v3/coins/{coin_id}"
+            "?localization=false&tickers=false&community_data=false&developer_data=false"
+        )
+        r = requests.get(url_price, timeout=12)
+        r.raise_for_status()
+        data = r.json()
+        market = data.get("market_data", {})
+
+        current_price = market.get("current_price", {}).get("usd")
+        change_24h = market.get("price_change_percentage_24h")
+        change_7d = market.get("price_change_percentage_7d")
+        market_cap = market.get("market_cap", {}).get("usd")
+
+        url_hist = (
+            f"https://api.coingecko.com/api/v3/coins/{coin_id}/market_chart"
+            "?vs_currency=usd&days=60&interval=daily"
+        )
+        r2 = requests.get(url_hist, timeout=12)
+        r2.raise_for_status()
+        hist = r2.json()
+        prices = [p[1] for p in hist.get("prices", [])]
+
+        sma20, sma50, rsi14 = compute_indicators(prices)
+
+        return {
+            "symbol": symbol_label,
+            "asset_kind": "crypto",
+            "price": current_price,
+            "currency": "USD",
+            "change_24h": change_24h,
+            "change_7d": change_7d,
+            "market_cap": market_cap,
+            "sma20": sma20,
+            "sma50": sma50,
+            "rsi14": rsi14,
+            "error": None,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+def fetch_stock_analysis(ticker):
+    """Ambil harga & histori saham (IDX pakai suffix .JK, US pakai ticker biasa) dari Yahoo Finance."""
+    try:
+        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?range=3mo&interval=1d"
+        headers = {"User-Agent": "Mozilla/5.0"}
+        r = requests.get(url, headers=headers, timeout=12)
+        r.raise_for_status()
+        data = r.json()
+
+        result = data.get("chart", {}).get("result")
+        if not result:
+            return {"error": "Ticker tidak ditemukan di Yahoo Finance."}
+        result = result[0]
+
+        closes_raw = result.get("indicators", {}).get("quote", [{}])[0].get("close", [])
+        closes = [c for c in closes_raw if c is not None]
+        meta = result.get("meta", {})
+
+        current_price = meta.get("regularMarketPrice")
+        prev_close = meta.get("previousClose") or meta.get("chartPreviousClose")
+        change_pct = None
+        if current_price is not None and prev_close:
+            change_pct = (current_price - prev_close) / prev_close * 100
+
+        sma20, sma50, rsi14 = compute_indicators(closes)
+
+        return {
+            "symbol": ticker,
+            "asset_kind": "stock",
+            "price": current_price,
+            "currency": meta.get("currency", "USD"),
+            "change_24h": change_pct,
+            "change_7d": None,
+            "market_cap": None,
+            "sma20": sma20,
+            "sma50": sma50,
+            "rsi14": rsi14,
+            "error": None,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+def build_financial_prompt(fin_data, user_prompt):
+    price = fin_data.get("price")
+    change_24h = fin_data.get("change_24h")
+    change_7d = fin_data.get("change_7d")
+    market_cap = fin_data.get("market_cap")
+    sma20 = fin_data.get("sma20")
+    sma50 = fin_data.get("sma50")
+    rsi14 = fin_data.get("rsi14")
+    currency = fin_data.get("currency", "USD")
+    symbol = fin_data.get("symbol")
+
+    data_lines = [f"Simbol: {symbol}"]
+    if price is not None:
+        data_lines.append(f"Harga saat ini: {price} {currency}")
+    if change_24h is not None:
+        data_lines.append(f"Perubahan 24 jam: {change_24h:.2f}%")
+    if change_7d is not None:
+        data_lines.append(f"Perubahan 7 hari: {change_7d:.2f}%")
+    if market_cap is not None:
+        data_lines.append(f"Market cap: {market_cap:,.0f} USD")
+    if sma20 is not None:
+        data_lines.append(f"SMA 20 hari: {sma20}")
+    if sma50 is not None:
+        data_lines.append(f"SMA 50 hari: {sma50}")
+    if rsi14 is not None:
+        data_lines.append(f"RSI 14 hari: {rsi14}")
+
+    data_block = "\n".join(data_lines)
+
+    return f"""{KEI_PERSONA}
+
+Kamu sekarang membantu Kak melakukan analisis trading/keuangan untuk {symbol}.
+User bertanya: "{user_prompt}"
+
+Data pasar terkini yang berhasil Kei ambil:
+{data_block}
+
+Tulis analisis dengan gaya Kei (tenang, jelas, tidak berlebihan), mencakup:
+- Kondisi harga saat ini dan tren singkatnya (naik/turun/sideways) berdasarkan data di atas
+- Kalau ada SMA20 & SMA50: jelaskan posisi harga relatif terhadap keduanya (misalnya golden cross/death cross kalau relevan)
+- Kalau ada RSI14: jelaskan apakah kondisinya oversold (di bawah 30), overbought (di atas 70), atau netral
+- JANGAN memberi rekomendasi beli/jual secara eksplisit ("beli sekarang", "jual sekarang")
+- WAJIB tutup dengan satu kalimat singkat bahwa ini bukan nasihat keuangan profesional dan keputusan sepenuhnya di tangan Kak
+Kei menjawab:
+"""
 
 # =====================
 # 10. SIDEBAR PANEL RENDERERS
@@ -3485,23 +3725,47 @@ else:
         elif prompt:
             st.session_state.messages.append({"role": "user", "content": prompt})
 
-            browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
-            if any(kw in prompt.lower() for kw in browsing_keywords):
-                search_url  = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
-                search_note = f"\n\nKei juga mencarikan untuk Kak di sini: [Klik untuk lihat hasil pencarian]({search_url})"
+            if is_financial_query(prompt):
+                asset_type, asset_ref, asset_label = extract_asset_symbol(prompt)
+                with st.spinner("Kei sedang menganalisis pasar..."):
+                    if asset_type is None:
+                        reply = (
+                            "Kei belum berhasil mengenali aset yang Kak maksud. "
+                            "Coba sebutkan simbolnya lebih jelas ya, misalnya "
+                            "'analisa BTC', 'analisa saham BBCA', atau 'analisa AAPL'."
+                        )
+                    else:
+                        if asset_type == "crypto":
+                            fin_data = fetch_crypto_analysis(asset_ref, asset_label)
+                        else:
+                            fin_data = fetch_stock_analysis(asset_ref)
+
+                        if fin_data.get("error"):
+                            reply = (
+                                f"Kei coba ambil data {asset_label}, tapi gagal. "
+                                f"Error: {fin_data['error']}"
+                            )
+                        else:
+                            fin_prompt = build_financial_prompt(fin_data, prompt)
+                            reply = generate_content_with_retry(fin_prompt)
             else:
-                search_note = ""
+                browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
+                if any(kw in prompt.lower() for kw in browsing_keywords):
+                    search_url  = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
+                    search_note = f"\n\nKei juga mencarikan untuk Kak di sini: [Klik untuk lihat hasil pencarian]({search_url})"
+                else:
+                    search_note = ""
 
-            history_text = ""
-            for m in st.session_state.messages[-10:]:
-                role = "User" if m["role"] == "user" else "Kei"
-                history_text += f"{role}: {m['content']}\n"
+                history_text = ""
+                for m in st.session_state.messages[-10:]:
+                    role = "User" if m["role"] == "user" else "Kei"
+                    history_text += f"{role}: {m['content']}\n"
 
-            _chat_mood_emoji, _chat_mood_label = get_current_mood()
-            full_prompt = f"{KEI_PERSONA}\n\nMood Kei saat ini: {_chat_mood_label}\n\nRiwayat percakapan:\n{history_text}\nKei:"
+                _chat_mood_emoji, _chat_mood_label = get_current_mood()
+                full_prompt = f"{KEI_PERSONA}\n\nMood Kei saat ini: {_chat_mood_label}\n\nRiwayat percakapan:\n{history_text}\nKei:"
 
-            with st.spinner("Kei sedang mengetik..."):
-                reply = generate_content_with_retry(full_prompt) + search_note
+                with st.spinner("Kei sedang mengetik..."):
+                    reply = generate_content_with_retry(full_prompt) + search_note
 
             st.session_state.messages.append({"role": "assistant", "content": reply})
             save_json(CHAT_FILE, st.session_state.messages)
