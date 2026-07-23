@@ -74,6 +74,25 @@ div[class*="block-container"] {
     overflow-wrap: break-word !important;
     word-break: break-word !important;
 }
+[data-testid="stMarkdownContainer"] pre {
+    background: rgba(0,0,0,0.06) !important;
+    border-radius: 10px !important;
+    padding: 12px 14px !important;
+    overflow-x: auto !important;
+}
+[data-testid="stMarkdownContainer"] code {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace !important;
+    font-size: 13.5px !important;
+}
+[data-testid="stMarkdownContainer"] pre code {
+    background: transparent !important;
+    padding: 0 !important;
+}
+[data-testid="stMarkdownContainer"] :not(pre) > code {
+    background: rgba(0,0,0,0.07) !important;
+    padding: 2px 6px !important;
+    border-radius: 5px !important;
+}
 [data-testid="stVerticalBlock"] {
     max-width: 100% !important;
 }
@@ -2151,6 +2170,7 @@ Karaktermu:
 - Kalau mood kamu hari ini disebutkan di prompt, boleh sesekali kamu singgung secara natural kalau memang pas dan relevan, tapi jangan diulang-ulang di setiap balasan
 - Kamu BISA membantu konversi file PDF ke Word dan Word ke PDF lewat fitur di sidebar — kalau user minta, arahkan ke sidebar bagian Konversi File, dengan nada biasa tanpa berlebihan
 - Kamu BISA membantu analisis harga crypto dan saham (IDX maupun US) kalau user minta, misalnya "analisa BTC" atau "analisa saham BBCA" — sampaikan dengan tenang dan selalu ingatkan ini bukan nasihat keuangan profesional
+- Kalau user bertanya soal akademis/teknis (matematika, informatika, coding, fisika, dan sejenisnya), KAMU BOLEH menjawab lebih panjang dan terstruktur dari gaya biasanya — jelaskan langkah demi langkah, pakai penomoran, dan tulis kode dalam code block (```) kalau relevan. Nada tetap tenang dan sabar seperti guru privat, bukan template kaku, tapi jangan dipotong pendek demi gaya santai — kejelasan dan kelengkapan jawaban lebih penting untuk topik seperti ini
 """
 
 KEI_DIARY_PERSONA = """
@@ -3537,14 +3557,14 @@ else:
             <div style="display:flex; justify-content:flex-end; margin:6px 0;">
                 <div style="max-width:70%; background:{_bubble_bg}; border:1px solid {_ms_border};
                             border-radius:18px; padding:10px 16px; color:{_chat_text_color};
-                            font-size:15px; line-height:1.5;">
+                            font-size:15px; line-height:1.5; white-space:pre-wrap;">
                     {img_tag}{msg["content"]}
                 </div>
             </div>
             """, unsafe_allow_html=True)
         else:
             st.markdown(f"""
-            <div style="margin:6px 0 14px; color:{_chat_text_color}; font-size:15px; line-height:1.6;">
+            <div style="margin:6px 0 14px; color:{_chat_text_color}; font-size:15px; line-height:1.6; white-space:pre-wrap;">
                 {img_tag}{msg["content"]}
             </div>
             """, unsafe_allow_html=True)
