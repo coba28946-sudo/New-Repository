@@ -3555,7 +3555,7 @@ else:
         if msg["role"] == "user":
             st.markdown(f"""
             <div style="display:flex; justify-content:flex-end; margin:6px 0;">
-                <div style="max-width:50%; background:{_bubble_bg}; border:1px solid {_ms_border};
+                <div style="width:fit-content; max-width:50%; background:{_bubble_bg}; border:1px solid {_ms_border};
                             border-radius:10px; padding:6px 12px; color:{_chat_text_color};
                             font-size:15px; line-height:1.5; white-space:pre-wrap;">
                     {img_tag}{msg["content"]}
