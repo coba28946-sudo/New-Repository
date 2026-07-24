@@ -12,6 +12,7 @@ import io
 import colorsys
 from datetime import datetime, timedelta
 import re
+import html
 import requests
 import pandas as pd
 
@@ -1500,6 +1501,34 @@ def save_json(path, data):
     with open(path, "w") as f:
         json.dump(data, f, ensure_ascii=False)
 
+def render_kei_markdown(text):
+    """Escape teks user/Kei buat aman ditaruh di raw HTML, sekaligus ubah markdown
+    sederhana (code block ```, inline code `, **bold**) jadi HTML beneran.
+    Ini perlu karena bubble chat dirender lewat div HTML mentah, bukan lewat
+    parser markdown Streamlit biasa, jadi ```code``` nggak otomatis jadi <pre><code>.
+    """
+    if not text:
+        return ""
+
+    parts = re.split(r"(```.*?```)", text, flags=re.DOTALL)
+    out = []
+    for part in parts:
+        if part.startswith("```") and part.endswith("```"):
+            inner = part[3:-3]
+            lines = inner.split("\n", 1)
+            if len(lines) == 2 and re.match(r"^[a-zA-Z0-9_+-]{0,20}$", lines[0].strip()):
+                code_body = lines[1]
+            else:
+                code_body = inner
+            code_escaped = html.escape(code_body)
+            out.append(f"<pre><code>{code_escaped}</code></pre>")
+        else:
+            escaped = html.escape(part)
+            escaped = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", escaped)
+            escaped = re.sub(r"`([^`]+?)`", r"<code>\1</code>", escaped)
+            out.append(escaped)
+    return "".join(out)
+
 # =====================
 # 5b. BAHASA (i18n)
 # =====================
@@ -2171,6 +2200,9 @@ Karaktermu:
 - Kamu BISA membantu konversi file PDF ke Word dan Word ke PDF lewat fitur di sidebar — kalau user minta, arahkan ke sidebar bagian Konversi File, dengan nada biasa tanpa berlebihan
 - Kamu BISA membantu analisis harga crypto dan saham (IDX maupun US) kalau user minta, misalnya "analisa BTC" atau "analisa saham BBCA" — sampaikan dengan tenang dan selalu ingatkan ini bukan nasihat keuangan profesional
 - Kalau user bertanya soal akademis/teknis (matematika, informatika, coding, fisika, dan sejenisnya), KAMU BOLEH menjawab lebih panjang dan terstruktur dari gaya biasanya — jelaskan langkah demi langkah, pakai penomoran, dan tulis kode dalam code block (```) kalau relevan. Nada tetap tenang dan sabar seperti guru privat, bukan template kaku, tapi jangan dipotong pendek demi gaya santai — kejelasan dan kelengkapan jawaban lebih penting untuk topik seperti ini
+- Kamu adalah asisten serba bisa (all-round), bukan cuma teman ngobrol santai. Kamu BISA dan HARUS membantu penuh untuk hal-hal seperti: menulis kode dari nol di berbagai bahasa pemrograman/framework, debugging dan menjelaskan error, code review, menjelaskan konsep teknis, menulis/mengedit teks (esai, email, dokumen), riset dan ringkasan informasi, brainstorming ide, dan tugas problem-solving lainnya — persis seperti asisten AI serba guna (mis. ChatGPT/Gemini), bukan dibatasi cuma jadi teman curhat
+- Sesuaikan gaya jawaban dengan konteks: untuk obrolan santai/curhat/emosional, tetap hangat, kalem, dan personal seperti biasa. Untuk permintaan teknis/kerja (coding, analisis, penulisan formal, riset), boleh lebih panjang, terstruktur, dan lengkap — utamakan kegunaan dan akurasi jawaban di atas gaya bicara singkat ala companion
+- Kalau user minta kode program, tulis kode LENGKAP dan bisa langsung dipakai (bukan potongan setengah-setengah), dalam code block dengan bahasa yang sesuai (```python, ```javascript, dst), dan kasih penjelasan singkat sebelum/sesudah kodenya kalau perlu
 """
 
 KEI_DIARY_PERSONA = """
@@ -3558,14 +3590,14 @@ else:
                 f'<div class="kei-user-bubble" style="width:fit-content; max-width:50%; background:{_bubble_bg}; '
                 f'border:1px solid rgba(0,0,0,0.04); box-shadow:0 2px 10px -4px rgba(0,0,0,0.12); border-radius:13px; '
                 f'padding:5px 10px; color:{_chat_text_color}; font-size:14.5px; line-height:1.25; '
-                f'white-space:pre-wrap; text-align:center;">{img_tag}{msg["content"]}</div></div>'
+                f'white-space:pre-wrap; text-align:center;">{img_tag}{render_kei_markdown(msg["content"])}</div></div>'
                 f'<style>.kei-user-bubble p {{ margin:0 !important; text-align:center !important; }}</style>',
                 unsafe_allow_html=True,
             )
         else:
             st.markdown(
                 f'<div style="margin:6px 0 14px; color:{_chat_text_color}; font-size:15px; '
-                f'line-height:1.6; white-space:pre-wrap;">{img_tag}{msg["content"]}</div>',
+                f'line-height:1.6; white-space:pre-wrap;">{img_tag}{render_kei_markdown(msg["content"])}</div>',
                 unsafe_allow_html=True,
             )
 
