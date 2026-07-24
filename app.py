@@ -3556,8 +3556,8 @@ else:
             st.markdown(f"""
             <div class="kei-user-bubble-row" style="display:flex; justify-content:flex-end; margin:6px 0;">
                 <div class="kei-user-bubble" style="width:fit-content; max-width:50%; background:{_bubble_bg}; border:1px solid rgba(0,0,0,0.04);
-                            box-shadow:0 2px 10px -4px rgba(0,0,0,0.12); border-radius:16px; padding:6px 14px; color:{_chat_text_color};
-                            font-size:15px; line-height:1.3; white-space:pre-wrap; text-align:center;">
+                            box-shadow:0 2px 10px -4px rgba(0,0,0,0.12); border-radius:13px; padding:5px 10px; color:{_chat_text_color};
+                            font-size:14.5px; line-height:1.25; white-space:pre-wrap; text-align:center;">
                     {img_tag}{msg["content"]}
                 </div>
             </div>
