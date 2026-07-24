@@ -3553,27 +3553,21 @@ else:
             img_tag = f'<img src="data:image/png;base64,{msg["image_b64"]}" style="max-width:240px;border-radius:14px;display:block;margin-bottom:6px;" />'
 
         if msg["role"] == "user":
-            st.markdown(f"""
-            <div class="kei-user-bubble-row" style="display:flex; justify-content:flex-end; margin:6px 0;">
-                <div class="kei-user-bubble" style="width:fit-content; max-width:50%; background:{_bubble_bg}; border:1px solid rgba(0,0,0,0.04);
-                            box-shadow:0 2px 10px -4px rgba(0,0,0,0.12); border-radius:13px; padding:5px 10px; color:{_chat_text_color};
-                            font-size:14.5px; line-height:1.25; white-space:pre-wrap; text-align:center;">
-                    {img_tag}{msg["content"]}
-                </div>
-            </div>
-            <style>
-            .kei-user-bubble p {{
-                margin: 0 !important;
-                text-align: center !important;
-            }}
-            </style>
-            """, unsafe_allow_html=True)
+            st.markdown(
+                f'<div class="kei-user-bubble-row" style="display:flex; justify-content:flex-end; margin:6px 0;">'
+                f'<div class="kei-user-bubble" style="width:fit-content; max-width:50%; background:{_bubble_bg}; '
+                f'border:1px solid rgba(0,0,0,0.04); box-shadow:0 2px 10px -4px rgba(0,0,0,0.12); border-radius:13px; '
+                f'padding:5px 10px; color:{_chat_text_color}; font-size:14.5px; line-height:1.25; '
+                f'white-space:pre-wrap; text-align:center;">{img_tag}{msg["content"]}</div></div>'
+                f'<style>.kei-user-bubble p {{ margin:0 !important; text-align:center !important; }}</style>',
+                unsafe_allow_html=True,
+            )
         else:
-            st.markdown(f"""
-            <div style="margin:6px 0 14px; color:{_chat_text_color}; font-size:15px; line-height:1.6; white-space:pre-wrap;">
-                {img_tag}{msg["content"]}
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(
+                f'<div style="margin:6px 0 14px; color:{_chat_text_color}; font-size:15px; '
+                f'line-height:1.6; white-space:pre-wrap;">{img_tag}{msg["content"]}</div>',
+                unsafe_allow_html=True,
+            )
 
     if st.session_state.conv_result:
         cr = st.session_state.conv_result
