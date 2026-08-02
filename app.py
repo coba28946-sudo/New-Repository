@@ -1391,6 +1391,7 @@ for key, val in {
     "show_forgot_password": False,
     "active_panel": None,
     "keep_panel_open": None,
+    "pending_reply": False,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = val
@@ -3302,6 +3303,36 @@ else:
             </div>
             """, unsafe_allow_html=True)
 
+    if st.session_state.get("pending_reply"):
+        _last_user_msg = ""
+        for _m in reversed(st.session_state.messages):
+            if _m["role"] == "user":
+                _last_user_msg = _m["content"]
+                break
+
+        _browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
+        if any(kw in _last_user_msg.lower() for kw in _browsing_keywords):
+            _search_url = f"https://www.google.com/search?q={_last_user_msg.replace(' ', '+')}"
+            _search_note = f"\n\nKei juga mencarikan untuk Kak di sini: [Klik untuk lihat hasil pencarian]({_search_url})"
+        else:
+            _search_note = ""
+
+        _history_text = ""
+        for m in st.session_state.messages[-10:]:
+            role = "User" if m["role"] == "user" else "Kei"
+            _history_text += f"{role}: {m['content']}\n"
+
+        _pending_mood_emoji, _pending_mood_label = get_current_mood()
+        _full_prompt = f"{KEI_PERSONA}\n\nMood Kei saat ini: {_pending_mood_label}\n\nRiwayat percakapan:\n{_history_text}\nKei:"
+
+        with st.spinner("Kei sedang mengetik..."):
+            _reply = generate_content_with_retry(_full_prompt) + _search_note
+
+        st.session_state.messages.append({"role": "assistant", "content": _reply})
+        save_json(CHAT_FILE, st.session_state.messages)
+        st.session_state.pending_reply = False
+        st.rerun()
+
     if st.session_state.conv_result:
         cr = st.session_state.conv_result
         with st.chat_message("assistant"):
@@ -3359,13 +3390,8 @@ else:
                 with qa_col:
                     if st.button(qa_label, key=f"qa_{qa_key}"):
                         st.session_state.messages.append({"role": "user", "content": qa_prompt})
-                        history_text = f"User: {qa_prompt}\n"
-                        _qa_mood_emoji, _qa_mood_label = get_current_mood()
-                        full_prompt = f"{KEI_PERSONA}\n\nMood Kei saat ini: {_qa_mood_label}\n\nRiwayat percakapan:\n{history_text}\nKei:"
-                        with st.spinner("Kei sedang mengetik..."):
-                            reply = generate_content_with_retry(full_prompt)
-                        st.session_state.messages.append({"role": "assistant", "content": reply})
                         save_json(CHAT_FILE, st.session_state.messages)
+                        st.session_state.pending_reply = True
                         st.rerun()
 
     chat_input = st.chat_input(
@@ -3477,25 +3503,6 @@ else:
 
         elif prompt:
             st.session_state.messages.append({"role": "user", "content": prompt})
-
-            browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
-            if any(kw in prompt.lower() for kw in browsing_keywords):
-                search_url  = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
-                search_note = f"\n\nKei juga mencarikan untuk Kak di sini: [Klik untuk lihat hasil pencarian]({search_url})"
-            else:
-                search_note = ""
-
-            history_text = ""
-            for m in st.session_state.messages[-10:]:
-                role = "User" if m["role"] == "user" else "Kei"
-                history_text += f"{role}: {m['content']}\n"
-
-            _chat_mood_emoji, _chat_mood_label = get_current_mood()
-            full_prompt = f"{KEI_PERSONA}\n\nMood Kei saat ini: {_chat_mood_label}\n\nRiwayat percakapan:\n{history_text}\nKei:"
-
-            with st.spinner("Kei sedang mengetik..."):
-                reply = generate_content_with_retry(full_prompt) + search_note
-
-            st.session_state.messages.append({"role": "assistant", "content": reply})
             save_json(CHAT_FILE, st.session_state.messages)
+            st.session_state.pending_reply = True
             st.rerun()
