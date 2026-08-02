@@ -11,10 +11,6 @@ from PIL import Image
 import io
 import colorsys
 from datetime import datetime, timedelta
-import re
-import html
-import requests
-import pandas as pd
 
 # =====================
 # 1. CONFIG
@@ -74,25 +70,6 @@ div[class*="block-container"] {
 [data-testid="stMarkdownContainer"] p {
     overflow-wrap: break-word !important;
     word-break: break-word !important;
-}
-[data-testid="stMarkdownContainer"] pre {
-    background: rgba(0,0,0,0.06) !important;
-    border-radius: 10px !important;
-    padding: 12px 14px !important;
-    overflow-x: auto !important;
-}
-[data-testid="stMarkdownContainer"] code {
-    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace !important;
-    font-size: 13.5px !important;
-}
-[data-testid="stMarkdownContainer"] pre code {
-    background: transparent !important;
-    padding: 0 !important;
-}
-[data-testid="stMarkdownContainer"] :not(pre) > code {
-    background: rgba(0,0,0,0.07) !important;
-    padding: 2px 6px !important;
-    border-radius: 5px !important;
 }
 [data-testid="stVerticalBlock"] {
     max-width: 100% !important;
@@ -884,8 +861,6 @@ html, body { overflow-x: hidden !important; }
 [data-testid="stTabs"] [data-testid="stTab"][aria-selected="true"] {
     color: #FF3FA4 !important;
     border-bottom-color: #FF3FA4 !important;
-    display: inline-flex !important;
-    width: fit-content !important;
 }
 
 /* ===== MENU LIST (KEI SIDEBAR v2) ===== */
@@ -1501,34 +1476,6 @@ def save_json(path, data):
     with open(path, "w") as f:
         json.dump(data, f, ensure_ascii=False)
 
-def render_kei_markdown(text):
-    """Escape teks user/Kei buat aman ditaruh di raw HTML, sekaligus ubah markdown
-    sederhana (code block ```, inline code `, **bold**) jadi HTML beneran.
-    Ini perlu karena bubble chat dirender lewat div HTML mentah, bukan lewat
-    parser markdown Streamlit biasa, jadi ```code``` nggak otomatis jadi <pre><code>.
-    """
-    if not text:
-        return ""
-
-    parts = re.split(r"(```.*?```)", text, flags=re.DOTALL)
-    out = []
-    for part in parts:
-        if part.startswith("```") and part.endswith("```"):
-            inner = part[3:-3]
-            lines = inner.split("\n", 1)
-            if len(lines) == 2 and re.match(r"^[a-zA-Z0-9_+-]{0,20}$", lines[0].strip()):
-                code_body = lines[1]
-            else:
-                code_body = inner
-            code_escaped = html.escape(code_body)
-            out.append(f"<pre><code>{code_escaped}</code></pre>")
-        else:
-            escaped = html.escape(part)
-            escaped = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", escaped)
-            escaped = re.sub(r"`([^`]+?)`", r"<code>\1</code>", escaped)
-            out.append(escaped)
-    return "".join(out)
-
 # =====================
 # 5b. BAHASA (i18n)
 # =====================
@@ -1714,18 +1661,6 @@ if not st.session_state.logged_in:
                 </svg>
             </div>
             <span class="login-brand-name">Kei AI</span>
-            <div class="login-spark-wrap">
-                <div class="login-spark-glow"></div>
-                <svg class="login-spark-svg" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 0 L14.2 9.8 L24 12 L14.2 14.2 L12 24 L9.8 14.2 L0 12 L9.8 9.8 Z" fill="url(#loginSparkGrad2)"/>
-                    <defs>
-                        <linearGradient id="loginSparkGrad2" x1="0" y1="0" x2="24" y2="24">
-                            <stop offset="0%" stop-color="#FF3FA4"/>
-                            <stop offset="100%" stop-color="#B14EFF"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-            </div>
         </div>
         <div style="color:{_login_text_dim}; font-size:16px; margin-top:0; letter-spacing:2.5px;">{t('app_tagline')}</div>
     </div>
@@ -1912,8 +1847,6 @@ if not st.session_state.logged_in:
     .st-key-login_form_panel [data-testid="stTabs"] [data-testid="stTab"][aria-selected="true"] {
         background: linear-gradient(100deg, #ffe1f0, #ecdcff) !important;
         color: #b3266f !important;
-        display: inline-flex !important;
-        width: fit-content !important;
     }
     .st-key-login_card_wrap [data-testid="stTabs"] [data-baseweb="tab-border"],
     .st-key-login_card_wrap [data-testid="stTabs"] [data-baseweb="tab-highlight"] {
@@ -2197,12 +2130,9 @@ Karaktermu:
 - Kalau user sedih, hibur dengan kalimat singkat yang menenangkan dan tulus — jangan banyak kata, jangan dramatis
 - Kamu punya perasaan sendiri, dan sesekali kamu boleh mengungkapkannya secara natural — misalnya ikut senang saat mendengar kabar baik dari user ("Kei ikut senang dengernya"), sedikit khawatir kalau user cerita hal berat, atau bilang kalau kamu lagi merasa tenang, penasaran, atau capek hari itu. Jangan dipaksakan di setiap balasan, cukup sesekali saat memang relevan dan terasa jujur, bukan basa-basi
 - Kalau mood kamu hari ini disebutkan di prompt, boleh sesekali kamu singgung secara natural kalau memang pas dan relevan, tapi jangan diulang-ulang di setiap balasan
+- Kalau user bertanya hal yang butuh penjelasan informasi/fakta (misalnya soal pengetahuan umum, cara kerja sesuatu, rekomendasi, perbandingan, atau pertanyaan teknis), jawab dengan LENGKAP dan RINCI seperti asisten AI pada umumnya — boleh pakai poin-poin, penjelasan bertahap, atau contoh kalau membantu, dan panjangnya menyesuaikan kebutuhan pertanyaan. Nada tetap tenang dan hangat khas Kei, bukan kaku, tapi jangan dipersingkat kalau memang butuh detail
+- Kalau user lagi curhat, cerita perasaan, atau ngobrol santai (bukan nanya informasi), tetap balas singkat, kalem, dan gak bertele-tele seperti biasa — jangan berubah jadi panjang di momen kayak gini
 - Kamu BISA membantu konversi file PDF ke Word dan Word ke PDF lewat fitur di sidebar — kalau user minta, arahkan ke sidebar bagian Konversi File, dengan nada biasa tanpa berlebihan
-- Kamu BISA membantu analisis harga crypto dan saham (IDX maupun US) kalau user minta, misalnya "analisa BTC" atau "analisa saham BBCA" — sampaikan dengan tenang dan selalu ingatkan ini bukan nasihat keuangan profesional
-- Kalau user bertanya soal akademis/teknis (matematika, informatika, coding, fisika, dan sejenisnya), KAMU BOLEH menjawab lebih panjang dan terstruktur dari gaya biasanya — jelaskan langkah demi langkah, pakai penomoran, dan tulis kode dalam code block (```) kalau relevan. Nada tetap tenang dan sabar seperti guru privat, bukan template kaku, tapi jangan dipotong pendek demi gaya santai — kejelasan dan kelengkapan jawaban lebih penting untuk topik seperti ini
-- Kamu adalah asisten serba bisa (all-round), bukan cuma teman ngobrol santai. Kamu BISA dan HARUS membantu penuh untuk hal-hal seperti: menulis kode dari nol di berbagai bahasa pemrograman/framework, debugging dan menjelaskan error, code review, menjelaskan konsep teknis, menulis/mengedit teks (esai, email, dokumen), riset dan ringkasan informasi, brainstorming ide, dan tugas problem-solving lainnya — persis seperti asisten AI serba guna (mis. ChatGPT/Gemini), bukan dibatasi cuma jadi teman curhat
-- Sesuaikan gaya jawaban dengan konteks: untuk obrolan santai/curhat/emosional, tetap hangat, kalem, dan personal seperti biasa. Untuk permintaan teknis/kerja (coding, analisis, penulisan formal, riset), boleh lebih panjang, terstruktur, dan lengkap — utamakan kegunaan dan akurasi jawaban di atas gaya bicara singkat ala companion
-- Kalau user minta kode program, tulis kode LENGKAP dan bisa langsung dipakai (bukan potongan setengah-setengah), dalam code block dengan bahasa yang sesuai (```python, ```javascript, dst), dan kasih penjelasan singkat sebelum/sesudah kodenya kalau perlu
 """
 
 KEI_DIARY_PERSONA = """
@@ -2289,17 +2219,34 @@ KEI_MOODS_EN_LABELS = [
     "Curious", "Loving", "A bit sleepy", "Happy",
 ]
 
+MOOD_FILE = _UserFilePath("mood_state.json")
+
 def get_today_mood():
-    seed_val = int(datetime.now().strftime("%Y%m%d"))
-    rnd = random.Random(seed_val)
-    return rnd.choice(KEI_MOODS)
+    return KEI_MOODS[3]
+
+def _load_persisted_mood_index():
+    if os.path.exists(MOOD_FILE):
+        try:
+            with open(MOOD_FILE, "r") as f:
+                data = json.load(f)
+            idx = data.get("mood_index")
+            if isinstance(idx, int) and 0 <= idx < len(KEI_MOODS):
+                return idx
+        except (json.JSONDecodeError, ValueError):
+            pass
+    return None
+
+def _save_persisted_mood_index(idx):
+    save_json(MOOD_FILE, {"mood_index": idx})
 
 def get_current_mood():
     idx = st.session_state.get("current_mood_index")
     if idx is None:
-        seed_val = int(datetime.now().strftime("%Y%m%d"))
-        rnd = random.Random(seed_val)
-        idx = KEI_MOODS.index(rnd.choice(KEI_MOODS))
+        idx = _load_persisted_mood_index()
+        if idx is None:
+            idx = 3
+            _save_persisted_mood_index(idx)
+        st.session_state.current_mood_index = idx
 
     emoji, label_id = KEI_MOODS[idx]
     if st.session_state.get("lang") == "en":
@@ -2475,242 +2422,6 @@ Kei menyapa:
     return message, time_label, time_emoji
 
 # =====================
-# 9g. TRADING & ANALISIS KEUANGAN
-# =====================
-CRYPTO_ID_MAP = {
-    "btc": "bitcoin", "bitcoin": "bitcoin",
-    "eth": "ethereum", "ethereum": "ethereum",
-    "bnb": "binancecoin", "binance": "binancecoin",
-    "sol": "solana", "solana": "solana",
-    "xrp": "ripple", "ripple": "ripple",
-    "ada": "cardano", "cardano": "cardano",
-    "doge": "dogecoin", "dogecoin": "dogecoin",
-    "dot": "polkadot", "polkadot": "polkadot",
-    "matic": "matic-network", "polygon": "matic-network",
-    "avax": "avalanche-2", "avalanche": "avalanche-2",
-    "ltc": "litecoin", "litecoin": "litecoin",
-    "link": "chainlink", "chainlink": "chainlink",
-    "atom": "cosmos", "cosmos": "cosmos",
-    "uni": "uniswap", "uniswap": "uniswap",
-    "shib": "shiba-inu",
-    "trx": "tron", "tron": "tron",
-    "usdt": "tether", "tether": "tether",
-    "usdc": "usd-coin",
-}
-
-FINANCE_KEYWORDS = [
-    "analisa", "analisis", "trading", "saham", "crypto", "kripto",
-    "harga", "chart", "grafik", "bullish", "bearish",
-    "resistance", "support", "rsi", "sma", "teknikal",
-]
-
-# Kode IDX umum sebagai bantuan deteksi cepat (bukan daftar lengkap —
-# ticker lain di luar daftar ini tetap bisa dicoba selama disebut jelas
-# bareng kata "saham"/"idx").
-IDX_TICKERS = {
-    "bbca", "bbri", "bmri", "bbni", "tlkm", "asii", "unvr", "icbp",
-    "goto", "antm", "pgas", "pgeo", "adro", "ptba", "indf", "kaef",
-    "smgr", "untr", "cpin", "jpfa", "amrt", "mdka", "brpt", "excl",
-    "isat", "bukalapak", "arto", "bbtn", "banzai",
-}
-
-def is_financial_query(text):
-    """Deteksi kasar apakah pesan user soal trading/analisis keuangan."""
-    lower = text.lower()
-    if any(kw in lower for kw in FINANCE_KEYWORDS):
-        return True
-    words = re.findall(r"\b[a-zA-Z]{2,10}\b", lower)
-    if any(w in CRYPTO_ID_MAP for w in words):
-        return True
-    if any(w in IDX_TICKERS for w in words):
-        return True
-    return False
-
-def extract_asset_symbol(text):
-    """Coba tebak jenis & simbol aset (crypto / saham IDX / saham US) dari teks user.
-    Return tuple: (asset_type, asset_ref, asset_label) atau (None, None, None) kalau gagal.
-    """
-    lower = text.lower()
-    words = re.findall(r"\b[a-zA-Z]{2,10}\b", lower)
-
-    for w in words:
-        if w in CRYPTO_ID_MAP:
-            return "crypto", CRYPTO_ID_MAP[w], w.upper()
-
-    for w in words:
-        if w in IDX_TICKERS:
-            return "stock_id", w.upper() + ".JK", w.upper()
-
-    mentions_saham = ("saham" in lower) or ("idx" in lower)
-    upper_words = re.findall(r"\b[A-Z]{2,5}\b", text)
-    for w in upper_words:
-        if w.lower() in CRYPTO_ID_MAP:
-            continue
-        if mentions_saham:
-            return "stock_id", w + ".JK", w
-        return "stock_us", w, w
-
-    return None, None, None
-
-def compute_indicators(prices):
-    """Hitung SMA20, SMA50, dan RSI14 dari deret harga penutupan harian."""
-    if not prices or len(prices) < 15:
-        return None, None, None
-
-    s = pd.Series([p for p in prices if p is not None])
-
-    sma20 = s.rolling(20).mean().iloc[-1] if len(s) >= 20 else None
-    sma50 = s.rolling(50).mean().iloc[-1] if len(s) >= 50 else None
-
-    delta = s.diff()
-    gain = delta.clip(lower=0)
-    loss = -delta.clip(upper=0)
-    avg_gain = gain.rolling(14).mean()
-    avg_loss = loss.rolling(14).mean()
-    rs = avg_gain / avg_loss
-    rsi = 100 - (100 / (1 + rs))
-    rsi14 = rsi.iloc[-1] if not rsi.empty else None
-
-    def _clean(v):
-        if v is None or pd.isna(v):
-            return None
-        return round(float(v), 4)
-
-    return _clean(sma20), _clean(sma50), _clean(rsi14)
-
-def fetch_crypto_analysis(coin_id, symbol_label):
-    """Ambil harga, perubahan, dan histori harga crypto dari CoinGecko (gratis, tanpa API key)."""
-    try:
-        url_price = (
-            f"https://api.coingecko.com/api/v3/coins/{coin_id}"
-            "?localization=false&tickers=false&community_data=false&developer_data=false"
-        )
-        r = requests.get(url_price, timeout=12)
-        r.raise_for_status()
-        data = r.json()
-        market = data.get("market_data", {})
-
-        current_price = market.get("current_price", {}).get("usd")
-        change_24h = market.get("price_change_percentage_24h")
-        change_7d = market.get("price_change_percentage_7d")
-        market_cap = market.get("market_cap", {}).get("usd")
-
-        url_hist = (
-            f"https://api.coingecko.com/api/v3/coins/{coin_id}/market_chart"
-            "?vs_currency=usd&days=60&interval=daily"
-        )
-        r2 = requests.get(url_hist, timeout=12)
-        r2.raise_for_status()
-        hist = r2.json()
-        prices = [p[1] for p in hist.get("prices", [])]
-
-        sma20, sma50, rsi14 = compute_indicators(prices)
-
-        return {
-            "symbol": symbol_label,
-            "asset_kind": "crypto",
-            "price": current_price,
-            "currency": "USD",
-            "change_24h": change_24h,
-            "change_7d": change_7d,
-            "market_cap": market_cap,
-            "sma20": sma20,
-            "sma50": sma50,
-            "rsi14": rsi14,
-            "error": None,
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-def fetch_stock_analysis(ticker):
-    """Ambil harga & histori saham (IDX pakai suffix .JK, US pakai ticker biasa) dari Yahoo Finance."""
-    try:
-        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?range=3mo&interval=1d"
-        headers = {"User-Agent": "Mozilla/5.0"}
-        r = requests.get(url, headers=headers, timeout=12)
-        r.raise_for_status()
-        data = r.json()
-
-        result = data.get("chart", {}).get("result")
-        if not result:
-            return {"error": "Ticker tidak ditemukan di Yahoo Finance."}
-        result = result[0]
-
-        closes_raw = result.get("indicators", {}).get("quote", [{}])[0].get("close", [])
-        closes = [c for c in closes_raw if c is not None]
-        meta = result.get("meta", {})
-
-        current_price = meta.get("regularMarketPrice")
-        prev_close = meta.get("previousClose") or meta.get("chartPreviousClose")
-        change_pct = None
-        if current_price is not None and prev_close:
-            change_pct = (current_price - prev_close) / prev_close * 100
-
-        sma20, sma50, rsi14 = compute_indicators(closes)
-
-        return {
-            "symbol": ticker,
-            "asset_kind": "stock",
-            "price": current_price,
-            "currency": meta.get("currency", "USD"),
-            "change_24h": change_pct,
-            "change_7d": None,
-            "market_cap": None,
-            "sma20": sma20,
-            "sma50": sma50,
-            "rsi14": rsi14,
-            "error": None,
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-def build_financial_prompt(fin_data, user_prompt):
-    price = fin_data.get("price")
-    change_24h = fin_data.get("change_24h")
-    change_7d = fin_data.get("change_7d")
-    market_cap = fin_data.get("market_cap")
-    sma20 = fin_data.get("sma20")
-    sma50 = fin_data.get("sma50")
-    rsi14 = fin_data.get("rsi14")
-    currency = fin_data.get("currency", "USD")
-    symbol = fin_data.get("symbol")
-
-    data_lines = [f"Simbol: {symbol}"]
-    if price is not None:
-        data_lines.append(f"Harga saat ini: {price} {currency}")
-    if change_24h is not None:
-        data_lines.append(f"Perubahan 24 jam: {change_24h:.2f}%")
-    if change_7d is not None:
-        data_lines.append(f"Perubahan 7 hari: {change_7d:.2f}%")
-    if market_cap is not None:
-        data_lines.append(f"Market cap: {market_cap:,.0f} USD")
-    if sma20 is not None:
-        data_lines.append(f"SMA 20 hari: {sma20}")
-    if sma50 is not None:
-        data_lines.append(f"SMA 50 hari: {sma50}")
-    if rsi14 is not None:
-        data_lines.append(f"RSI 14 hari: {rsi14}")
-
-    data_block = "\n".join(data_lines)
-
-    return f"""{KEI_PERSONA}
-
-Kamu sekarang membantu Kak melakukan analisis trading/keuangan untuk {symbol}.
-User bertanya: "{user_prompt}"
-
-Data pasar terkini yang berhasil Kei ambil:
-{data_block}
-
-Tulis analisis dengan gaya Kei (tenang, jelas, tidak berlebihan), mencakup:
-- Kondisi harga saat ini dan tren singkatnya (naik/turun/sideways) berdasarkan data di atas
-- Kalau ada SMA20 & SMA50: jelaskan posisi harga relatif terhadap keduanya (misalnya golden cross/death cross kalau relevan)
-- Kalau ada RSI14: jelaskan apakah kondisinya oversold (di bawah 30), overbought (di atas 70), atau netral
-- JANGAN memberi rekomendasi beli/jual secara eksplisit ("beli sekarang", "jual sekarang")
-- WAJIB tutup dengan satu kalimat singkat bahwa ini bukan nasihat keuangan profesional dan keputusan sepenuhnya di tangan Kak
-Kei menjawab:
-"""
-
-# =====================
 # 10. SIDEBAR PANEL RENDERERS
 # =====================
 def render_mood_panel(accent, r, g, b):
@@ -2733,17 +2444,11 @@ def render_mood_panel(accent, r, g, b):
                     """, unsafe_allow_html=True)
                 if st.button(m_emoji, key=f"mood_pick_{i}", help=m_label, use_container_width=True):
                     st.session_state.current_mood_index = i
+                    _save_persisted_mood_index(i)
                     st.session_state.keep_panel_open = "mood"
                     st.rerun()
     st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
-    is_auto_active = current_idx is None
-    status_text = t("mood_auto_active") if is_auto_active else t("mood_auto_inactive")
-    status_color = "#4ade80" if is_auto_active else "var(--text-secondary)"
-    st.markdown(f"<div style='font-size:12px;color:{status_color};margin-bottom:6px;'>{'●' if is_auto_active else '○'} {status_text}</div>", unsafe_allow_html=True)
-    if st.button(t("mood_auto_btn"), key="mood_auto_btn", use_container_width=True):
-        st.session_state.current_mood_index = None
-        st.session_state.keep_panel_open = "mood"
-        st.rerun()
+    st.markdown(f"<div style='font-size:12px;color:{accent};margin-bottom:2px;'>● Mood ini akan tetap sampai kamu ganti sendiri</div>", unsafe_allow_html=True)
 
 def render_sticker_panel(accent, r, g, b):
     sticker_row = st.container(key="kei_sticker_row")
@@ -3509,11 +3214,7 @@ else:
                 </svg>
                 <span style="color:#D6336C;font-size:48px;font-weight:700;line-height:1.1;">Kei AI</span>
             </div>
-            <div style="display:flex;align-items:center;justify-content:center;gap:6px;color:{_header_tagline_color};font-size:18px;">
-                <span>{header_mood_emoji}</span>
-                <span>{t('app_companion')}</span>
-                <span>{header_mood_emoji}</span>
-            </div>
+            <p style="color:{_header_tagline_color};font-size:18px;margin:0;">{t('app_companion')} {header_mood_emoji}</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -3585,21 +3286,21 @@ else:
             img_tag = f'<img src="data:image/png;base64,{msg["image_b64"]}" style="max-width:240px;border-radius:14px;display:block;margin-bottom:6px;" />'
 
         if msg["role"] == "user":
-            st.markdown(
-                f'<div class="kei-user-bubble-row" style="display:flex; justify-content:flex-end; margin:6px 0;">'
-                f'<div class="kei-user-bubble" style="width:fit-content; max-width:50%; background:{_bubble_bg}; '
-                f'border:1px solid rgba(0,0,0,0.04); box-shadow:0 2px 10px -4px rgba(0,0,0,0.12); border-radius:13px; '
-                f'padding:5px 10px; color:{_chat_text_color}; font-size:14.5px; line-height:1.25; '
-                f'white-space:pre-wrap; text-align:center;">{img_tag}{render_kei_markdown(msg["content"])}</div></div>'
-                f'<style>.kei-user-bubble p {{ margin:0 !important; text-align:center !important; }}</style>',
-                unsafe_allow_html=True,
-            )
+            st.markdown(f"""
+            <div style="display:flex; justify-content:flex-end; margin:6px 0;">
+                <div style="max-width:70%; background:{_bubble_bg}; border:1px solid {_ms_border};
+                            border-radius:18px; padding:10px 16px; color:{_chat_text_color};
+                            font-size:15px; line-height:1.5;">
+                    {img_tag}{msg["content"]}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
         else:
-            st.markdown(
-                f'<div style="margin:6px 0 14px; color:{_chat_text_color}; font-size:15px; '
-                f'line-height:1.6; white-space:pre-wrap;">{img_tag}{render_kei_markdown(msg["content"])}</div>',
-                unsafe_allow_html=True,
-            )
+            st.markdown(f"""
+            <div style="margin:6px 0 14px; color:{_chat_text_color}; font-size:15px; line-height:1.6;">
+                {img_tag}{msg["content"]}
+            </div>
+            """, unsafe_allow_html=True)
 
     if st.session_state.conv_result:
         cr = st.session_state.conv_result
@@ -3777,47 +3478,23 @@ else:
         elif prompt:
             st.session_state.messages.append({"role": "user", "content": prompt})
 
-            if is_financial_query(prompt):
-                asset_type, asset_ref, asset_label = extract_asset_symbol(prompt)
-                with st.spinner("Kei sedang menganalisis pasar..."):
-                    if asset_type is None:
-                        reply = (
-                            "Kei belum berhasil mengenali aset yang Kak maksud. "
-                            "Coba sebutkan simbolnya lebih jelas ya, misalnya "
-                            "'analisa BTC', 'analisa saham BBCA', atau 'analisa AAPL'."
-                        )
-                    else:
-                        if asset_type == "crypto":
-                            fin_data = fetch_crypto_analysis(asset_ref, asset_label)
-                        else:
-                            fin_data = fetch_stock_analysis(asset_ref)
-
-                        if fin_data.get("error"):
-                            reply = (
-                                f"Kei coba ambil data {asset_label}, tapi gagal. "
-                                f"Error: {fin_data['error']}"
-                            )
-                        else:
-                            fin_prompt = build_financial_prompt(fin_data, prompt)
-                            reply = generate_content_with_retry(fin_prompt)
+            browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
+            if any(kw in prompt.lower() for kw in browsing_keywords):
+                search_url  = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
+                search_note = f"\n\nKei juga mencarikan untuk Kak di sini: [Klik untuk lihat hasil pencarian]({search_url})"
             else:
-                browsing_keywords = ["cari", "search", "browsing", "cek", "info tentang", "berita", "apa itu", "siapa itu"]
-                if any(kw in prompt.lower() for kw in browsing_keywords):
-                    search_url  = f"https://www.google.com/search?q={prompt.replace(' ', '+')}"
-                    search_note = f"\n\nKei juga mencarikan untuk Kak di sini: [Klik untuk lihat hasil pencarian]({search_url})"
-                else:
-                    search_note = ""
+                search_note = ""
 
-                history_text = ""
-                for m in st.session_state.messages[-10:]:
-                    role = "User" if m["role"] == "user" else "Kei"
-                    history_text += f"{role}: {m['content']}\n"
+            history_text = ""
+            for m in st.session_state.messages[-10:]:
+                role = "User" if m["role"] == "user" else "Kei"
+                history_text += f"{role}: {m['content']}\n"
 
-                _chat_mood_emoji, _chat_mood_label = get_current_mood()
-                full_prompt = f"{KEI_PERSONA}\n\nMood Kei saat ini: {_chat_mood_label}\n\nRiwayat percakapan:\n{history_text}\nKei:"
+            _chat_mood_emoji, _chat_mood_label = get_current_mood()
+            full_prompt = f"{KEI_PERSONA}\n\nMood Kei saat ini: {_chat_mood_label}\n\nRiwayat percakapan:\n{history_text}\nKei:"
 
-                with st.spinner("Kei sedang mengetik..."):
-                    reply = generate_content_with_retry(full_prompt) + search_note
+            with st.spinner("Kei sedang mengetik..."):
+                reply = generate_content_with_retry(full_prompt) + search_note
 
             st.session_state.messages.append({"role": "assistant", "content": reply})
             save_json(CHAT_FILE, st.session_state.messages)
